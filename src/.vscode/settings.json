@@ -1,5 +1,5 @@
 {
   "claudeCode.useTerminal": true,
-  "claudeCode.claudeProcessWrapper": "C:\\Users\\28386\\AppData\\Roaming\\npm\\claude.cmd",
+  "claudeCode.claudeProcessWrapper": "C:\\Users\\28386\\AppData\\Roaming\\npm\\node_modules\\@anthropic-ai\\claude-code\\bin\\claude.exe",
   "claudeCode.disableLoginPrompt": true
 }
