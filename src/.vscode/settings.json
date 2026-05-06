@@ -1,0 +1,5 @@
+{
+  "claudeCode.useTerminal": true,
+  "claudeCode.claudeProcessWrapper": "C:\\Users\\28386\\AppData\\Roaming\\npm\\claude.cmd",
+  "claudeCode.disableLoginPrompt": true
+}
