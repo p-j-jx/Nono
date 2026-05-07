@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -9,10 +8,9 @@ import { Label } from "@/components/ui/label"
 import { Loader2, Eye, EyeOff } from "lucide-react"
 
 export default function LoginPage() {
-  const router = useRouter()
-  const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [csrfToken, setCsrfToken] = useState("")
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     fetch("/api/auth/csrf")
@@ -20,30 +18,6 @@ export default function LoginPage() {
       .then((d) => setCsrfToken(d.csrfToken))
       .catch(() => {})
   }, [])
-
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-    setLoading(true)
-    // Submit the form via native POST (not fetch), so CSP eval blocking doesn't matter
-    const form = e.currentTarget
-    const formData = new FormData(form)
-    const submitData = new URLSearchParams(formData as any)
-    fetch(form.action, {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: submitData.toString(),
-      redirect: "follow",
-    }).then((res) => {
-      if (res.redirected) {
-        window.location.href = res.url
-      } else {
-        window.location.href = "/dashboard"
-      }
-    }).catch(() => {
-      // Fallback: native form submit
-      form.submit()
-    })
-  }
 
   return (
     <div className="w-full max-w-sm animate-scale-in">
@@ -63,7 +37,7 @@ export default function LoginPage() {
         <form
           action="/api/auth/callback/credentials"
           method="POST"
-          onSubmit={handleSubmit}
+          onSubmit={() => setLoading(true)}
           className="space-y-5"
         >
           <input name="csrfToken" type="hidden" value={csrfToken} />
