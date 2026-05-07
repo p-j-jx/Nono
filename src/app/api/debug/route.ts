@@ -8,6 +8,7 @@ export async function GET() {
     const hasAuthToken = !!process.env.TURSO_AUTH_TOKEN
     const hasAuthSecret = !!process.env.AUTH_SECRET
     const hasDeepSeek = !!process.env.DEEPSEEK_API_KEY
+    const authUrl = process.env.AUTH_URL || "未设置"
 
     const info: Record<string, unknown> = {
       env: {
@@ -15,6 +16,7 @@ export async function GET() {
         TURSO_AUTH_TOKEN: hasAuthToken ? "已设置" : "未设置",
         AUTH_SECRET: hasAuthSecret ? "已设置" : "未设置",
         DEEPSEEK_API_KEY: hasDeepSeek ? "已设置" : "未设置",
+        AUTH_URL: authUrl,
       },
     }
 
