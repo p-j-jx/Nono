@@ -3,15 +3,14 @@ import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 
 export async function proxy(req: NextRequest) {
-  const isSecure = req.url?.startsWith("https://")
-  const cookieName = isSecure
-    ? "__Secure-authjs.session-token"
-    : "authjs.session-token"
+  const isSecure =
+    req.headers.get("x-forwarded-proto") === "https" ||
+    req.url?.startsWith("https://")
 
   const token = await getToken({
     req,
     secret: process.env.AUTH_SECRET,
-    salt: cookieName,
+    secureCookie: isSecure,
   })
 
   if (!token) {
