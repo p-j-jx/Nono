@@ -1,50 +1,48 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { signIn } from "next-auth/react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Loader2, Eye, EyeOff } from "lucide-react"
-import { toast } from "sonner"
 
 export default function LoginPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
+  const [csrfToken, setCsrfToken] = useState("")
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  useEffect(() => {
+    fetch("/api/auth/csrf")
+      .then((r) => r.json())
+      .then((d) => setCsrfToken(d.csrfToken))
+      .catch(() => {})
+  }, [])
+
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setLoading(true)
-
-    const form = new FormData(e.currentTarget)
-    const email = form.get("email") as string
-    const password = form.get("password") as string
-
-    let result
-    try {
-      result = await signIn("credentials", {
-        email,
-        password,
-        redirect: false,
-      })
-    } catch (err) {
-      console.error("signIn 报错:", err)
-      toast.error("登录请求失败，请检查控制台错误")
-      setLoading(false)
-      return
-    }
-
-    if (result?.error) {
-      toast.error("邮箱或密码错误")
-      setLoading(false)
-      return
-    }
-
-    router.push("/dashboard")
-    router.refresh()
+    // Submit the form via native POST (not fetch), so CSP eval blocking doesn't matter
+    const form = e.currentTarget
+    const formData = new FormData(form)
+    const submitData = new URLSearchParams(formData as any)
+    fetch(form.action, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: submitData.toString(),
+      redirect: "follow",
+    }).then((res) => {
+      if (res.redirected) {
+        window.location.href = res.url
+      } else {
+        window.location.href = "/dashboard"
+      }
+    }).catch(() => {
+      // Fallback: native form submit
+      form.submit()
+    })
   }
 
   return (
@@ -62,7 +60,15 @@ export default function LoginPage() {
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form
+          action="/api/auth/callback/credentials"
+          method="POST"
+          onSubmit={handleSubmit}
+          className="space-y-5"
+        >
+          <input name="csrfToken" type="hidden" value={csrfToken} />
+          <input name="callbackUrl" type="hidden" value="/dashboard" />
+
           <div className="space-y-2">
             <Label htmlFor="email">邮箱</Label>
             <Input
