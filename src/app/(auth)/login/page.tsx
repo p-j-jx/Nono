@@ -23,11 +23,19 @@ export default function LoginPage() {
     const email = form.get("email") as string
     const password = form.get("password") as string
 
-    const result = await signIn("credentials", {
-      email,
-      password,
-      redirect: false,
-    })
+    let result
+    try {
+      result = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      })
+    } catch (err) {
+      console.error("signIn 报错:", err)
+      toast.error("登录请求失败，请检查控制台错误")
+      setLoading(false)
+      return
+    }
 
     if (result?.error) {
       toast.error("邮箱或密码错误")
