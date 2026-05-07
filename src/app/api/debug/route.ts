@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server"
+import { cookies, headers } from "next/headers"
 
 export async function GET() {
   try {
@@ -8,7 +9,6 @@ export async function GET() {
     const hasAuthToken = !!process.env.TURSO_AUTH_TOKEN
     const hasAuthSecret = !!process.env.AUTH_SECRET
     const hasDeepSeek = !!process.env.DEEPSEEK_API_KEY
-    const authUrl = process.env.AUTH_URL || "未设置"
 
     const info: Record<string, unknown> = {
       env: {
@@ -16,9 +16,19 @@ export async function GET() {
         TURSO_AUTH_TOKEN: hasAuthToken ? "已设置" : "未设置",
         AUTH_SECRET: hasAuthSecret ? "已设置" : "未设置",
         DEEPSEEK_API_KEY: hasDeepSeek ? "已设置" : "未设置",
-        AUTH_URL: authUrl,
+        AUTH_URL: process.env.AUTH_URL || "未设置",
+        NODE_ENV: process.env.NODE_ENV,
+        VERCEL: process.env.VERCEL || "未设置",
       },
     }
+
+    // Check cookies
+    const cookieStore = await cookies()
+    const allCookies: Record<string, string> = {}
+    for (const c of cookieStore.getAll()) {
+      allCookies[c.name] = c.value.substring(0, 20) + "..."
+    }
+    info["cookies"] = allCookies
 
     // Test DB connection
     if (hasDbUrl && hasAuthToken) {
