@@ -9,7 +9,7 @@ export async function GET() {
     const hasAuthSecret = !!process.env.AUTH_SECRET
     const hasDeepSeek = !!process.env.DEEPSEEK_API_KEY
 
-    const info = {
+    const info: Record<string, unknown> = {
       env: {
         DATABASE_URL: hasDbUrl ? `${process.env.DATABASE_URL?.slice(0, 20)}...` : "未设置",
         TURSO_AUTH_TOKEN: hasAuthToken ? "已设置" : "未设置",
