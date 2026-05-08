@@ -205,11 +205,33 @@ export async function POST(req: Request) {
         : `已生成${contentTypeLabels[contentType] || contentType}内容`
     }
 
+    // For image content types, try to generate actual image via OpenAI gpt-image-2
+    let imageUrl: string | null = null
+    if (
+      (contentType === "mainImage" || contentType === "sceneImage") &&
+      process.env.OPENAI_API_KEY
+    ) {
+      try {
+        const { default: OpenAI } = await import("openai")
+        const oa = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+        const imgRes = await oa.images.generate({
+          model: "gpt-image-2",
+          prompt: content,
+          n: 1,
+          size: "1024x1024",
+        })
+        imageUrl = imgRes.data?.[0]?.url ?? null
+      } catch (e) {
+        console.error("图片生成失败:", e)
+      }
+    }
+
     const record = await prisma.generationRecord.create({
       data: {
         projectId,
         contentType,
         content,
+        imageUrl,
         prompt: `为"${project.productName}"生成${contentTypeLabels[contentType] || contentType}`,
       },
     })
