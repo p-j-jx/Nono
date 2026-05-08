@@ -205,7 +205,7 @@ export async function POST(req: Request) {
         : `已生成${contentTypeLabels[contentType] || contentType}内容`
     }
 
-    // For image content types, try to generate actual image via aipaiai.cn proxy
+    // For image content types, generate image via aipaiai.cn Images API
     let imageUrl: string | null = null
     if (
       (contentType === "mainImage" || contentType === "sceneImage") &&
@@ -217,13 +217,16 @@ export async function POST(req: Request) {
           apiKey: process.env.OPENAI_API_KEY,
           baseURL: "https://aipaiai.cn/v1",
         })
-        const imgRes = await oa.chat.completions.create({
+        const imgRes = await oa.images.generate({
           model: "gpt-image-2",
-          messages: [{ role: "user", content }],
+          prompt: content,
+          n: 1,
+          size: "1024x1024",
+          response_format: "b64_json",
         })
-        const raw = imgRes.choices?.[0]?.message?.content
-        if (raw) {
-          imageUrl = raw.startsWith("data:") ? raw : `data:image/png;base64,${raw}`
+        const b64 = imgRes.data?.[0]?.b64_json
+        if (b64) {
+          imageUrl = `data:image/png;base64,${b64}`
         }
       } catch (e) {
         console.error("图片生成失败:", e)
