@@ -213,7 +213,10 @@ export async function POST(req: Request) {
     ) {
       try {
         const { default: OpenAI } = await import("openai")
-        const oa = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+        const oa = new OpenAI({
+          apiKey: process.env.OPENAI_API_KEY,
+          baseURL: "https://aipaiai.cn/v1",
+        })
         const imgRes = await oa.images.generate({
           model: "gpt-image-2",
           prompt: content,
