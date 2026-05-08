@@ -46,3 +46,6 @@ prisma/*.db
 next-env.d.ts
 
 /src/generated/prisma
+
+.vercel
+src/cookies.txt

@@ -59,23 +59,45 @@ model User {
 }
 
 model ProductProject {
-  id             String             @id @default(cuid())
-  userId         String
-  productName    String
-  category       String?
-  features       String?
-  sellingPoints  String?
-  keywords       String?
-  useScenario    String?
-  targetAudience String?
-  priceRange     String?
-  brandTone      String?
-  platform       String
-  language       String
-  createdAt      DateTime           @default(now())
-  updatedAt      DateTime           @updatedAt
-  records        GenerationRecord[]
-  user           User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                    String             @id @default(cuid())
+  userId                String
+  productName           String
+  category              String?
+  features              String?
+  sellingPoints         String?
+  keywords              String?
+  useScenario           String?
+  targetAudience        String?
+  priceRange            String?
+  brandTone             String?
+  platform              String
+  language              String
+
+  // Basic product info
+  brandName             String?
+  material              String?
+  specifications        String?
+  targetCountry         String?
+
+  // User scenario info
+  painPoints            String?
+  competitiveAdvantages String?
+  festivalScenario      String?
+
+  // Brand & style info
+  copyStyle             String?
+  bannedWords           String?
+  isPromotional         Boolean            @default(false)
+  isBrandFocused        Boolean            @default(false)
+
+  // Generation config
+  visualStyle           String             @default("minimal")
+  generationIntensity   String             @default("balanced")
+
+  createdAt             DateTime           @default(now())
+  updatedAt             DateTime           @updatedAt
+  records               GenerationRecord[]
+  user                  User               @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model GenerationRecord {

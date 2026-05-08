@@ -26,6 +26,12 @@ import {
   BookOpen,
   ImageIcon,
   ImagePlus,
+  Megaphone,
+  Search,
+  Video,
+  PanelTop,
+  Share2,
+  ImageDown,
   Copy,
   Check,
   Sparkles,
@@ -128,6 +134,48 @@ const contentTypeInfo: Record<
     icon: ImagePlus,
     color: "text-cyan-600 dark:text-cyan-400",
     bgColor: "bg-cyan-50 dark:bg-cyan-950/30",
+    type: "image",
+  },
+  adCopy: {
+    label: "广告文案",
+    icon: Megaphone,
+    color: "text-red-600 dark:text-red-400",
+    bgColor: "bg-red-50 dark:bg-red-950/30",
+    type: "copy",
+  },
+  seoKeywords: {
+    label: "SEO关键词",
+    icon: Search,
+    color: "text-indigo-600 dark:text-indigo-400",
+    bgColor: "bg-indigo-50 dark:bg-indigo-950/30",
+    type: "copy",
+  },
+  videoScript: {
+    label: "视频脚本",
+    icon: Video,
+    color: "text-orange-600 dark:text-orange-400",
+    bgColor: "bg-orange-50 dark:bg-orange-950/30",
+    type: "copy",
+  },
+  banner: {
+    label: "Banner图",
+    icon: PanelTop,
+    color: "text-sky-600 dark:text-sky-400",
+    bgColor: "bg-sky-50 dark:bg-sky-950/30",
+    type: "image",
+  },
+  socialMediaImage: {
+    label: "社媒图",
+    icon: Share2,
+    color: "text-rose-600 dark:text-rose-400",
+    bgColor: "bg-rose-50 dark:bg-rose-950/30",
+    type: "image",
+  },
+  promoPoster: {
+    label: "促销海报",
+    icon: ImageDown,
+    color: "text-purple-600 dark:text-purple-400",
+    bgColor: "bg-purple-50 dark:bg-purple-950/30",
     type: "image",
   },
 }
@@ -302,8 +350,8 @@ export function ResultsView({ project }: { project: Project }) {
     return records.find((r) => r.contentType === contentType)
   }
 
-  const copyTypes = ["title", "bulletPoints", "shortDesc", "longDesc"]
-  const imageTypes = ["mainImage", "sceneImage"]
+  const copyTypes = ["title", "bulletPoints", "shortDesc", "longDesc", "adCopy", "seoKeywords", "videoScript"]
+  const imageTypes = ["mainImage", "sceneImage", "banner", "socialMediaImage", "promoPoster"]
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">

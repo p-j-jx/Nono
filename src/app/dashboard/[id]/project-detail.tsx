@@ -41,6 +41,12 @@ import {
   ChevronRight,
   Sparkles,
   Star,
+  Megaphone,
+  Search,
+  Video,
+  PanelTop,
+  Share2,
+  ImageDown,
 } from "lucide-react"
 import { toast } from "sonner"
 import type { Project, GenerationRecord } from "@/types"
@@ -50,64 +56,24 @@ import {
   contentTypeLabels,
   categoryLabel,
   downloadTextFile,
+  generationTypeConfig,
+  contentTypeGroups,
 } from "@/types"
 
-const generationTypes = [
-  {
-    key: "title",
-    label: "商品标题",
-    desc: "生成SEO优化的产品标题",
-    icon: FileText,
-    gradient: "from-blue-500/20 to-blue-600/5",
-    iconColor: "text-blue-600 dark:text-blue-400",
-    borderColor: "border-blue-200/50 dark:border-blue-800/30",
-  },
-  {
-    key: "bulletPoints",
-    label: "要点描述",
-    desc: "生成产品核心卖点列表",
-    icon: ListOrdered,
-    gradient: "from-emerald-500/20 to-emerald-600/5",
-    iconColor: "text-emerald-600 dark:text-emerald-400",
-    borderColor: "border-emerald-200/50 dark:border-emerald-800/30",
-  },
-  {
-    key: "shortDesc",
-    label: "短描述",
-    desc: "生成简洁的产品介绍",
-    icon: AlignLeft,
-    gradient: "from-violet-500/20 to-violet-600/5",
-    iconColor: "text-violet-600 dark:text-violet-400",
-    borderColor: "border-violet-200/50 dark:border-violet-800/30",
-  },
-  {
-    key: "longDesc",
-    label: "长描述",
-    desc: "生成详细的产品描述",
-    icon: BookOpen,
-    gradient: "from-amber-500/20 to-amber-600/5",
-    iconColor: "text-amber-600 dark:text-amber-400",
-    borderColor: "border-amber-200/50 dark:border-amber-800/30",
-  },
-  {
-    key: "mainImage",
-    label: "商品主图",
-    desc: "生成产品主图提示词",
-    icon: ImageIcon,
-    gradient: "from-pink-500/20 to-pink-600/5",
-    iconColor: "text-pink-600 dark:text-pink-400",
-    borderColor: "border-pink-200/50 dark:border-pink-800/30",
-  },
-  {
-    key: "sceneImage",
-    label: "场景图",
-    desc: "生成产品使用场景图",
-    icon: ImagePlus,
-    gradient: "from-cyan-500/20 to-cyan-600/5",
-    iconColor: "text-cyan-600 dark:text-cyan-400",
-    borderColor: "border-cyan-200/50 dark:border-cyan-800/30",
-  },
-]
+const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+  FileText, ListOrdered, AlignLeft, BookOpen, ImageIcon, ImagePlus,
+  Megaphone, Search, Video, PanelTop, Share2, ImageDown,
+}
+
+const generationTypes = generationTypeConfig.map((cfg) => ({
+  key: cfg.key,
+  label: cfg.label,
+  desc: cfg.desc,
+  icon: iconMap[cfg.iconName] || FileText,
+  gradient: cfg.gradient,
+  iconColor: cfg.iconColor,
+  borderColor: cfg.borderColor,
+}))
 
 export function ProjectDetail({ project }: { project: Project }) {
   const router = useRouter()

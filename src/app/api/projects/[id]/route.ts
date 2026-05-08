@@ -2,8 +2,8 @@ import { NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/db/prisma"
 
-const VALID_PLATFORMS = ["amazon", "shopify", "tiktok"]
-const VALID_LANGUAGES = ["zh", "en", "es"]
+const VALID_PLATFORMS = ["amazon", "shopify", "tiktok", "ebay", "etsy", "walmart", "aliexpress"]
+const VALID_LANGUAGES = ["zh", "en", "es", "de", "fr", "ja", "pt", "ar"]
 
 export async function GET(
   _req: Request,
@@ -60,6 +60,19 @@ export async function PUT(
       brandTone,
       platform,
       language,
+      brandName,
+      material,
+      specifications,
+      targetCountry,
+      painPoints,
+      competitiveAdvantages,
+      festivalScenario,
+      copyStyle,
+      bannedWords,
+      isPromotional,
+      isBrandFocused,
+      visualStyle,
+      generationIntensity,
     } = body
 
     if (!productName?.trim()) {
@@ -88,6 +101,19 @@ export async function PUT(
         brandTone: brandTone || null,
         platform,
         language,
+        brandName: brandName || null,
+        material: material || null,
+        specifications: specifications || null,
+        targetCountry: targetCountry || null,
+        painPoints: painPoints || null,
+        competitiveAdvantages: competitiveAdvantages || null,
+        festivalScenario: festivalScenario || null,
+        copyStyle: copyStyle || null,
+        bannedWords: bannedWords || null,
+        isPromotional: isPromotional ?? false,
+        isBrandFocused: isBrandFocused ?? false,
+        visualStyle: visualStyle || "minimal",
+        generationIntensity: generationIntensity || "balanced",
       },
     })
 

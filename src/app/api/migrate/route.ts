@@ -8,6 +8,21 @@ const REQUIRED_COLUMNS: Record<string, { name: string; def: string }[]> = {
     { name: "apiKey", def: "TEXT" },
     { name: "apiKeyProvider", def: "TEXT NOT NULL DEFAULT 'deepseek'" },
   ],
+  ProductProject: [
+    { name: "brandName", def: "TEXT" },
+    { name: "material", def: "TEXT" },
+    { name: "specifications", def: "TEXT" },
+    { name: "targetCountry", def: "TEXT" },
+    { name: "painPoints", def: "TEXT" },
+    { name: "competitiveAdvantages", def: "TEXT" },
+    { name: "festivalScenario", def: "TEXT" },
+    { name: "copyStyle", def: "TEXT" },
+    { name: "bannedWords", def: "TEXT" },
+    { name: "isPromotional", def: "BOOLEAN NOT NULL DEFAULT false" },
+    { name: "isBrandFocused", def: "BOOLEAN NOT NULL DEFAULT false" },
+    { name: "visualStyle", def: "TEXT NOT NULL DEFAULT 'minimal'" },
+    { name: "generationIntensity", def: "TEXT NOT NULL DEFAULT 'balanced'" },
+  ],
 }
 
 export async function GET() {

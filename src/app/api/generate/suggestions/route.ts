@@ -10,6 +10,12 @@ function generateMockSuggestions(productName: string) {
     keywords: `${productName}, 高品质, 实用好物, 居家必备, 潮流单品`,
     useScenario: "日常居家, 办公环境, 户外出行, 旅行携带, 送礼首选",
     targetAudience: "注重品质与性价比的18-45岁消费者",
+    brandName: `${productName.split(/[\s,，、]/)[0] || ""}品牌`,
+    painPoints: "品质参差不齐, 选择困难, 使用体验不佳",
+    competitiveAdvantages: "品质保证, 价格优势, 创新设计, 售后服务",
+    festivalScenario: "情人节, 圣诞季, 黑五促销, 春节年货",
+    copyStyle: "professional",
+    bannedWords: "最好, 第一, 绝对, 永不",
   }
 }
 
@@ -21,6 +27,12 @@ const suggestionPrompt = (productName: string) => ({
 - keywords: 搜索关键词（中文，逗号分隔，3-5个）
 - useScenario: 使用场景（中文，逗号分隔，3-5项）
 - targetAudience: 目标人群（中文，一句话描述）
+- brandName: 建议的品牌名称（中文）
+- painPoints: 用户痛点（中文，逗号分隔，2-4项）
+- competitiveAdvantages: 竞争优势（中文，逗号分隔，2-4项）
+- festivalScenario: 适用节日/活动场景（中文，逗号分隔，2-3项）
+- copyStyle: 建议的文案风格（professional/casual/emotional/technical 选一）
+- bannedWords: 建议避免的敏感词（中文，逗号分隔，2-4项）
 
 只返回 JSON，不要其他内容。`,
   user: `产品名称：${productName}`,

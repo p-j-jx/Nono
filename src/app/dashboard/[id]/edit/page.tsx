@@ -34,6 +34,19 @@ export default async function EditProjectPage({
         brandTone: project.brandTone,
         platform: project.platform,
         language: project.language,
+        brandName: project.brandName,
+        material: project.material,
+        specifications: project.specifications,
+        targetCountry: project.targetCountry,
+        painPoints: project.painPoints,
+        competitiveAdvantages: project.competitiveAdvantages,
+        festivalScenario: project.festivalScenario,
+        copyStyle: project.copyStyle,
+        bannedWords: project.bannedWords,
+        isPromotional: project.isPromotional,
+        isBrandFocused: project.isBrandFocused,
+        visualStyle: project.visualStyle,
+        generationIntensity: project.generationIntensity,
       }}
       projectId={project.id}
     />
