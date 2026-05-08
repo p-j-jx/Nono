@@ -1,11 +1,7 @@
 import type { Metadata } from "next"
-import { GeistSans, GeistMono } from "geist/font"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/sonner"
 import "./globals.css"
-
-const geistSans = GeistSans
-const geistMono = GeistMono
 
 export const metadata: Metadata = {
   title: "AI跨境通 - AI跨境电商运营助手",
@@ -21,7 +17,7 @@ export default function RootLayout({
   return (
     <html
       lang="zh-CN"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className="h-full antialiased"
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col">
