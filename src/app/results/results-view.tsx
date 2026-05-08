@@ -643,10 +643,120 @@ export function ResultsView({ project }: { project: Project }) {
                   </CardHeader>
                   <CardContent>
                     {record?.imageUrl ? (
-                      <div className="aspect-square rounded-lg bg-muted/20 flex items-center justify-center">
-                        <p className="text-sm text-muted-foreground">
-                          图片预览（待接入真实图片生成API）
-                        </p>
+                      <div className="space-y-3">
+                        <div className="aspect-square rounded-lg overflow-hidden bg-muted/20">
+                          <img
+                            src={record.imageUrl}
+                            alt={info.label}
+                            className="size-full object-cover"
+                          />
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Button
+                            variant="ghost"
+                            size="icon-sm"
+                            onClick={() => {
+                              const a = document.createElement("a")
+                              a.href = record.imageUrl!
+                              a.download = `${project.productName}-${info.label}.png`
+                              document.body.appendChild(a)
+                              a.click()
+                              document.body.removeChild(a)
+                              toast.success("图片已下载")
+                            }}
+                            title="下载图片"
+                          >
+                            <Download className="size-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon-sm"
+                            onClick={() => handleRegenerate(type)}
+                            disabled={regenerating !== null}
+                            title="重新生成"
+                          >
+                            {regenerating === type ? (
+                              <Loader2 className="size-4 animate-spin" />
+                            ) : (
+                              <RefreshCw className="size-4" />
+                            )}
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon-sm"
+                            onClick={() =>
+                              handleToggleFavorite(record.id, record.favorited)
+                            }
+                            title={record.favorited ? "取消收藏" : "收藏"}
+                          >
+                            <Star
+                              className={`size-4 ${
+                                record.favorited
+                                  ? "fill-amber-400 text-amber-400"
+                                  : ""
+                              }`}
+                            />
+                          </Button>
+                          <div className="ml-auto">
+                            <Dialog
+                              open={deletingId === record.id}
+                              onOpenChange={(open) =>
+                                !open && setDeletingId(null)
+                              }
+                            >
+                              <DialogTrigger
+                                render={
+                                  <Button
+                                    variant="ghost"
+                                    size="icon-sm"
+                                    onClick={() =>
+                                      setDeletingId(record.id)
+                                    }
+                                    title="删除"
+                                    className="hover:text-destructive"
+                                  >
+                                    <Trash2 className="size-4" />
+                                  </Button>
+                                }
+                              />
+                              <DialogContent>
+                                <DialogHeader>
+                                  <DialogTitle>确认删除</DialogTitle>
+                                  <DialogDescription>
+                                    删除此{info.label}的生成记录？
+                                  </DialogDescription>
+                                </DialogHeader>
+                                <DialogFooter>
+                                  <DialogClose
+                                    render={
+                                      <Button variant="outline">
+                                        取消
+                                      </Button>
+                                    }
+                                  />
+                                  <Button
+                                    variant="destructive"
+                                    onClick={() =>
+                                      handleDelete(record.id)
+                                    }
+                                  >
+                                    确认删除
+                                  </Button>
+                                </DialogFooter>
+                              </DialogContent>
+                            </Dialog>
+                          </div>
+                        </div>
+                        {record.content && (
+                          <details className="group">
+                            <summary className="cursor-pointer text-xs text-muted-foreground hover:text-foreground">
+                              查看生成提示词
+                            </summary>
+                            <pre className="mt-2 whitespace-pre-wrap text-xs font-sans text-muted-foreground bg-muted/20 rounded-lg p-3">
+                              {record.content}
+                            </pre>
+                          </details>
+                        )}
                       </div>
                     ) : record?.content ? (
                       <>

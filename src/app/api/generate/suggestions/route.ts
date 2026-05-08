@@ -2,36 +2,14 @@ import { NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/db/prisma"
 
-const mockSuggestions: Record<
-  string,
-  {
-    features: string
-    sellingPoints: string
-    keywords: string
-    useScenario: string
-    targetAudience: string
-  }
-> = {
-  default: {
-    features:
-      "高品质材料, 创新设计, 耐用可靠, 易于使用, 环保环保",
-    sellingPoints:
-      "独特的功能设计，解决用户痛点\n高品质保证，远超同类产品\n性价比极高，物超所值",
-    keywords: "高品质, 创新, 时尚, 实用, 热销",
-    useScenario:
-      "日常居家使用, 办公场所, 户外活动, 旅行出差, 送礼佳品",
-    targetAudience: "18-45岁追求品质生活的消费者",
-  },
-}
-
 function generateMockSuggestions(productName: string) {
-  const base = mockSuggestions.default
   return {
-    features: `${productName}的${base.features}`,
-    sellingPoints: base.sellingPoints,
-    keywords: `${productName}, ${base.keywords}`,
-    useScenario: base.useScenario,
-    targetAudience: base.targetAudience,
+    features: `优质材料, 创新设计, 安全可靠, 操作便捷, 经久耐用`,
+    sellingPoints:
+      `${productName}采用优质材料精心打造，品质有保障\n独特设计兼顾美观与实用，解决日常痛点\n性价比出众，为您提供超值选择`,
+    keywords: `${productName}, 高品质, 实用好物, 居家必备, 潮流单品`,
+    useScenario: "日常居家, 办公环境, 户外出行, 旅行携带, 送礼首选",
+    targetAudience: "注重品质与性价比的18-45岁消费者",
   }
 }
 
