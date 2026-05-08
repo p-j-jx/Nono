@@ -205,27 +205,36 @@ export async function POST(req: Request) {
         : `已生成${contentTypeLabels[contentType] || contentType}内容`
     }
 
-    // For image content types, try to generate actual image via OpenAI gpt-image-2
+    // For image content types, try to generate actual image via OpenAI-compatible API
     let imageUrl: string | null = null
     if (
       (contentType === "mainImage" || contentType === "sceneImage") &&
       process.env.OPENAI_API_KEY
     ) {
-      try {
-        const { default: OpenAI } = await import("openai")
-        const oa = new OpenAI({
-          apiKey: process.env.OPENAI_API_KEY,
-          baseURL: "https://aipaiai.cn/v1",
-        })
-        const imgRes = await oa.images.generate({
-          model: "gpt-image-2",
-          prompt: content,
-          n: 1,
-          size: "1024x1024",
-        })
-        imageUrl = imgRes.data?.[0]?.url ?? null
-      } catch (e) {
-        console.error("图片生成失败:", e)
+      for (const model of ["gpt-image-2", "dall-e-3"]) {
+        try {
+          const { default: OpenAI } = await import("openai")
+          const oa = new OpenAI({
+            apiKey: process.env.OPENAI_API_KEY,
+            baseURL: "https://aipaiai.cn/v1",
+          })
+          const imgRes = await oa.images.generate({
+            model,
+            prompt: content,
+            n: 1,
+            size: "1024x1024",
+            response_format: "b64_json",
+          })
+          const imgData = imgRes.data?.[0]
+          if (imgData?.url) {
+            imageUrl = imgData.url
+          } else if (imgData?.b64_json) {
+            imageUrl = `data:image/png;base64,${imgData.b64_json}`
+          }
+          if (imageUrl) break // got an image, stop trying models
+        } catch (e) {
+          console.error(`${model} 图片生成失败:`, e)
+        }
       }
     }
 
