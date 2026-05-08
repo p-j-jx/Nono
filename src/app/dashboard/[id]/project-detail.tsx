@@ -735,14 +735,48 @@ export function ProjectDetail({ project }: { project: Project }) {
                                   </Button>
                                 </div>
                               </div>
+                            ) : (record.contentType === "mainImage" ||
+                                record.contentType === "sceneImage") &&
+                              record.imageUrl ? (
+                              <div className="space-y-3">
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img
+                                  src={record.imageUrl}
+                                  alt={record.content || "生成图片"}
+                                  className="w-full rounded-lg border border-border/50"
+                                />
+                                {record.content && (
+                                  <details className="text-xs text-muted-foreground">
+                                    <summary className="cursor-pointer hover:text-foreground transition-colors">
+                                      查看提示词
+                                    </summary>
+                                    <pre className="mt-2 whitespace-pre-wrap font-sans text-foreground/80 leading-relaxed">
+                                      {record.content}
+                                    </pre>
+                                  </details>
+                                )}
+                              </div>
                             ) : record.content ? (
                               <pre className="whitespace-pre-wrap text-sm font-sans text-foreground/90 leading-relaxed">
                                 {record.content}
                               </pre>
                             ) : record.imageUrl ? (
-                              <span className="text-sm text-muted-foreground">
-                                {record.imageUrl}
-                              </span>
+                              <div className="space-y-2">
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img
+                                  src={record.imageUrl}
+                                  alt="生成图片"
+                                  className="w-full rounded-lg border border-border/50"
+                                />
+                                <a
+                                  href={record.imageUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-xs text-primary hover:underline block"
+                                >
+                                  查看原图
+                                </a>
+                              </div>
                             ) : (
                               <span className="text-sm text-muted-foreground">
                                 (无内容)
