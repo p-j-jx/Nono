@@ -28,16 +28,18 @@ export function RecentProjects() {
   if (recent.length === 0) return null
 
   return (
-    <div className="mb-8">
-      <h2 className="text-lg font-semibold mb-4">最近查看</h2>
+    <div>
+      <h2 className="text-sm font-semibold mb-3">最近查看</h2>
       <div className="flex flex-wrap gap-2">
         {recent.map((project) => (
           <Link key={project.id} href={`/dashboard/${project.id}`}>
-            <Card className="transition-all duration-300 hover:shadow-md hover:border-primary/20 cursor-pointer group/card">
-              <CardContent className="py-2.5 px-4">
+            <Card className="transition-all duration-200 hover:shadow-sm hover:border-primary/20 cursor-pointer group/card" size="sm">
+              <CardContent className="py-2 px-3">
                 <div className="flex items-center gap-2">
-                  <Clock className="size-3.5 text-muted-foreground shrink-0" />
-                  <span className="text-sm font-medium group-hover/card:text-primary transition-colors truncate max-w-[200px]">
+                  <div className="rounded-full bg-primary/10 p-1">
+                    <Clock className="size-3 text-primary" />
+                  </div>
+                  <span className="text-xs font-medium group-hover/card:text-primary transition-colors truncate max-w-[180px]">
                     {project.name}
                   </span>
                 </div>
