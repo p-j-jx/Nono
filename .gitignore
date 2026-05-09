@@ -49,3 +49,5 @@ next-env.d.ts
 
 .vercel
 src/cookies.txt
+
+.vercel
