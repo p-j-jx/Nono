@@ -32,6 +32,18 @@ import { Highlight } from "@/components/highlight"
 
 const PAGE_SIZE = 20
 
+function BackButton() {
+  return (
+    <Link
+      href="/dashboard"
+      className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors mb-4"
+    >
+      <ChevronLeft className="size-4" />
+      返回工作台
+    </Link>
+  )
+}
+
 const contentTypeConfig: Record<
   string,
   { label: string; icon: typeof FileText; color: string }
@@ -174,6 +186,7 @@ export default async function HistoryPage({
 
   return (
     <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-8">
+      <BackButton />
       {/* Header */}
       <div className="mb-6">
         <h1 className="text-2xl font-bold tracking-tight">历史记录</h1>

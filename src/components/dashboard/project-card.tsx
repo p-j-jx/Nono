@@ -26,6 +26,16 @@ const platformBadgeColors: Record<string, string> = {
   aliexpress: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300",
 }
 
+const platformTopBars: Record<string, string> = {
+  amazon: "bg-gradient-to-r from-amber-500 to-orange-500",
+  shopify: "bg-gradient-to-r from-emerald-500 to-green-600",
+  tiktok: "bg-gradient-to-r from-cyan-500 to-teal-500",
+  ebay: "bg-gradient-to-r from-blue-500 to-indigo-500",
+  etsy: "bg-gradient-to-r from-orange-500 to-red-500",
+  walmart: "bg-gradient-to-r from-blue-500 to-sky-500",
+  aliexpress: "bg-gradient-to-r from-red-500 to-rose-500",
+}
+
 type ProjectCardProps = {
   id: string
   productName: string
@@ -38,12 +48,22 @@ type ProjectCardProps = {
 export function ProjectCard({ id, productName, platform, language, recordCount, updatedAt }: ProjectCardProps) {
   const platformLabel = platformLabels[platform] || platform
   const badgeColor = platformBadgeColors[platform] || "bg-muted text-muted-foreground"
+  const topBar = platformTopBars[platform] || "bg-gradient-to-r from-primary to-primary/50"
   const platformInitial = platformLabel.charAt(0)
 
   return (
     <Link href={`/dashboard/${id}`}>
-      <Card className="group h-full transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 hover:border-primary/20 cursor-pointer">
-        <CardHeader className="pb-2">
+      <Card className="group relative overflow-hidden h-full transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 hover:border-transparent cursor-pointer">
+        {/* Platform-colored top bar */}
+        <div aria-hidden className={`absolute top-0 left-0 right-0 h-[3px] ${topBar} opacity-80`} />
+
+        {/* Hover glow overlay */}
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-gradient-to-b from-primary/[0.03] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        />
+
+        <CardHeader className="pb-2 relative">
           <div className="flex items-start justify-between gap-2">
             <div className="flex items-center gap-2.5 min-w-0">
               <div className="flex size-8 items-center justify-center rounded-lg bg-primary/10 text-xs font-bold text-primary shrink-0">
@@ -61,7 +81,7 @@ export function ProjectCard({ id, productName, platform, language, recordCount, 
             </span>
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="relative">
           <div className="flex items-center gap-3 text-xs text-muted-foreground mb-2.5">
             <span className="flex items-center gap-1">
               <FileText className="size-3" />
@@ -76,7 +96,7 @@ export function ProjectCard({ id, productName, platform, language, recordCount, 
           </div>
           <div className="h-1.5 rounded-full bg-muted overflow-hidden">
             <div
-              className="h-full rounded-full bg-primary transition-all duration-500"
+              className="h-full rounded-full bg-gradient-to-r from-primary to-primary/60 transition-all duration-500"
               style={{ width: `${Math.min((recordCount / 10) * 100, 100)}%` }}
             />
           </div>

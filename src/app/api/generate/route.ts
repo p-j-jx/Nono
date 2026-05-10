@@ -58,6 +58,8 @@ const sampleContents: Record<string, (name: string) => string> = {
     "Lifestyle product photo for social media, user enjoying the product in a cozy modern home setting, warm ambient lighting, candid style, shallow depth of field, Instagram aesthetic, 1080x1080 pixels",
   promoPoster: () =>
     "Promotional sale poster design, bold product placement, vibrant colors, special offer callout, discount badge, dynamic composition, retail promotional poster, high energy, 1200x1500 pixels",
+  brandStory: (name) =>
+    `品牌故事 | ${name}\n\n从一个小小的想法，到如今备受信赖的产品。我们始终相信，好产品源于对品质的执着追求。秉持匠心精神，从选材到工艺，每一个环节都精益求精。\n\n我们的使命：让每一位用户都能享受到优质产品带来的美好体验。\n\n我们的承诺：品质保障、售后无忧、持续创新。\n\n选择${name}，不仅是选择一个产品，更是选择一种生活方式。让我们一起，创造更美好的日常。`,
 }
 
 function buildPrompt(
@@ -248,6 +250,17 @@ ${bannedWordHint}
 - 语言：English
 - 只输出Prompt本身，不要其他内容`,
       user: `Generate a promotional poster image prompt based on the following product information:\n\n${contextInfo}`,
+    },
+    brandStory: {
+      system: `你是一位专业的品牌文案策划师。根据提供的产品信息，创作一个有温度的品牌故事。
+要求：
+- 以品牌创始或产品研发的视角讲述
+- 语言有感染力和情感共鸣
+- 突出品牌理念和产品品质
+- 语言：${language}
+${bannedWordHint}
+- 只输出品牌故事本身，不要其他内容`,
+      user: `请为以下产品创作一个品牌故事（${language}）：\n\n${contextInfo}`,
     },
   }
 

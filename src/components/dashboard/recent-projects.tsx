@@ -33,10 +33,10 @@ export function RecentProjects() {
       <div className="flex flex-wrap gap-2">
         {recent.map((project) => (
           <Link key={project.id} href={`/dashboard/${project.id}`}>
-            <Card className="transition-all duration-200 hover:shadow-sm hover:border-primary/20 cursor-pointer group/card" size="sm">
+            <Card className="transition-all duration-200 hover:shadow-md hover:border-primary/20 cursor-pointer group/card" size="sm">
               <CardContent className="py-2 px-3">
                 <div className="flex items-center gap-2">
-                  <div className="rounded-full bg-primary/10 p-1">
+                  <div className="rounded-full bg-gradient-to-br from-primary/10 to-primary/5 p-1.5 group-hover/card:from-primary/20 group-hover/card:to-primary/10 transition-colors">
                     <Clock className="size-3 text-primary" />
                   </div>
                   <span className="text-xs font-medium group-hover/card:text-primary transition-colors truncate max-w-[180px]">

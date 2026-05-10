@@ -86,6 +86,7 @@ export const contentTypeLabels: Record<string, string> = {
   banner: "Banner图",
   socialMediaImage: "社媒图",
   promoPoster: "促销海报",
+  brandStory: "品牌故事",
 }
 
 export function categoryLabel(value: string): string {

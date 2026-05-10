@@ -19,6 +19,69 @@ type PrefillData = {
   language: string
 }
 
+const TEMPLATE_PRESETS: Record<string, Partial<PrefillData>> = {
+  "amazon": {
+    platform: "amazon",
+    language: "zh",
+    targetAudience: "Amazon 全球买家",
+    brandTone: "professional",
+  },
+  "shopify": {
+    platform: "shopify",
+    language: "en",
+    targetAudience: "欧美独立站消费者",
+    brandTone: "fashionable",
+  },
+  "tiktok": {
+    platform: "tiktok",
+    language: "en",
+    targetAudience: "TikTok 年轻用户",
+    brandTone: "fashionable",
+  },
+  "electronics": {
+    category: "electronics",
+    platform: "amazon",
+    brandTone: "professional",
+    targetAudience: "18-40岁科技爱好者",
+    language: "zh",
+  },
+  "clothing": {
+    category: "clothing",
+    platform: "shopify",
+    brandTone: "fashionable",
+    targetAudience: "20-35岁追求时尚的年轻消费者",
+    language: "en",
+  },
+  "beauty": {
+    category: "beauty",
+    platform: "shopify",
+    brandTone: "friendly",
+    targetAudience: "18-45岁注重护肤的女性消费者",
+    language: "en",
+  },
+  "home": {
+    category: "home",
+    platform: "amazon",
+    brandTone: "friendly",
+    targetAudience: "25-50岁注重生活品质的家庭用户",
+    language: "zh",
+  },
+  "sports": {
+    category: "sports",
+    platform: "amazon",
+    brandTone: "professional",
+    targetAudience: "18-40岁热爱运动的消费者",
+    language: "zh",
+  },
+  "tiktok-fashion": {
+    category: "clothing",
+    platform: "tiktok",
+    brandTone: "fashionable",
+    targetAudience: "16-30岁TikTok活跃用户",
+    language: "en",
+  },
+}
+
 function LoadingSkeleton() {
   return (
     <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-8">
@@ -36,26 +99,29 @@ function NewProjectContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const reuseProjectId = searchParams.get("reuseProjectId")
+  const templateId = searchParams.get("template")
   const [prefillLoading, setPrefillLoading] = useState(!!reuseProjectId)
   const [prefillData, setPrefillData] = useState<PrefillData | null>(null)
 
   useEffect(() => {
-    if (!reuseProjectId) return
-
-    fetch(`/api/projects/${reuseProjectId}`)
-      .then((res) => {
-        if (!res.ok) throw new Error("项目不存在")
-        return res.json()
-      })
-      .then((data) => {
-        setPrefillData(data.project)
-        setPrefillLoading(false)
-      })
-      .catch(() => {
-        toast.error("项目不存在或已删除")
-        router.replace("/dashboard/new")
-      })
-  }, [reuseProjectId, router])
+    if (reuseProjectId) {
+      fetch(`/api/projects/${reuseProjectId}`)
+        .then((res) => {
+          if (!res.ok) throw new Error("项目不存在")
+          return res.json()
+        })
+        .then((data) => {
+          setPrefillData(data.project)
+          setPrefillLoading(false)
+        })
+        .catch(() => {
+          toast.error("项目不存在或已删除")
+          router.replace("/dashboard/new")
+        })
+    } else if (templateId && TEMPLATE_PRESETS[templateId]) {
+      setPrefillData(TEMPLATE_PRESETS[templateId] as PrefillData)
+    }
+  }, [reuseProjectId, templateId, router])
 
   if (prefillLoading) return <LoadingSkeleton />
 
