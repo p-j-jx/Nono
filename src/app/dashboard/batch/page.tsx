@@ -97,6 +97,11 @@ export default function BatchPage() {
     failed: number
     projectIds: string[]
   } | null>(null)
+  const [batchGenerating, setBatchGenerating] = useState(false)
+  const [batchGenProgress, setBatchGenProgress] = useState<{
+    completed: number
+    total: number
+  } | null>(null)
 
   function handleDownloadTemplate() {
     const csv = generateCsvTemplate()
@@ -171,10 +176,50 @@ export default function BatchPage() {
     toast.success(`导入完成：成功 ${success}，失败 ${failed}`)
   }
 
+  async function handleBatchGenerate() {
+    if (!importResults || importResults.projectIds.length === 0) return
+
+    const basicTypes = ["title", "bulletPoints", "shortDesc"]
+    const total = importResults.projectIds.length * basicTypes.length
+    setBatchGenerating(true)
+    setBatchGenProgress({ completed: 0, total })
+
+    let completed = 0
+    let genFailed = 0
+
+    for (const projectId of importResults.projectIds) {
+      for (const contentType of basicTypes) {
+        try {
+          const res = await fetch("/api/generate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ projectId, contentType }),
+          })
+          if (!res.ok) genFailed++
+        } catch {
+          genFailed++
+        }
+        completed++
+        setBatchGenProgress({ completed, total })
+      }
+    }
+
+    setBatchGenerating(false)
+    setBatchGenProgress(null)
+
+    if (genFailed === 0) {
+      toast.success(`已为 ${importResults.projectIds.length} 个项目生成基础文案`)
+    } else {
+      toast.warning(`生成完成，${genFailed} 项失败`)
+    }
+  }
+
   function resetAll() {
     setParsedData(null)
     setRawCsv("")
     setImportResults(null)
+    setBatchGenerating(false)
+    setBatchGenProgress(null)
   }
 
   return (
@@ -367,17 +412,51 @@ export default function BatchPage() {
             <p className="text-sm text-muted-foreground mb-5">
               成功 {importResults.success} 个，失败 {importResults.failed} 个
             </p>
-            <div className="flex gap-3">
+
+            {/* Batch generate progress */}
+            {batchGenProgress && (
+              <div className="w-full max-w-xs mb-5">
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="text-xs font-medium text-muted-foreground">
+                    正在生成文案... {batchGenProgress.completed}/{batchGenProgress.total}
+                  </span>
+                  <Loader2 className="size-3.5 animate-spin text-primary" />
+                </div>
+                <div className="h-2 rounded-full bg-muted overflow-hidden">
+                  <div
+                    className="h-full rounded-full bg-primary transition-all duration-300"
+                    style={{
+                      width: `${(batchGenProgress.completed / batchGenProgress.total) * 100}%`,
+                    }}
+                  />
+                </div>
+              </div>
+            )}
+
+            <div className="flex gap-3 flex-wrap justify-center">
+              {importResults.success > 0 && !batchGenerating && (
+                <Button
+                  variant="default"
+                  onClick={handleBatchGenerate}
+                  className="gap-2 shadow-lg shadow-primary/20"
+                >
+                  <Loader2 className="size-4" />
+                  为全部项目生成基础文案
+                </Button>
+              )}
               <Button
                 variant="outline"
                 onClick={resetAll}
                 className="gap-2"
+                disabled={batchGenerating}
               >
                 继续导入
               </Button>
               <Button
-                className="gap-2 shadow-lg shadow-primary/20"
+                className="gap-2"
+                variant="outline"
                 onClick={() => router.push("/dashboard/projects")}
+                disabled={batchGenerating}
               >
                 查看项目 <ArrowRight className="size-4" />
               </Button>

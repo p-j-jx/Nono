@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
-import { FileText, Sparkles } from "lucide-react"
+import { FileText, Sparkles, Copy } from "lucide-react"
 import { platformLabels, languageLabels } from "@/types"
 
 function relativeTime(date: Date): string {
@@ -105,6 +105,25 @@ export function ProjectCard({ id, productName, platform, language, recordCount, 
               {recordCount >= 10 ? "内容完整" : `${recordCount}/10 条内容`}
             </span>
             <time className="text-[10px] text-muted-foreground">{relativeTime(updatedAt)}</time>
+          </div>
+          {/* Copy project shortcut */}
+          <div className="mt-3 pt-3 border-t border-border/40 flex items-center justify-between">
+            <Link
+              href={`/dashboard/new?reuseProjectId=${id}`}
+              onClick={(e) => e.stopPropagation()}
+              className="inline-flex items-center gap-1 text-[11px] text-muted-foreground hover:text-primary transition-colors"
+            >
+              <Copy className="size-3" />
+              复制项目
+            </Link>
+            <Link
+              href={`/results?projectId=${id}`}
+              onClick={(e) => e.stopPropagation()}
+              className="inline-flex items-center gap-1 text-[11px] text-muted-foreground hover:text-primary transition-colors"
+            >
+              <Sparkles className="size-3" />
+              查看结果
+            </Link>
           </div>
         </CardContent>
       </Card>

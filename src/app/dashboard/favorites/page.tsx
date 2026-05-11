@@ -10,7 +10,7 @@ import Link from "next/link"
 export const dynamic = "force-dynamic"
 
 const contentTypes = [
-  { value: "copy", label: "收藏文案", types: ["title", "bulletPoints", "description", "longDescription", "adCopy", "seoKeywords", "brandStory"] },
+  { value: "copy", label: "收藏文案", types: ["title", "bulletPoints", "shortDesc", "longDesc", "adCopy", "seoKeywords", "videoScript", "brandStory"] },
   { value: "image", label: "收藏图片", types: ["mainImage", "sceneImage", "banner", "socialMediaImage", "promoPoster"] },
 ]
 

@@ -9,7 +9,7 @@ export default async function SettingsPage() {
 
   const user = await prisma.user.findUnique({
     where: { id: session.user.id },
-    select: { apiKey: true, apiKeyProvider: true },
+    select: { apiKey: true, apiKeyProvider: true, imageApiKey: true, name: true, email: true },
   })
 
   return (
@@ -24,6 +24,9 @@ export default async function SettingsPage() {
       <SettingsForm
         initialApiKey={user?.apiKey || ""}
         initialProvider={user?.apiKeyProvider || "deepseek"}
+        initialImageApiKey={user?.imageApiKey || ""}
+        initialName={user?.name || ""}
+        email={user?.email || ""}
       />
     </div>
   )

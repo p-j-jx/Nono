@@ -10,16 +10,22 @@ export async function GET(req: Request) {
 
   const url = new URL(req.url)
   const type = url.searchParams.get("type")
+  const projectId = url.searchParams.get("projectId")
 
   try {
     if (type === "copy") {
-      const records = await prisma.generationRecord.findMany({
-        where: {
-          project: { userId: session.user.id },
-          contentType: {
-            in: ["title", "bulletPoints", "shortDesc", "longDesc", "adCopy", "seoKeywords", "videoScript", "brandStory"],
-          },
+      const whereClause: Record<string, unknown> = {
+        project: { userId: session.user.id },
+        contentType: {
+          in: ["title", "bulletPoints", "shortDesc", "longDesc", "adCopy", "seoKeywords", "videoScript", "brandStory"],
         },
+      }
+      if (projectId) {
+        whereClause.projectId = projectId
+      }
+
+      const records = await prisma.generationRecord.findMany({
+        where: whereClause,
         orderBy: { createdAt: "desc" },
         include: {
           project: { select: { productName: true } },

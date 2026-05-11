@@ -5,16 +5,16 @@ const footerLinks = [
   {
     title: "产品",
     links: [
-      { label: "功能", href: "#features" },
-      { label: "价格", href: "/pricing" },
-      { label: "更新日志", href: "/pricing" },
+      { label: "功能介绍", href: "/#features" },
+      { label: "价格方案", href: "/pricing" },
+      { label: "平台支持", href: "/#platforms" },
     ],
   },
   {
-    title: "支持",
+    title: "快速入口",
     links: [
-      { label: "帮助中心", href: "/register" },
-      { label: "使用指南", href: "#features" },
+      { label: "免费注册", href: "/register" },
+      { label: "立即登录", href: "/login" },
       { label: "联系我们", href: "mailto:support@aikuajingtong.com" },
     ],
   },

@@ -701,8 +701,7 @@ export function ProjectDetail({ project }: { project: Project }) {
                                   </Button>
                                 </div>
                               </div>
-                            ) : (record.contentType === "mainImage" ||
-                                record.contentType === "sceneImage") &&
+                            ) : ["mainImage", "sceneImage", "banner", "socialMediaImage", "promoPoster"].includes(record.contentType) &&
                               record.imageUrl ? (
                               <div className="space-y-3">
                                 {/* eslint-disable-next-line @next/next/no-img-element */}

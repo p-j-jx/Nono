@@ -3,6 +3,8 @@ import { Footer } from "@/components/home/footer"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Check } from "lucide-react"
+import { SessionProvider } from "next-auth/react"
+import { auth } from "@/lib/auth"
 
 const tiers = [
   {
@@ -60,9 +62,11 @@ const tiers = [
   },
 ]
 
-export default function PricingPage() {
+export default async function PricingPage() {
+  const session = await auth()
+
   return (
-    <>
+    <SessionProvider session={session}>
       <Navbar />
       <main>
         {/* Header */}
@@ -175,6 +179,6 @@ export default function PricingPage() {
         </section>
       </main>
       <Footer />
-    </>
+    </SessionProvider>
   )
 }

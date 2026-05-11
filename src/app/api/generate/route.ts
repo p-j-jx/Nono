@@ -296,15 +296,16 @@ export async function POST(req: Request) {
     let content: string
 
     // Resolve API key: user-configured > environment variable
-    let apiKey = process.env.DEEPSEEK_API_KEY
+    let apiKey: string | undefined
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { apiKey: true, imageApiKey: true },
+    })
+    if (user?.apiKey) {
+      apiKey = user.apiKey
+    }
     if (!apiKey) {
-      const user = await prisma.user.findUnique({
-        where: { id: session.user.id },
-        select: { apiKey: true },
-      })
-      if (user?.apiKey) {
-        apiKey = user.apiKey
-      }
+      apiKey = process.env.DEEPSEEK_API_KEY
     }
 
     // Try real AI API first, fall back to mock
@@ -347,14 +348,15 @@ export async function POST(req: Request) {
     // For image content types, generate image via aipaiai.cn Images API
     const imageContentTypes = ["mainImage", "sceneImage", "banner", "socialMediaImage", "promoPoster"]
     let imageUrl: string | null = null
+    const imageApiKey = user?.imageApiKey || process.env.OPENAI_API_KEY
     if (
       imageContentTypes.includes(contentType) &&
-      process.env.OPENAI_API_KEY
+      imageApiKey
     ) {
       try {
         const { default: OpenAI } = await import("openai")
         const oa = new OpenAI({
-          apiKey: process.env.OPENAI_API_KEY,
+          apiKey: imageApiKey,
           baseURL: "https://aipaiai.cn/v1",
         })
         const imgRes = await oa.images.generate({

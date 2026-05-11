@@ -9,14 +9,22 @@ export async function PUT(req: Request) {
   }
 
   try {
-    const { apiKey, apiKeyProvider } = await req.json()
+    const { apiKey, apiKeyProvider, imageApiKey, name } = await req.json()
+
+    const data: Record<string, unknown> = {
+      apiKey: apiKey || null,
+      apiKeyProvider: apiKeyProvider || "deepseek",
+    }
+    if (imageApiKey !== undefined) {
+      data.imageApiKey = imageApiKey || null
+    }
+    if (name !== undefined) {
+      data.name = name || null
+    }
 
     await prisma.user.update({
       where: { id: session.user.id },
-      data: {
-        apiKey: apiKey || null,
-        apiKeyProvider: apiKeyProvider || "deepseek",
-      },
+      data,
     })
 
     return NextResponse.json({ success: true })

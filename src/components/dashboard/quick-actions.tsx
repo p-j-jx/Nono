@@ -13,7 +13,7 @@ const actions = [
     borderGlow: "group-hover:shadow-primary/10",
   },
   {
-    href: "/dashboard/new?batch=true",
+    href: "/dashboard/batch",
     icon: Upload,
     title: "批量导入",
     desc: "批量导入商品，快速生成多平台内容",
@@ -31,7 +31,7 @@ const actions = [
     borderGlow: "group-hover:shadow-emerald-500/10",
   },
   {
-    href: "/dashboard/new?template=true",
+    href: "/dashboard/templates",
     icon: LayoutTemplate,
     title: "智能模板",
     desc: "基于场景模板快速开始，推荐最佳配置",

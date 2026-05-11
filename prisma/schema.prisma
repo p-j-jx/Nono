@@ -51,6 +51,7 @@ model User {
   password       String?
   apiKey         String?
   apiKeyProvider String           @default("deepseek")
+  imageApiKey    String?
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
   accounts       Account[]

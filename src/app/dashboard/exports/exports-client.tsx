@@ -58,11 +58,33 @@ export function ExportsClient({
         const text = `项目列表 (${projects.length} 个)\n${new Date().toLocaleString("zh-CN")}\n${"-".repeat(30)}\n\n${lines.join("\n")}`
         downloadTextFile(text, `项目列表_${new Date().toISOString().slice(0, 10)}.txt`)
         toast.success("文本导出成功")
-      } else if (type === "project") {
-        toast.success("导出功能开发中")
       } else {
         toast.success("导出功能开发中")
       }
+    } catch {
+      toast.error("导出失败")
+    } finally {
+      setExporting(null)
+    }
+  }
+
+  async function handleExportProject(project: Project) {
+    setExporting(`project-${project.id}`)
+
+    try {
+      const res = await fetch(`/api/generate/export?type=copy&projectId=${project.id}`)
+      if (!res.ok) throw new Error()
+      const data = await res.json()
+      if (data.count === 0) {
+        toast.warning("该项目暂无文案记录可导出")
+        return
+      }
+      const text = `【${project.productName}】\n平台：${platformLabels[project.platform] || project.platform}\n${"=".repeat(30)}\n\n` +
+        data.records
+          .map((r: any) => `【${r.contentType}】\n${r.content}\n---`)
+          .join("\n")
+      downloadTextFile(text, `${project.productName}_文案_${new Date().toISOString().slice(0, 10)}.txt`)
+      toast.success(`导出 ${data.count} 条文案`)
     } catch {
       toast.error("导出失败")
     } finally {
@@ -167,24 +189,11 @@ export function ExportsClient({
                     <Button
                       variant="ghost"
                       size="icon-sm"
-                      onClick={() => handleExport("txt")}
-                      title="导出为 TXT"
+                      onClick={() => handleExportProject(p)}
+                      title="导出该项目文案"
                       disabled={exporting !== null}
                     >
-                      {exporting === "txt" ? (
-                        <Loader2 className="size-3.5 animate-spin" />
-                      ) : (
-                        <FileText className="size-3.5" />
-                      )}
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon-sm"
-                      onClick={() => handleExport("csv")}
-                      title="导出为 CSV"
-                      disabled={exporting !== null}
-                    >
-                      {exporting === "csv" ? (
+                      {exporting === `project-${p.id}` ? (
                         <Loader2 className="size-3.5 animate-spin" />
                       ) : (
                         <Download className="size-3.5" />

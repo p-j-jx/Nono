@@ -17,6 +17,20 @@ type PrefillData = {
   brandTone: string | null
   platform: string
   language: string
+  // Advanced fields
+  brandName: string | null
+  material: string | null
+  specifications: string | null
+  targetCountry: string | null
+  painPoints: string | null
+  competitiveAdvantages: string | null
+  festivalScenario: string | null
+  copyStyle: string | null
+  bannedWords: string | null
+  isPromotional: boolean
+  isBrandFocused: boolean
+  visualStyle: string
+  generationIntensity: string
 }
 
 const TEMPLATE_PRESETS: Record<string, Partial<PrefillData>> = {
@@ -42,6 +56,8 @@ const TEMPLATE_PRESETS: Record<string, Partial<PrefillData>> = {
     category: "electronics",
     platform: "amazon",
     brandTone: "professional",
+    copyStyle: "technical",
+    visualStyle: "tech",
     targetAudience: "18-40岁科技爱好者",
     language: "zh",
   },
@@ -49,6 +65,8 @@ const TEMPLATE_PRESETS: Record<string, Partial<PrefillData>> = {
     category: "clothing",
     platform: "shopify",
     brandTone: "fashionable",
+    copyStyle: "emotional",
+    visualStyle: "lifestyle",
     targetAudience: "20-35岁追求时尚的年轻消费者",
     language: "en",
   },
@@ -56,6 +74,8 @@ const TEMPLATE_PRESETS: Record<string, Partial<PrefillData>> = {
     category: "beauty",
     platform: "shopify",
     brandTone: "friendly",
+    copyStyle: "emotional",
+    visualStyle: "brand",
     targetAudience: "18-45岁注重护肤的女性消费者",
     language: "en",
   },
@@ -63,6 +83,8 @@ const TEMPLATE_PRESETS: Record<string, Partial<PrefillData>> = {
     category: "home",
     platform: "amazon",
     brandTone: "friendly",
+    copyStyle: "casual",
+    visualStyle: "lifestyle",
     targetAudience: "25-50岁注重生活品质的家庭用户",
     language: "zh",
   },
@@ -70,6 +92,8 @@ const TEMPLATE_PRESETS: Record<string, Partial<PrefillData>> = {
     category: "sports",
     platform: "amazon",
     brandTone: "professional",
+    copyStyle: "casual",
+    visualStyle: "lifestyle",
     targetAudience: "18-40岁热爱运动的消费者",
     language: "zh",
   },
@@ -77,6 +101,8 @@ const TEMPLATE_PRESETS: Record<string, Partial<PrefillData>> = {
     category: "clothing",
     platform: "tiktok",
     brandTone: "fashionable",
+    copyStyle: "casual",
+    visualStyle: "promotional",
     targetAudience: "16-30岁TikTok活跃用户",
     language: "en",
   },

@@ -1,86 +1,113 @@
 import Link from "next/link"
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Check, ArrowRight } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { ArrowRight, ListOrdered, Video, Sparkles } from "lucide-react"
 
-const templates = [
+const showcaseTemplates = [
   {
-    href: "/dashboard/new?template=amazon",
+    id: "amazon",
+    href: "/dashboard/templates/amazon",
     platform: "Amazon",
     badgeClass: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
-    title: "Amazon 商品详情",
-    desc: "完整的 Listing 优化方案",
-    features: ["标题与五点描述", "A+ 页面文案", "关键词研究"],
-    gradient: "from-amber-500/10 to-amber-500/5",
     topBar: "bg-gradient-to-r from-amber-500 to-orange-500",
+    gradient: "from-amber-500/[0.04] to-orange-500/[0.02]",
+    iconBg: "bg-amber-500/10 text-amber-600 dark:text-amber-400",
+    icon: ListOrdered,
+    title: "Listing 转化型",
+    desc: "严格遵循 Amazon SEO 规则",
+    metas: ["标题 ≤ 200 字符", "5 点描述", "Backend Keywords"],
+    snippet: "Wireless BT 5.3 Headphones, Active Noise Cancelling, 30Hr Playtime, IPX7 Waterproof…",
   },
   {
-    href: "/dashboard/new?template=tiktok",
+    id: "tiktok",
+    href: "/dashboard/templates/tiktok",
     platform: "TikTok Shop",
     badgeClass: "bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-300",
-    title: "TikTok 带货视频",
-    desc: "短视频脚本与视觉方案",
-    features: ["口播脚本与分镜", "热门标签推荐", "多语言字幕"],
-    gradient: "from-cyan-500/10 to-cyan-500/5",
     topBar: "bg-gradient-to-r from-cyan-500 to-teal-500",
+    gradient: "from-cyan-500/[0.04] to-teal-500/[0.02]",
+    iconBg: "bg-cyan-500/10 text-cyan-600 dark:text-cyan-400",
+    icon: Video,
+    title: "短视频带货型",
+    desc: "3 秒钩子 + 口播脚本 + Hashtag",
+    metas: ["开场钩子", "60s 分镜", "爆款 Hashtag"],
+    snippet: "\"Wait—这条裙子真的只要 $29?\" 😱 朋友们看完都让我发链接…",
   },
   {
-    href: "/dashboard/new?template=shopify",
+    id: "shopify",
+    href: "/dashboard/templates/shopify",
     platform: "Shopify",
     badgeClass: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300",
-    title: "Shopify 产品页面",
-    desc: "独立站产品页优化",
-    features: ["产品描述与卖点", "SEO 标题优化", "邮件营销文案"],
-    gradient: "from-emerald-500/10 to-emerald-500/5",
     topBar: "bg-gradient-to-r from-emerald-500 to-green-600",
+    gradient: "from-emerald-500/[0.04] to-green-500/[0.02]",
+    iconBg: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
+    icon: Sparkles,
+    title: "品牌独立站型",
+    desc: "品牌故事 + SEO Meta + 邮件",
+    metas: ["Brand Story", "SEO Meta", "邮件营销"],
+    snippet: "Feel free in every move — designed for women who flow through life with intention…",
   },
 ]
 
 export function TemplateCards() {
   return (
     <div>
-      <div className="flex items-center gap-2 mb-4">
-        <h2 className="text-sm font-semibold">场景模板</h2>
-        <span className="text-[11px] text-muted-foreground">基于最佳实践预配置</span>
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2">
+          <h2 className="text-sm font-semibold">场景模板</h2>
+          <span className="text-[11px] text-muted-foreground">不同平台、不同打法</span>
+        </div>
+        <Button variant="ghost" size="sm" className="text-xs h-7 gap-1" render={<Link href="/dashboard/templates" />}>
+          模板中心 <ArrowRight className="size-3" />
+        </Button>
       </div>
+
       <div className="grid gap-4 sm:grid-cols-3">
-        {templates.map((t) => (
-          <Link key={t.title} href={t.href}>
-            <Card className="group relative overflow-hidden h-full transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 hover:border-transparent cursor-pointer">
-              {/* Top gradient bar */}
-              <div aria-hidden className={`absolute top-0 left-0 right-0 h-[3px] ${t.topBar}`} />
+        {showcaseTemplates.map((t) => {
+          const Icon = t.icon
+          return (
+            <Link key={t.id} href={t.href}>
+              <Card className="group relative overflow-hidden h-full transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 hover:border-transparent cursor-pointer">
+                <div aria-hidden className={`absolute top-0 left-0 right-0 h-[3px] ${t.topBar}`} />
+                <div aria-hidden className={`absolute inset-0 bg-gradient-to-b ${t.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
 
-              {/* Hover gradient overlay */}
-              <div
-                aria-hidden
-                className={`absolute inset-0 bg-gradient-to-b ${t.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
-              />
+                <CardContent className="p-4 relative space-y-3">
+                  <div className="flex items-center justify-between">
+                    <Badge variant="outline" className={`text-[10px] font-medium ${t.badgeClass}`}>
+                      {t.platform}
+                    </Badge>
+                    <div className={`flex size-7 items-center justify-center rounded-lg ${t.iconBg}`}>
+                      <Icon className="size-3.5" />
+                    </div>
+                  </div>
 
-              <CardHeader className="pb-3 relative">
-                <Badge variant="outline" className={`w-fit text-[11px] font-medium ${t.badgeClass}`}>
-                  {t.platform}
-                </Badge>
-                <CardTitle className="text-sm mt-2">{t.title}</CardTitle>
-                <CardDescription className="text-xs">{t.desc}</CardDescription>
-              </CardHeader>
-              <CardContent className="relative">
-                <ul className="space-y-1.5">
-                  {t.features.map((f) => (
-                    <li key={f} className="flex items-center gap-2 text-xs text-muted-foreground">
-                      <span className="flex size-4 items-center justify-center rounded-full bg-emerald-500/10 shrink-0">
-                        <Check className="size-2.5 text-emerald-500" />
+                  <div>
+                    <h3 className="text-sm font-semibold mb-0.5">{t.title}</h3>
+                    <p className="text-xs text-muted-foreground">{t.desc}</p>
+                  </div>
+
+                  <div className="flex flex-wrap gap-1">
+                    {t.metas.map((m) => (
+                      <span key={m} className="inline-flex items-center rounded bg-muted/60 px-1.5 py-0.5 text-[10px] text-muted-foreground">
+                        {m}
                       </span>
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-                <div className="mt-4 text-xs font-medium text-primary/70 group-hover:text-primary transition-colors inline-flex items-center gap-1">
-                  使用此模板 <ArrowRight className="size-3 transition-transform duration-300 group-hover:translate-x-0.5" />
-                </div>
-              </CardContent>
-            </Card>
-          </Link>
-        ))}
+                    ))}
+                  </div>
+
+                  <div className="rounded-lg bg-muted/30 p-2 border border-border/30">
+                    <p className="text-[11px] text-foreground/70 leading-relaxed line-clamp-2 font-light italic">
+                      {t.snippet}
+                    </p>
+                  </div>
+
+                  <div className="flex items-center gap-1 text-xs font-medium text-primary/70 group-hover:text-primary transition-colors">
+                    查看完整模板 <ArrowRight className="size-3 transition-transform duration-300 group-hover:translate-x-0.5" />
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+          )
+        })}
       </div>
     </div>
   )

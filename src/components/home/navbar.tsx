@@ -2,20 +2,22 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { Menu, Moon, Sparkles, Sun, X } from "lucide-react"
+import { Menu, Moon, Sparkles, Sun, X, LayoutDashboard } from "lucide-react"
 import { useTheme } from "next-themes"
+import { useSession } from "next-auth/react"
 import { Button } from "@/components/ui/button"
 
 const navLinks = [
   { label: "首页", href: "/" },
-  { label: "功能", href: "#features" },
+  { label: "功能", href: "/#features" },
   { label: "价格", href: "/pricing" },
-  { label: "关于", href: "#about" },
+  { label: "关于", href: "/#about" },
 ]
 
 export function Navbar() {
   const [open, setOpen] = useState(false)
   const { theme, setTheme } = useTheme()
+  const { data: session } = useSession()
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-border/30 bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60 shadow-sm shadow-black/5">
@@ -51,12 +53,21 @@ export function Navbar() {
             <Sun className="size-4 scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
             <Moon className="absolute size-4 scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
           </Button>
-          <Button variant="outline" render={<Link href="/login" />}>
-            登录
-          </Button>
-          <Button render={<Link href="/register" />}>
-            免费注册
-          </Button>
+          {session ? (
+            <Button render={<Link href="/dashboard" />} className="gap-2">
+              <LayoutDashboard className="size-4" />
+              进入工作台
+            </Button>
+          ) : (
+            <>
+              <Button variant="outline" render={<Link href="/login" />}>
+                登录
+              </Button>
+              <Button render={<Link href="/register" />}>
+                免费注册
+              </Button>
+            </>
+          )}
         </div>
 
         <div className="flex md:hidden items-center gap-2">
@@ -94,12 +105,21 @@ export function Navbar() {
               </Link>
             ))}
             <div className="mt-2 flex flex-col gap-2 border-t border-border/40 pt-2">
-              <Button variant="outline" render={<Link href="/login" />} className="w-full">
-                登录
-              </Button>
-              <Button render={<Link href="/register" />} className="w-full">
-                免费注册
-              </Button>
+              {session ? (
+                <Button render={<Link href="/dashboard" onClick={() => setOpen(false)} />} className="w-full gap-2">
+                  <LayoutDashboard className="size-4" />
+                  进入工作台
+                </Button>
+              ) : (
+                <>
+                  <Button variant="outline" render={<Link href="/login" />} className="w-full">
+                    登录
+                  </Button>
+                  <Button render={<Link href="/register" />} className="w-full">
+                    免费注册
+                  </Button>
+                </>
+              )}
             </div>
           </nav>
         </div>

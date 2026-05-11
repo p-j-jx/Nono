@@ -334,7 +334,7 @@ export function ResultsView({ project }: { project: Project }) {
   }
 
   function handleSaveToHistory() {
-    toast.success("所有记录已自动保存")
+    router.push("/history")
   }
 
   function handleDownloadRecord(record: typeof records[0]) {
@@ -976,21 +976,6 @@ export function ResultsView({ project }: { project: Project }) {
                       </div>
                     )}
 
-                    {/* Reserved extensions */}
-                    {type === "mainImage" && (
-                      <div className="mt-3 rounded-lg border border-dashed border-muted-foreground/20 p-3 text-center">
-                        <p className="text-xs text-muted-foreground">
-                          + Banner 图（预留扩展）
-                        </p>
-                      </div>
-                    )}
-                    {type === "sceneImage" && (
-                      <div className="mt-3 rounded-lg border border-dashed border-muted-foreground/20 p-3 text-center">
-                        <p className="text-xs text-muted-foreground">
-                          + 社媒图（预留扩展）
-                        </p>
-                      </div>
-                    )}
                   </CardContent>
                 </Card>
               )

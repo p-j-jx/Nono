@@ -24,17 +24,28 @@ import { toast } from "sonner"
 interface SettingsFormProps {
   initialApiKey: string
   initialProvider: string
+  initialImageApiKey: string
+  initialName: string
+  email: string
 }
 
 export function SettingsForm({
   initialApiKey,
   initialProvider,
+  initialImageApiKey,
+  initialName,
+  email,
 }: SettingsFormProps) {
   const [apiKey, setApiKey] = useState(initialApiKey)
   const [provider, setProvider] = useState(initialProvider)
+  const [imageApiKey, setImageApiKey] = useState(initialImageApiKey)
+  const [name, setName] = useState(initialName)
   const [showKey, setShowKey] = useState(false)
+  const [showImageKey, setShowImageKey] = useState(false)
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [savingAccount, setSavingAccount] = useState(false)
+  const [savedAccount, setSavedAccount] = useState(false)
 
   async function handleSave() {
     setSaving(true)
@@ -44,7 +55,7 @@ export function SettingsForm({
       const res = await fetch("/api/user/settings", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ apiKey, apiKeyProvider: provider }),
+        body: JSON.stringify({ apiKey, apiKeyProvider: provider, imageApiKey }),
       })
 
       if (!res.ok) {
@@ -83,8 +94,72 @@ export function SettingsForm({
     }
   }
 
+  async function handleSaveAccount() {
+    setSavingAccount(true)
+    setSavedAccount(false)
+
+    try {
+      const res = await fetch("/api/user/settings", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name }),
+      })
+
+      if (!res.ok) {
+        const data = await res.json()
+        throw new Error(data.error || "保存失败")
+      }
+
+      setSavedAccount(true)
+      toast.success("账户信息已保存")
+      setTimeout(() => setSavedAccount(false), 2000)
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "保存失败")
+    } finally {
+      setSavingAccount(false)
+    }
+  }
+
   return (
     <div className="space-y-6">
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">账户信息</CardTitle>
+          <CardDescription>管理你的账户基本信息</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="name">昵称</Label>
+            <Input
+              id="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="请输入昵称"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="email">邮箱</Label>
+            <Input
+              id="email"
+              value={email}
+              disabled
+              className="bg-muted text-muted-foreground cursor-not-allowed"
+            />
+            <p className="text-xs text-muted-foreground">邮箱地址不可修改</p>
+          </div>
+          <div className="pt-2">
+            <Button onClick={handleSaveAccount} disabled={savingAccount} className="gap-2">
+              {savingAccount ? (
+                <Loader2 className="size-4 animate-spin" />
+              ) : savedAccount ? (
+                <Check className="size-4" />
+              ) : null}
+              {savingAccount ? "保存中..." : savedAccount ? "已保存" : "保存"}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
       <Card>
         <CardHeader>
           <CardTitle className="text-lg">AI API 密钥</CardTitle>
@@ -166,6 +241,47 @@ export function SettingsForm({
                 清除密钥
               </Button>
             )}
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">图片生成 API 密钥</CardTitle>
+          <CardDescription>
+            配置图片生成服务的 API 密钥（兼容 OpenAI Images API），用于生成商品主图、场景图、Banner 等。
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="imageApiKey">API 密钥</Label>
+            <div className="relative">
+              <Input
+                id="imageApiKey"
+                type={showImageKey ? "text" : "password"}
+                value={imageApiKey}
+                onChange={(e) => setImageApiKey(e.target.value)}
+                placeholder="sk-..."
+                className="pr-10 font-mono text-sm"
+              />
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="absolute right-1 top-1/2 -translate-y-1/2 size-8"
+                onClick={() => setShowImageKey(!showImageKey)}
+                aria-label={showImageKey ? "隐藏" : "显示"}
+              >
+                {showImageKey ? (
+                  <EyeOff className="size-4" />
+                ) : (
+                  <Eye className="size-4" />
+                )}
+              </Button>
+            </div>
+            <p className="text-xs text-muted-foreground">
+              支持兼容 OpenAI Images API 的服务商。不配置时将使用服务器环境变量中的密钥。
+            </p>
           </div>
         </CardContent>
       </Card>

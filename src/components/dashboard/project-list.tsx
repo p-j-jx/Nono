@@ -47,7 +47,7 @@ export function ProjectList({ projects }: { projects: ProjectListProject[] }) {
               <Plus className="size-4" />
               创建项目
             </Button>
-            <Button variant="outline" render={<Link href="/dashboard/new?template=true" />} className="gap-2">
+            <Button variant="outline" render={<Link href="/dashboard/templates" />} className="gap-2">
               <LayoutTemplate className="size-4" />
               使用模板
             </Button>
