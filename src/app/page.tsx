@@ -1,33 +1,11 @@
-import { Navbar } from "@/components/home/navbar"
-import { Hero } from "@/components/home/hero"
-import { Platforms } from "@/components/home/platforms"
-import { Features } from "@/components/home/features"
-import { HowItWorks } from "@/components/home/how-it-works"
-import { CTASection } from "@/components/home/cta-section"
-import { Footer } from "@/components/home/footer"
-import { ScrollAnimate } from "@/components/scroll-animate"
-import { SessionProvider } from "next-auth/react"
-
 export default function Home() {
   return (
-    <SessionProvider>
-      <Navbar />
-      <main>
-        <Hero />
-        <ScrollAnimate>
-          <Platforms />
-        </ScrollAnimate>
-        <ScrollAnimate>
-          <Features />
-        </ScrollAnimate>
-        <ScrollAnimate>
-          <HowItWorks />
-        </ScrollAnimate>
-        <ScrollAnimate>
-          <CTASection />
-        </ScrollAnimate>
-      </main>
-      <Footer />
-    </SessionProvider>
+    <div style={{ padding: 40, fontFamily: "sans-serif" }}>
+      <h1>AI跨境通 测试</h1>
+      <p>如果看到这个说明首页基本渲染正常</p>
+      <a href="/login">去登录</a>
+      <br />
+      <a href="/dashboard">去工作台</a>
+    </div>
   )
 }
