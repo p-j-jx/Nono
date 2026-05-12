@@ -5,7 +5,7 @@ import Link from "next/link"
 import { Menu, Moon, Sparkles, Sun, X, LayoutDashboard } from "lucide-react"
 import { useTheme } from "next-themes"
 import { useSession } from "next-auth/react"
-import { Button } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
 
 const navLinks = [
   { label: "首页", href: "/" },
@@ -54,18 +54,18 @@ export function Navbar() {
             <Moon className="absolute size-4 scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
           </Button>
           {session ? (
-            <Button render={<Link href="/dashboard" />} className="gap-2">
+            <Link href="/dashboard" className={buttonVariants({ className: "gap-2" })}>
               <LayoutDashboard className="size-4" />
               进入工作台
-            </Button>
+            </Link>
           ) : (
             <>
-              <Button variant="outline" render={<Link href="/login" />}>
+              <Link href="/login" className={buttonVariants({ variant: "outline" })}>
                 登录
-              </Button>
-              <Button render={<Link href="/register" />}>
+              </Link>
+              <Link href="/register" className={buttonVariants({})}>
                 免费注册
-              </Button>
+              </Link>
             </>
           )}
         </div>
@@ -106,18 +106,18 @@ export function Navbar() {
             ))}
             <div className="mt-2 flex flex-col gap-2 border-t border-border/40 pt-2">
               {session ? (
-                <Button render={<Link href="/dashboard" onClick={() => setOpen(false)} />} className="w-full gap-2">
+                <Link href="/dashboard" onClick={() => setOpen(false)} className={buttonVariants({ className: "w-full gap-2" })}>
                   <LayoutDashboard className="size-4" />
                   进入工作台
-                </Button>
+                </Link>
               ) : (
                 <>
-                  <Button variant="outline" render={<Link href="/login" />} className="w-full">
+                  <Link href="/login" className={buttonVariants({ variant: "outline", className: "w-full" })}>
                     登录
-                  </Button>
-                  <Button render={<Link href="/register" />} className="w-full">
+                  </Link>
+                  <Link href="/register" className={buttonVariants({ className: "w-full" })}>
                     免费注册
-                  </Button>
+                  </Link>
                 </>
               )}
             </div>

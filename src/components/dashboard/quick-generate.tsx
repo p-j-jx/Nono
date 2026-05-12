@@ -4,7 +4,7 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Loader2, Sparkles, ArrowRight, Check, Copy, Download, Star } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
@@ -311,13 +311,12 @@ export function QuickGenerate({
           </Button>
 
           {results && results.length > 0 && currentProjectId && (
-            <Button
-              variant="outline"
-              className="w-full gap-2"
-              render={<Link href={`/dashboard/${currentProjectId}`} />}
+            <Link
+              href={`/dashboard/${currentProjectId}`}
+              className={buttonVariants({ variant: "outline", className: "w-full gap-2" })}
             >
               查看完整项目 <ArrowRight className="size-4" />
-            </Button>
+            </Link>
           )}
         </div>
 
