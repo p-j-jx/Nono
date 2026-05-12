@@ -57,7 +57,7 @@ export function TemplateCards() {
           <h2 className="text-sm font-semibold">场景模板</h2>
           <span className="text-[11px] text-muted-foreground">不同平台、不同打法</span>
         </div>
-        <Button variant="ghost" size="sm" className="text-xs h-7 gap-1" render={<Link href="/dashboard/templates" />}>
+        <Button variant="ghost" size="sm" className="text-xs h-7 gap-1" render={<a href="/dashboard/templates" />}>
           模板中心 <ArrowRight className="size-3" />
         </Button>
       </div>

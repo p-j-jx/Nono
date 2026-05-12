@@ -123,7 +123,7 @@ export default async function PricingPage() {
                     variant={tier.highlighted ? "default" : "outline"}
                     className="w-full mb-8"
                     size="lg"
-                    render={<Link href={tier.href} />}
+                    render={<a href={tier.href} />}
                   >
                     {tier.cta}
                   </Button>

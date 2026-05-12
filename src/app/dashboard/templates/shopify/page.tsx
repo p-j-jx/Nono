@@ -42,11 +42,11 @@ export default function ShopifyTemplatePage() {
             独立站的核心不是流量，是品牌信任。围绕「品牌故事 + 产品叙事 + SEO Meta + 邮件营销」构建完整内容矩阵。
           </p>
           <div className="mt-5 flex flex-wrap gap-3">
-            <Button render={<Link href="/dashboard/new?template=shopify" />} className="gap-2 shadow-lg shadow-emerald-500/20 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-500/90 hover:to-green-600/90 text-white border-0">
+            <Button render={<a href="/dashboard/new?template=shopify" />} className="gap-2 shadow-lg shadow-emerald-500/20 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-500/90 hover:to-green-600/90 text-white border-0">
               <Sparkles className="size-4" />
               使用此模板
             </Button>
-            <Button variant="outline" render={<Link href="/dashboard/templates" />}>
+            <Button variant="outline" render={<a href="/dashboard/templates" />}>
               对比其他模板
             </Button>
           </div>
@@ -300,7 +300,7 @@ export default function ShopifyTemplatePage() {
               输入商品和品牌信息，AI 将为你生成品牌故事、产品描述、SEO Meta 和邮件营销文案。
             </p>
           </div>
-          <Button render={<Link href="/dashboard/new?template=shopify" />} size="lg" className="gap-2 shrink-0 shadow-lg shadow-emerald-500/20 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-500/90 hover:to-green-600/90 text-white border-0">
+          <Button render={<a href="/dashboard/new?template=shopify" />} size="lg" className="gap-2 shrink-0 shadow-lg shadow-emerald-500/20 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-500/90 hover:to-green-600/90 text-white border-0">
             <Sparkles className="size-4" />
             使用此模板
             <ArrowRight className="size-4" />

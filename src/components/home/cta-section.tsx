@@ -50,7 +50,7 @@ export function CTASection() {
               <Button
                 size="lg"
                 className="h-12 px-8 text-base gap-2 w-full sm:w-auto bg-conversion text-conversion-foreground hover:bg-conversion/90 shadow-lg shadow-black/10 hover:shadow-xl transition-all duration-300"
-                render={<Link href="/register" />}
+                render={<a href="/register" />}
               >
                 免费开始使用
                 <ArrowRight className="size-4" />

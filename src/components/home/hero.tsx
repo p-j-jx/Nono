@@ -67,7 +67,7 @@ export function Hero() {
               <Button
                 size="lg"
                 className="h-12 px-8 text-base gap-2 w-full sm:w-auto bg-conversion text-conversion-foreground hover:bg-conversion/90 shadow-lg shadow-conversion/25 hover:shadow-xl hover:shadow-conversion/30 transition-all duration-300"
-                render={<Link href="/register" />}
+                render={<a href="/register" />}
               >
                 免费开始使用
                 <ArrowRight className="size-4" />
@@ -76,7 +76,7 @@ export function Hero() {
                 variant="outline"
                 size="lg"
                 className="h-12 px-8 text-base w-full sm:w-auto border-border/60 hover:border-primary/30 hover:bg-primary/5 transition-all duration-300"
-                render={<Link href="#features" />}
+                render={<a href="#features" />}
               >
                 了解更多
               </Button>

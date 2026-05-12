@@ -68,11 +68,11 @@ export default function AmazonTemplatePage() {
             严格遵循 Amazon Listing SEO 规则，标题、五点、描述、关键词全要素覆盖，专注搜索排名与转化率。
           </p>
           <div className="mt-5 flex flex-wrap gap-3">
-            <Button render={<Link href="/dashboard/new?template=amazon" />} className="gap-2 shadow-lg shadow-amber-500/20 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-500/90 hover:to-orange-500/90 text-white border-0">
+            <Button render={<a href="/dashboard/new?template=amazon" />} className="gap-2 shadow-lg shadow-amber-500/20 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-500/90 hover:to-orange-500/90 text-white border-0">
               <Sparkles className="size-4" />
               使用此模板
             </Button>
-            <Button variant="outline" render={<Link href="/dashboard/templates" />}>
+            <Button variant="outline" render={<a href="/dashboard/templates" />}>
               对比其他模板
             </Button>
           </div>
@@ -220,7 +220,7 @@ export default function AmazonTemplatePage() {
               输入商品信息，AI 将为你生成符合 Amazon 规则的标题、五点、描述、关键词。
             </p>
           </div>
-          <Button render={<Link href="/dashboard/new?template=amazon" />} size="lg" className="gap-2 shrink-0 shadow-lg shadow-amber-500/20 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-500/90 hover:to-orange-500/90 text-white border-0">
+          <Button render={<a href="/dashboard/new?template=amazon" />} size="lg" className="gap-2 shrink-0 shadow-lg shadow-amber-500/20 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-500/90 hover:to-orange-500/90 text-white border-0">
             <Sparkles className="size-4" />
             使用此模板
             <ArrowRight className="size-4" />

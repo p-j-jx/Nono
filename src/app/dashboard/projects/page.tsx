@@ -56,7 +56,7 @@ export default async function ProjectsPage({
               共 {projects.length} 个项目
             </p>
           </div>
-          <Button render={<Link href="/dashboard/new" />} className="gap-2 shadow-lg shadow-primary/20">
+          <Button render={<a href="/dashboard/new" />} className="gap-2 shadow-lg shadow-primary/20">
             <Plus className="size-4" />
             新建项目
           </Button>
@@ -119,11 +119,11 @@ export default async function ProjectsPage({
                 : "创建你的第一个项目，开始 AI 跨境电商之旅"}
             </p>
             <div className="flex gap-3">
-              <Button render={<Link href="/dashboard/new" />} className="gap-2 shadow-lg shadow-primary/20">
+              <Button render={<a href="/dashboard/new" />} className="gap-2 shadow-lg shadow-primary/20">
                 <Plus className="size-4" />
                 创建项目
               </Button>
-              <Button variant="outline" render={<Link href="/dashboard/templates" />} className="gap-2">
+              <Button variant="outline" render={<a href="/dashboard/templates" />} className="gap-2">
                 浏览模板
               </Button>
             </div>

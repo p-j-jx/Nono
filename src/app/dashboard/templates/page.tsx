@@ -189,10 +189,10 @@ export default function TemplatesPage() {
 
                 {/* Actions */}
                 <div className="mt-auto flex items-center gap-2">
-                  <Button variant="outline" size="sm" className="flex-1 h-9 text-xs" render={<Link href={t.detailHref} />}>
+                  <Button variant="outline" size="sm" className="flex-1 h-9 text-xs" render={<a href={t.detailHref} />}>
                     查看示例
                   </Button>
-                  <Button size="sm" className="flex-1 h-9 text-xs gap-1" render={<Link href={t.useHref} />}>
+                  <Button size="sm" className="flex-1 h-9 text-xs gap-1" render={<a href={t.useHref} />}>
                     使用此模板
                     <ArrowRight className="size-3" />
                   </Button>
@@ -247,7 +247,7 @@ export default function TemplatesPage() {
           <p className="text-sm text-muted-foreground mb-4 max-w-sm">
             可以从空白项目开始，AI 会根据你的商品信息自动推荐最佳配置
           </p>
-          <Button render={<Link href="/dashboard/new" />} className="gap-2 shadow-lg shadow-primary/20">
+          <Button render={<a href="/dashboard/new" />} className="gap-2 shadow-lg shadow-primary/20">
             创建空白项目 <ArrowRight className="size-4" />
           </Button>
         </CardContent>

@@ -57,7 +57,7 @@ export default function TikTokTemplatePage() {
             围绕 60 秒短视频带货逻辑设计：3 秒钩子定生死、口播脚本逐帧分镜、爆款 Hashtag 组合 + BGM 推荐。
           </p>
           <div className="mt-5 flex flex-wrap gap-3">
-            <Button render={<Link href="/dashboard/new?template=tiktok" />} className="gap-2 shadow-lg shadow-cyan-500/20 bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-500/90 hover:to-teal-500/90 text-white border-0">
+            <Button render={<a href="/dashboard/new?template=tiktok" />} className="gap-2 shadow-lg shadow-cyan-500/20 bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-500/90 hover:to-teal-500/90 text-white border-0">
               <Sparkles className="size-4" />
               使用此模板
             </Button>
@@ -254,7 +254,7 @@ export default function TikTokTemplatePage() {
               输入商品信息，AI 将为你生成钩子、口播脚本、分镜表、Hashtag 组合。
             </p>
           </div>
-          <Button render={<Link href="/dashboard/new?template=tiktok" />} size="lg" className="gap-2 shrink-0 shadow-lg shadow-cyan-500/20 bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-500/90 hover:to-teal-500/90 text-white border-0">
+          <Button render={<a href="/dashboard/new?template=tiktok" />} size="lg" className="gap-2 shrink-0 shadow-lg shadow-cyan-500/20 bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-500/90 hover:to-teal-500/90 text-white border-0">
             <Sparkles className="size-4" />
             使用此模板
             <ArrowRight className="size-4" />

@@ -238,7 +238,7 @@ export default async function HistoryPage({
           筛选
         </Button>
         {hasFilters && (
-          <Button size="sm" variant="ghost" render={<Link href="/history" />}>
+          <Button size="sm" variant="ghost" render={<a href="/history" />}>
             清除
           </Button>
         )}

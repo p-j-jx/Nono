@@ -43,11 +43,11 @@ export function ProjectList({ projects }: { projects: ProjectListProject[] }) {
             创建第一个项目，AI 将为你生成适配多平台的商品文案和营销图片
           </p>
           <div className="flex flex-col sm:flex-row gap-3">
-            <Button render={<Link href="/dashboard/new" />} className="gap-2 shadow-lg shadow-primary/20">
+            <Button render={<a href="/dashboard/new" />} className="gap-2 shadow-lg shadow-primary/20">
               <Plus className="size-4" />
               创建项目
             </Button>
-            <Button variant="outline" render={<Link href="/dashboard/templates" />} className="gap-2">
+            <Button variant="outline" render={<a href="/dashboard/templates" />} className="gap-2">
               <LayoutTemplate className="size-4" />
               使用模板
             </Button>
@@ -64,7 +64,7 @@ export function ProjectList({ projects }: { projects: ProjectListProject[] }) {
           <h2 className="text-sm font-semibold">项目列表</h2>
           <span className="text-[11px] text-muted-foreground">共 {projects.length} 个</span>
         </div>
-        <Button variant="outline" size="sm" className="gap-1.5 h-8 text-xs" render={<Link href="/dashboard/new" />}>
+        <Button variant="outline" size="sm" className="gap-1.5 h-8 text-xs" render={<a href="/dashboard/new" />}>
           <Plus className="size-3.5" />
           新建项目
         </Button>
