@@ -17,7 +17,7 @@ export async function GET(req: Request) {
       const whereClause: Record<string, unknown> = {
         project: { userId: session.user.id },
         contentType: {
-          in: ["title", "bulletPoints", "shortDesc", "longDesc", "adCopy", "seoKeywords", "videoScript", "brandStory"],
+          in: ["title", "bulletPoints", "shortDesc", "longDesc", "adCopy", "seoKeywords", "brandStory"],
         },
       }
       if (projectId) {
@@ -39,7 +39,6 @@ export async function GET(req: Request) {
         longDesc: "长描述",
         adCopy: "广告文案",
         seoKeywords: "SEO关键词",
-        videoScript: "视频脚本",
         brandStory: "品牌故事",
       }
 

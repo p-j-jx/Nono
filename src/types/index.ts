@@ -82,7 +82,6 @@ export const contentTypeLabels: Record<string, string> = {
   sceneImage: "场景图",
   adCopy: "广告文案",
   seoKeywords: "SEO关键词",
-  videoScript: "视频脚本",
   banner: "Banner图",
   socialMediaImage: "社媒图",
   promoPoster: "促销海报",
@@ -151,7 +150,6 @@ export const contentTypeGroups = {
     { key: "longDesc", label: "长描述", desc: "详细的产品描述" },
     { key: "adCopy", label: "广告文案", desc: "广告投放文案" },
     { key: "seoKeywords", label: "SEO关键词", desc: "搜索引擎关键词" },
-    { key: "videoScript", label: "视频脚本", desc: "短视频带货脚本" },
   ],
   image: [
     { key: "mainImage", label: "商品主图", desc: "产品主图提示词" },
@@ -217,15 +215,6 @@ export const generationTypeConfig = [
     gradient: "from-indigo-500/20 to-indigo-600/5",
     iconColor: "text-indigo-600 dark:text-indigo-400",
     borderColor: "border-indigo-200/50 dark:border-indigo-800/30",
-  },
-  {
-    key: "videoScript",
-    label: "视频脚本",
-    desc: "生成短视频带货脚本",
-    iconName: "Video" as const,
-    gradient: "from-orange-500/20 to-orange-600/5",
-    iconColor: "text-orange-600 dark:text-orange-400",
-    borderColor: "border-orange-200/50 dark:border-orange-800/30",
   },
   {
     key: "mainImage",
@@ -320,12 +309,6 @@ export const contentTypeInfo: Record<
     bgColor: "bg-indigo-50 dark:bg-indigo-950/30",
     type: "copy",
   },
-  videoScript: {
-    label: "视频脚本",
-    color: "text-orange-600 dark:text-orange-400",
-    bgColor: "bg-orange-50 dark:bg-orange-950/30",
-    type: "copy",
-  },
   mainImage: {
     label: "商品主图",
     color: "text-pink-600 dark:text-pink-400",
@@ -355,6 +338,226 @@ export const contentTypeInfo: Record<
     color: "text-purple-600 dark:text-purple-400",
     bgColor: "bg-purple-50 dark:bg-purple-950/30",
     type: "image",
+  },
+}
+
+// ===== Platform-specific content type mapping =====
+// Defines which content types are available/relevant for each platform
+export const platformContentTypes: Record<string, string[]> = {
+  amazon: [
+    "title", "bulletPoints", "shortDesc", "longDesc",
+    "seoKeywords", "mainImage", "sceneImage", "banner",
+  ],
+  shopify: [
+    "title", "shortDesc", "longDesc", "brandStory",
+    "seoKeywords", "adCopy", "mainImage", "sceneImage",
+    "socialMediaImage", "banner",
+  ],
+  tiktok: [
+    "title", "shortDesc", "adCopy",
+    "mainImage", "socialMediaImage", "promoPoster",
+  ],
+  ebay: [
+    "title", "bulletPoints", "shortDesc", "longDesc",
+    "seoKeywords", "mainImage", "sceneImage",
+  ],
+  etsy: [
+    "title", "shortDesc", "longDesc", "brandStory",
+    "seoKeywords", "mainImage", "sceneImage",
+  ],
+  walmart: [
+    "title", "bulletPoints", "shortDesc", "longDesc",
+    "seoKeywords", "mainImage", "banner",
+  ],
+  aliexpress: [
+    "title", "bulletPoints", "shortDesc", "longDesc",
+    "seoKeywords", "adCopy", "mainImage", "sceneImage", "promoPoster",
+  ],
+}
+
+// ===== Platform-specific form config =====
+export const platformFormConfig: Record<
+  string,
+  {
+    label: string
+    color: string
+    bgGradient: string
+    description: string
+    featurePlaceholder: string
+    sellingPointPlaceholder: string
+    keywordPlaceholder: string
+    tips: string[]
+  }
+> = {
+  amazon: {
+    label: "Amazon",
+    color: "text-amber-600 dark:text-amber-400",
+    bgGradient: "from-amber-500/10 via-orange-500/5 to-transparent",
+    description: "Amazon Listing 模式：专注 SEO 排名、五点描述、Backend Keywords 和 A+ 内容",
+    featurePlaceholder: "例如：蓝牙5.3、主动降噪ANC、30小时续航、IPX7防水",
+    sellingPointPlaceholder: "例如：同价位降噪效果最好、10分钟快充4小时、2年质保",
+    keywordPlaceholder: "例如：wireless headphones, bluetooth earbuds, noise cancelling",
+    tips: [
+      "标题建议 80-200 字符，核心关键词放最前面",
+      "五点描述每点以大写开头，突出痛点和数据",
+      "Backend Keywords 不重复标题已有关键词",
+    ],
+  },
+  shopify: {
+    label: "Shopify",
+    color: "text-emerald-600 dark:text-emerald-400",
+    bgGradient: "from-emerald-500/10 via-green-500/5 to-transparent",
+    description: "Shopify 独立站模式：注重品牌故事、视觉调性和社媒传播",
+    featurePlaceholder: "例如：手工打造、天然有机材料、独家设计、限量版",
+    sellingPointPlaceholder: "例如：独一无二的设计、环保可持续理念、Instagram 网红同款",
+    keywordPlaceholder: "例如：handmade, eco-friendly, minimalist design, gift idea",
+    tips: [
+      "品牌故事比参数更重要，突出生活方式",
+      "适合搭配社媒图和 Banner 用于推广",
+      "建议设置品牌调性为'时尚潮流'或'高端奢华'",
+    ],
+  },
+  tiktok: {
+    label: "TikTok Shop",
+    color: "text-cyan-600 dark:text-cyan-400",
+    bgGradient: "from-cyan-500/10 via-teal-500/5 to-transparent",
+    description: "TikTok Shop 模式：短文案、强冲击力、适合种草带货场景",
+    featurePlaceholder: "例如：开箱即用、颜值超高、性价比爆棚、明星同款",
+    sellingPointPlaceholder: "例如：3秒抓住眼球、直播间爆款、用过都说好",
+    keywordPlaceholder: "例如：viral, trending, must-have, aesthetic",
+    tips: [
+      "文案要短小精悍，适合配合短视频展示",
+      "社媒图和促销海报是重点",
+      "突出视觉冲击力和种草感",
+    ],
+  },
+  ebay: {
+    label: "eBay",
+    color: "text-blue-600 dark:text-blue-400",
+    bgGradient: "from-blue-500/10 via-indigo-500/5 to-transparent",
+    description: "eBay 模式：强调产品标识符、物流信息和详细规格",
+    featurePlaceholder: "例如：全新正品、UPC/EAN编码、厂家直发",
+    sellingPointPlaceholder: "例如：包邮、30天退换、正品保证",
+    keywordPlaceholder: "例如：brand new, free shipping, authentic",
+    tips: [
+      "标题和描述需包含产品标识符（UPC/EAN）",
+      "突出物流优势和退换政策",
+      "Item Specifics 越详细越好",
+    ],
+  },
+  etsy: {
+    label: "Etsy",
+    color: "text-orange-600 dark:text-orange-400",
+    bgGradient: "from-orange-500/10 via-red-500/5 to-transparent",
+    description: "Etsy 模式：突出手工感、独特性和品牌故事",
+    featurePlaceholder: "例如：纯手工制作、独家定制、天然材料、可个性化",
+    sellingPointPlaceholder: "例如：独一无二的手工艺、支持定制、送礼首选",
+    keywordPlaceholder: "例如：handmade, personalized, vintage, custom gift",
+    tips: [
+      "Etsy 买家看重手工感和独特性",
+      "品牌故事和制作过程描述能提升转化",
+      "Tags 最多 13 个，善用长尾词",
+    ],
+  },
+  walmart: {
+    label: "Walmart",
+    color: "text-blue-600 dark:text-blue-400",
+    bgGradient: "from-blue-500/10 via-sky-500/5 to-transparent",
+    description: "Walmart 模式：强调性价比、正品保障和大众消费",
+    featurePlaceholder: "例如：全新升级、家庭装、性价比之选",
+    sellingPointPlaceholder: "例如：Walmart 正品保障、价格优势、门店可退",
+    keywordPlaceholder: "例如：best value, family pack, everyday essentials",
+    tips: [
+      "Walmart 用户注重性价比和实用性",
+      "标题简洁明了，突出核心参数",
+      "描述中强调售后保障和品牌授权",
+    ],
+  },
+  aliexpress: {
+    label: "AliExpress",
+    color: "text-red-600 dark:text-red-400",
+    bgGradient: "from-red-500/10 via-rose-500/5 to-transparent",
+    description: "AliExpress 模式：突出价格优势、跨境物流和多语言描述",
+    featurePlaceholder: "例如：工厂直销、批量优惠、多色可选",
+    sellingPointPlaceholder: "例如：全球包邮、48小时发货、90天质保",
+    keywordPlaceholder: "例如：wholesale, dropshipping, cheap, fast shipping",
+    tips: [
+      "突出价格优势和跨境物流",
+      "多尺寸/多色展示提升转化",
+      "促销海报和广告文案是重点",
+    ],
+  },
+}
+
+// ===== Industry-specific form config =====
+export const industryFormConfig: Record<
+  string,
+  {
+    label: string
+    icon: string
+    description: string
+    featurePlaceholder: string
+    sellingPointPlaceholder: string
+    keywordPlaceholder: string
+    scenarioPlaceholder: string
+    audiencePlaceholder: string
+    suggestedBrandTones: string[]
+  }
+> = {
+  electronics: {
+    label: "电子产品",
+    icon: "⚡",
+    description: "电子产品模板：突出技术参数、性能对比和使用体验",
+    featurePlaceholder: "例如：处理器型号、电池容量mAh、屏幕分辨率、连接协议",
+    sellingPointPlaceholder: "例如：跑分超越同价位竞品30%、续航同类最长、通过XX认证",
+    keywordPlaceholder: "例如：wireless, bluetooth 5.3, fast charging, 4K display",
+    scenarioPlaceholder: "例如：通勤降噪、游戏电竞、远程办公、户外运动",
+    audiencePlaceholder: "18-40岁科技爱好者、数码发烧友",
+    suggestedBrandTones: ["professional", "luxury"],
+  },
+  clothing: {
+    label: "服装鞋帽",
+    icon: "👗",
+    description: "服装模板：注重面料质感、穿搭场景和时尚调性",
+    featurePlaceholder: "例如：100%纯棉、修身版型、四季可穿、机洗不变形",
+    sellingPointPlaceholder: "例如：时尚博主推荐、舒适亲肤、一衣多搭百搭款",
+    keywordPlaceholder: "例如：cotton, casual wear, streetwear, oversized, trendy",
+    scenarioPlaceholder: "例如：通勤职场、约会穿搭、休闲出街、旅行度假",
+    audiencePlaceholder: "20-35岁追求时尚的年轻消费者",
+    suggestedBrandTones: ["fashionable", "luxury"],
+  },
+  beauty: {
+    label: "美容个护",
+    icon: "💄",
+    description: "美妆个护模板：强调成分功效、使用感受和安全认证",
+    featurePlaceholder: "例如：玻尿酸成分、无添加配方、通过皮肤科测试",
+    sellingPointPlaceholder: "例如：28天淡纹效果可见、敏感肌适用、成分天然",
+    keywordPlaceholder: "例如：skincare, anti-aging, hyaluronic acid, organic, cruelty-free",
+    scenarioPlaceholder: "例如：日常护肤、约会妆容、换季修复、送礼",
+    audiencePlaceholder: "18-45岁注重护肤的女性消费者",
+    suggestedBrandTones: ["friendly", "luxury"],
+  },
+  home: {
+    label: "家居园艺",
+    icon: "🏠",
+    description: "家居模板：营造生活氛围感，突出实用性和空间搭配",
+    featurePlaceholder: "例如：实木材质、静音设计、易安装、多功能收纳",
+    sellingPointPlaceholder: "例如：北欧简约设计、小户型神器、一物多用",
+    keywordPlaceholder: "例如：home decor, kitchen organizer, minimalist, space-saving",
+    scenarioPlaceholder: "例如：客厅布置、厨房收纳、卧室装饰、办公桌面",
+    audiencePlaceholder: "25-50岁注重生活品质的家庭用户",
+    suggestedBrandTones: ["friendly", "professional"],
+  },
+  sports: {
+    label: "运动户外",
+    icon: "⛹️",
+    description: "运动户外模板：强调性能参数、场景适配和运动体验",
+    featurePlaceholder: "例如：速干面料、人体工学设计、防滑耐磨、轻量化",
+    sellingPointPlaceholder: "例如：专业运动员推荐、透气排汗、运动不受限",
+    keywordPlaceholder: "例如：sports, workout, running shoes, gym equipment, outdoor",
+    scenarioPlaceholder: "例如：健身房训练、户外跑步、登山徒步、球类运动",
+    audiencePlaceholder: "18-40岁热爱运动的消费者",
+    suggestedBrandTones: ["professional", "fashionable"],
   },
 }
 

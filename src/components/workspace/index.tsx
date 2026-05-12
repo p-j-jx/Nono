@@ -30,6 +30,8 @@ import {
   platformLabels, languageLabels,
   visualStyleLabels, generationIntensityLabels,
   copyStyleLabels, targetCountryOptions,
+  platformFormConfig, industryFormConfig,
+  platformContentTypes,
 } from "@/types"
 
 const categoryOptions = [
@@ -151,6 +153,16 @@ export function WorkspaceForm({ initialData, projectId }: WorkspaceFormProps) {
 
   const initData = initialData ? { ...emptyForm(), ...initialData } : emptyForm()
   const [form, setForm] = useState<FormData>(initData)
+
+  // Platform and industry-specific config
+  const pConfig = form.platform ? platformFormConfig[form.platform] : null
+  const iConfig = form.category ? industryFormConfig[form.category] : null
+  // Merge hints: industry overrides > platform overrides > defaults
+  const featurePlaceholder = iConfig?.featurePlaceholder || pConfig?.featurePlaceholder || "描述产品的核心特点和功能"
+  const sellingPointPlaceholder = iConfig?.sellingPointPlaceholder || pConfig?.sellingPointPlaceholder || "产品的主要卖点和差异化优势"
+  const keywordPlaceholder = iConfig?.keywordPlaceholder || pConfig?.keywordPlaceholder || "相关搜索关键词，用逗号分隔"
+  const scenarioPlaceholder = iConfig?.scenarioPlaceholder || "产品的主要使用场景"
+  const audiencePlaceholder = iConfig?.audiencePlaceholder || "例如：18-35岁年轻消费者"
 
   const updateField = useCallback(<K extends keyof FormData>(key: K, value: FormData[K]) => {
     setForm((prev) => ({ ...prev, [key]: value }))
@@ -328,6 +340,50 @@ export function WorkspaceForm({ initialData, projectId }: WorkspaceFormProps) {
         </p>
       </div>
 
+      {/* Platform / Industry context banner */}
+      {(pConfig || iConfig) && !isEditing && (
+        <div className={`rounded-xl border p-4 mb-6 bg-gradient-to-r ${pConfig?.bgGradient || "from-primary/5 to-transparent"}`}>
+          <div className="flex items-start gap-3">
+            {iConfig && <span className="text-2xl">{iConfig.icon}</span>}
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 flex-wrap">
+                {pConfig && (
+                  <span className={`text-sm font-semibold ${pConfig.color}`}>{pConfig.label}</span>
+                )}
+                {pConfig && iConfig && <span className="text-muted-foreground">·</span>}
+                {iConfig && (
+                  <span className="text-sm font-semibold">{iConfig.label}</span>
+                )}
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">
+                {iConfig?.description || pConfig?.description}
+              </p>
+              {pConfig?.tips && (
+                <div className="flex flex-wrap gap-2 mt-2.5">
+                  {pConfig.tips.map((tip, i) => (
+                    <span key={i} className="inline-flex items-center rounded-md bg-background/60 px-2 py-1 text-[11px] text-muted-foreground ring-1 ring-border/40">
+                      💡 {tip}
+                    </span>
+                  ))}
+                </div>
+              )}
+              {pConfig && (
+                <div className="mt-2.5">
+                  <span className="text-[11px] text-muted-foreground">可生成内容：</span>
+                  <div className="flex flex-wrap gap-1 mt-1">
+                    {(platformContentTypes[form.platform] || []).slice(0, 8).map((ct) => (
+                      <span key={ct} className="inline-flex items-center rounded-full bg-background/80 px-2 py-0.5 text-[10px] font-medium ring-1 ring-border/30">
+                        {ct === "title" ? "标题" : ct === "bulletPoints" ? "要点" : ct === "shortDesc" ? "短描述" : ct === "longDesc" ? "长描述" : ct === "seoKeywords" ? "SEO" : ct === "adCopy" ? "广告文案" : ct === "brandStory" ? "品牌故事" : ct === "mainImage" ? "主图" : ct === "sceneImage" ? "场景图" : ct === "banner" ? "Banner" : ct === "socialMediaImage" ? "社媒图" : ct === "promoPoster" ? "促销海报" : ct}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       <form onSubmit={handleSubmit} className="grid gap-6 lg:grid-cols-[1fr_320px]">
         {/* Left: Form */}
         <div className="space-y-6">
@@ -367,7 +423,7 @@ export function WorkspaceForm({ initialData, projectId }: WorkspaceFormProps) {
                   </div>
 
                   <TextField name="brandName" label="品牌名称" placeholder="例如：Sony、Nike" />
-                  <TextField name="targetAudience" label="目标人群" placeholder="例如：18-35岁年轻消费者" />
+                  <TextField name="targetAudience" label="目标人群" placeholder={audiencePlaceholder} />
                 </div>
               </FormSection>
 
@@ -378,10 +434,10 @@ export function WorkspaceForm({ initialData, projectId }: WorkspaceFormProps) {
                       <Wand2 className="size-4" /> 应用全部建议
                     </Button>
                   )}
-                  <TextField name="features" label="产品特点" placeholder="描述产品的核心特点和功能" rows={3} />
-                  <TextField name="sellingPoints" label="核心卖点" placeholder="产品的主要卖点和差异化优势" rows={3} />
-                  <TextField name="keywords" label="关键词" placeholder="相关搜索关键词，用逗号分隔" rows={2} />
-                  <TextField name="useScenario" label="使用场景" placeholder="产品的主要使用场景" rows={2} />
+                  <TextField name="features" label="产品特点" placeholder={featurePlaceholder} rows={3} />
+                  <TextField name="sellingPoints" label="核心卖点" placeholder={sellingPointPlaceholder} rows={3} />
+                  <TextField name="keywords" label="关键词" placeholder={keywordPlaceholder} rows={2} />
+                  <TextField name="useScenario" label="使用场景" placeholder={scenarioPlaceholder} rows={2} />
                 </div>
               </FormSection>
             </>
@@ -441,16 +497,16 @@ export function WorkspaceForm({ initialData, projectId }: WorkspaceFormProps) {
                       <Wand2 className="size-4" /> 应用全部建议
                     </Button>
                   )}
-                  <TextField name="features" label="核心特点" placeholder="产品核心特点和功能，逗号或换行分隔" rows={3} />
-                  <TextField name="sellingPoints" label="核心卖点" placeholder="产品的主要卖点和差异化优势" rows={3} />
-                  <TextField name="useScenario" label="使用场景" placeholder="产品的使用环境和应用场景" rows={2} />
-                  <TextField name="targetAudience" label="目标人群" placeholder="例如：18-35岁年轻消费者" />
+                  <TextField name="features" label="核心特点" placeholder={featurePlaceholder} rows={3} />
+                  <TextField name="sellingPoints" label="核心卖点" placeholder={sellingPointPlaceholder} rows={3} />
+                  <TextField name="useScenario" label="使用场景" placeholder={scenarioPlaceholder} rows={2} />
+                  <TextField name="targetAudience" label="目标人群" placeholder={audiencePlaceholder} />
                   <div className="grid gap-4 sm:grid-cols-2">
                     <TextField name="painPoints" label="用户痛点" placeholder="用户使用中的痛点和困扰" rows={2} />
                     <TextField name="competitiveAdvantages" label="竞争优势" placeholder="相比竞品的优势" rows={2} />
                   </div>
                   <TextField name="festivalScenario" label="节日/活动场景" placeholder="适用的节日或促销活动场景" rows={1} />
-                  <TextField name="keywords" label="关键词" placeholder="搜索关键词，逗号分隔" rows={2} />
+                  <TextField name="keywords" label="关键词" placeholder={keywordPlaceholder} rows={2} />
                 </div>
               </FormSection>
 

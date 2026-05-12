@@ -43,7 +43,6 @@ import {
   Star,
   Megaphone,
   Search,
-  Video,
   PanelTop,
   Share2,
   ImageDown,
@@ -58,14 +57,15 @@ import {
   downloadTextFile,
   generationTypeConfig,
   contentTypeGroups,
+  platformContentTypes,
 } from "@/types"
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   FileText, ListOrdered, AlignLeft, BookOpen, ImageIcon, ImagePlus,
-  Megaphone, Search, Video, PanelTop, Share2, ImageDown,
+  Megaphone, Search, PanelTop, Share2, ImageDown,
 }
 
-const generationTypes = generationTypeConfig.map((cfg) => ({
+const allGenerationTypes = generationTypeConfig.map((cfg) => ({
   key: cfg.key,
   label: cfg.label,
   desc: cfg.desc,
@@ -77,6 +77,13 @@ const generationTypes = generationTypeConfig.map((cfg) => ({
 
 export function ProjectDetail({ project }: { project: Project }) {
   const router = useRouter()
+
+  // Filter generation types by platform
+  const allowedTypes = platformContentTypes[project.platform]
+  const generationTypes = allowedTypes
+    ? allGenerationTypes.filter((t) => allowedTypes.includes(t.key))
+    : allGenerationTypes
+
   const [generating, setGenerating] = useState<string | null>(null)
   const [records, setRecords] = useState(project.records)
   const [copiedId, setCopiedId] = useState<string | null>(null)

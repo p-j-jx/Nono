@@ -11,7 +11,6 @@ const contentTypeLabels: Record<string, string> = {
   sceneImage: "场景图",
   adCopy: "广告文案",
   seoKeywords: "SEO关键词",
-  videoScript: "视频脚本",
   banner: "Banner图",
   socialMediaImage: "社媒图",
   promoPoster: "促销海报",
@@ -50,8 +49,6 @@ const sampleContents: Record<string, (name: string) => string> = {
     `【限时特惠】${name}，品质生活从此刻开始！\n✨ 精选优质材料，匠心工艺打造\n💯 严格质检，品质 guaranteed\n🎁 限时折扣 + 包邮，错过等一年\n👉 立即抢购，开启品质生活！`,
   seoKeywords: (name) =>
     `${name}, ${name}推荐, ${name}测评, 高品质好物, 居家必备, 送礼佳品, 热门推荐, 2024新品, 性价比之选`,
-  videoScript: (name) =>
-    `【开头 3秒】看这里！今天给大家安利一款超好用的${name}……\n\n【5-15秒 痛点引入】你是不是也遇到过这样的情况？普通产品不好用，品质参差不齐……\n\n【15-45秒 产品展示】今天这款${name}，采用优质材料，做工精细，体验感直接拉满！\n\n【45-55秒 使用场景】不管是日常使用还是送礼，都是绝佳选择……\n\n【55-60秒 引导下单】链接在左下角，喜欢的朋友赶紧冲！`,
   banner: () =>
     "Product showcase banner with clean white background, professional product photography centered, soft natural lighting, minimalist composition, elegant typography overlay, e-commerce product banner, 1200x628 pixels",
   socialMediaImage: () =>
@@ -189,17 +186,6 @@ ${bannedWordHint}
 - 语言：${language}
 - 只输出关键词列表，不要其他内容`,
       user: `请为以下产品生成SEO关键词列表（${language}）：\n\n${contextInfo}`,
-    },
-    videoScript: {
-      system: `你是一位专业的短视频带货脚本策划师。根据提供的产品信息，生成一个60秒以内的短视频带货脚本。
-要求：
-- 包含时间轴标记（开头3秒、5-15秒等）
-- 包含画面描述和口播文案
-- 节奏紧凑，有吸引力
-- 语言：${language}
-${bannedWordHint}
-- 只输出脚本本身，不要其他内容`,
-      user: `请为以下产品生成一个短视频带货脚本（${language}）：\n\n${contextInfo}`,
     },
     mainImage: {
       system: `你是一位专业的电商视觉设计师。根据提供的产品信息，生成用于AI图片生成的提示词（Prompt）。

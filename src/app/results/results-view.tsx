@@ -28,7 +28,6 @@ import {
   ImagePlus,
   Megaphone,
   Search,
-  Video,
   PanelTop,
   Share2,
   ImageDown,
@@ -148,13 +147,6 @@ const contentTypeInfo: Record<
     icon: Search,
     color: "text-indigo-600 dark:text-indigo-400",
     bgColor: "bg-indigo-50 dark:bg-indigo-950/30",
-    type: "copy",
-  },
-  videoScript: {
-    label: "视频脚本",
-    icon: Video,
-    color: "text-orange-600 dark:text-orange-400",
-    bgColor: "bg-orange-50 dark:bg-orange-950/30",
     type: "copy",
   },
   banner: {
@@ -350,7 +342,7 @@ export function ResultsView({ project }: { project: Project }) {
     return records.find((r) => r.contentType === contentType)
   }
 
-  const copyTypes = ["title", "bulletPoints", "shortDesc", "longDesc", "adCopy", "seoKeywords", "videoScript"]
+  const copyTypes = ["title", "bulletPoints", "shortDesc", "longDesc", "adCopy", "seoKeywords", "brandStory"]
   const imageTypes = ["mainImage", "sceneImage", "banner", "socialMediaImage", "promoPoster"]
 
   return (

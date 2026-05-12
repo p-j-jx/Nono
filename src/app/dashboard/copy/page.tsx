@@ -8,7 +8,6 @@ const contentTypeOptions = [
   { key: "adCopy", label: "广告文案", desc: "广告投放文案" },
   { key: "seoKeywords", label: "SEO 关键词", desc: "搜索引擎关键词" },
   { key: "brandStory", label: "品牌故事", desc: "有温度的品牌故事" },
-  { key: "videoScript", label: "视频脚本", desc: "短视频带货脚本" },
 ]
 
 export default function CopyPage() {
