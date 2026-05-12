@@ -7,13 +7,10 @@ import { CTASection } from "@/components/home/cta-section"
 import { Footer } from "@/components/home/footer"
 import { ScrollAnimate } from "@/components/scroll-animate"
 import { SessionProvider } from "next-auth/react"
-import { auth } from "@/lib/auth"
 
-export default async function Home() {
-  const session = await auth()
-
+export default function Home() {
   return (
-    <SessionProvider session={session}>
+    <SessionProvider>
       <Navbar />
       <main>
         <Hero />

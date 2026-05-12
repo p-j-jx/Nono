@@ -11,8 +11,17 @@ export default async function HistoryLayout({
   const session = await auth()
   if (!session?.user) redirect("/login")
 
+  const serializableSession = {
+    user: {
+      id: session.user.id,
+      email: session.user.email,
+      name: session.user.name,
+    },
+    expires: session.expires,
+  }
+
   return (
-    <SessionProvider session={session}>
+    <SessionProvider session={serializableSession}>
       <div className="min-h-screen flex flex-col">
         <DashboardHeader />
         <main className="flex-1">{children}</main>

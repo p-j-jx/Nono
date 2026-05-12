@@ -13,8 +13,18 @@ export default async function DashboardLayout({
   const session = await auth()
   if (!session?.user) redirect("/login")
 
+  // Ensure session is serializable - create a plain object
+  const serializableSession = {
+    user: {
+      id: session.user.id,
+      email: session.user.email,
+      name: session.user.name,
+    },
+    expires: session.expires,
+  }
+
   return (
-    <SessionProvider session={session}>
+    <SessionProvider session={serializableSession}>
       <SidebarProvider>
         <div className="min-h-screen flex">
           <DashboardSidebar />
