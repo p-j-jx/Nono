@@ -7,6 +7,7 @@ const REQUIRED_COLUMNS: Record<string, { name: string; def: string }[]> = {
   User: [
     { name: "apiKey", def: "TEXT" },
     { name: "apiKeyProvider", def: "TEXT NOT NULL DEFAULT 'deepseek'" },
+    { name: "imageApiKey", def: "TEXT" },
   ],
   ProductProject: [
     { name: "brandName", def: "TEXT" },
