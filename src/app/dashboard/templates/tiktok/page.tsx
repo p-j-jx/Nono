@@ -61,7 +61,7 @@ export default function TikTokTemplatePage() {
               <Sparkles className="size-4" />
               使用此模板
             </Button>
-            <Button variant="outline" render={<Link href="/dashboard/templates" />}>
+            <Button variant="outline" render={<a href="/dashboard/templates" />}>
               对比其他模板
             </Button>
           </div>

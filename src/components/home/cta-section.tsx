@@ -59,7 +59,7 @@ export function CTASection() {
                 variant="outline"
                 size="lg"
                 className="h-12 px-8 text-base w-full sm:w-auto border-white/30 text-white hover:bg-white/10 hover:text-white hover:border-white/50 transition-all duration-300"
-                render={<Link href="/login" />}
+                render={<a href="/login" />}
               >
                 登录账户
               </Button>
