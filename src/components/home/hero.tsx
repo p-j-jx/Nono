@@ -22,7 +22,7 @@ export function Hero() {
           {/* ── 左侧文案 ── */}
           <div className="relative z-10">
             {/* Badge */}
-            <div className="mb-6 inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 px-4 py-1.5 text-sm font-medium text-primary ring-1 ring-primary/10 ring-inset animate-fade-in">
+            <div className="mb-6 inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 px-4 py-1.5 text-sm font-medium text-primary ring-1 ring-primary/10 ring-inset opacity-0 animate-fade-in">
               <Sparkles className="size-3.5" />
               跨境电商 AI 运营助手
             </div>

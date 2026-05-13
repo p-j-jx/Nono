@@ -41,6 +41,12 @@
   --color-card: var(--card);
   --color-conversion: var(--conversion);
   --color-conversion-foreground: var(--conversion-foreground);
+  --color-platform-amazon: var(--platform-amazon);
+  --color-platform-amazon-muted: var(--platform-amazon-muted);
+  --color-platform-tiktok: var(--platform-tiktok);
+  --color-platform-tiktok-muted: var(--platform-tiktok-muted);
+  --color-platform-shopify: var(--platform-shopify);
+  --color-platform-shopify-muted: var(--platform-shopify-muted);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -88,6 +94,13 @@
   --chart-4: oklch(0.37 0.01 250);
   --chart-5: oklch(0.27 0.01 250);
   --radius: 0.625rem;
+  /* Platform colors */
+  --platform-amazon: oklch(0.70 0.16 65);
+  --platform-amazon-muted: oklch(0.94 0.04 65);
+  --platform-tiktok: oklch(0.65 0.12 200);
+  --platform-tiktok-muted: oklch(0.93 0.03 200);
+  --platform-shopify: oklch(0.60 0.14 155);
+  --platform-shopify-muted: oklch(0.93 0.04 155);
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.13 0.01 250);
   --sidebar-primary: oklch(0.48 0.10 188);
@@ -132,6 +145,13 @@
   --sidebar-accent-foreground: oklch(0.96 0.005 250);
   --sidebar-border: oklch(0.25 0.01 250);
   --sidebar-ring: oklch(0.62 0.11 188);
+  /* Platform colors — dark */
+  --platform-amazon: oklch(0.78 0.14 65);
+  --platform-amazon-muted: oklch(0.25 0.04 65);
+  --platform-tiktok: oklch(0.75 0.10 200);
+  --platform-tiktok-muted: oklch(0.25 0.03 200);
+  --platform-shopify: oklch(0.72 0.12 155);
+  --platform-shopify-muted: oklch(0.25 0.04 155);
 }
 
 @layer base {

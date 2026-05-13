@@ -46,9 +46,9 @@ export default async function DashboardPage() {
   return (
     <>
       <DashboardBackground />
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
-        <div className="space-y-8">
-          {/* Section 1: Welcome */}
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
+        {/* Welcome + Quick Actions — tight cluster */}
+        <div className="space-y-6">
           <section>
             <WelcomeHeader
               userName={session.user.name || "用户"}
@@ -57,37 +57,33 @@ export default async function DashboardPage() {
               totalGenerations={totalGenerations}
             />
           </section>
-
-          {/* Section 2: Quick Actions */}
           <section>
             <QuickActions />
           </section>
-
-          {/* Section 3: Stats */}
-          <section>
-            <StatCards
-              projectCount={projects.length}
-              totalGenerations={totalGenerations}
-              todayRecords={todayRecords}
-              favoritedCount={favoritedCount}
-            />
-          </section>
-
-          {/* Section 4: Recently Viewed */}
-          <section>
-            <RecentProjects />
-          </section>
-
-          {/* Section 5: Templates */}
-          <section>
-            <TemplateCards />
-          </section>
-
-          {/* Section 6: Projects */}
-          <section>
-            <ProjectList projects={projects} />
-          </section>
         </div>
+
+        {/* Stats — breathing room above */}
+        <section className="mt-10">
+          <StatCards
+            projectCount={projects.length}
+            totalGenerations={totalGenerations}
+            todayRecords={todayRecords}
+            favoritedCount={favoritedCount}
+          />
+        </section>
+
+        {/* Content sections — larger gaps between groups */}
+        <section className="mt-12">
+          <RecentProjects />
+        </section>
+
+        <section className="mt-12">
+          <TemplateCards />
+        </section>
+
+        <section className="mt-12">
+          <ProjectList projects={projects} />
+        </section>
       </div>
     </>
   )

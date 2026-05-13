@@ -64,10 +64,9 @@ const platformTemplates = [
     desc: "严格遵循 Amazon SEO 规则",
     detailHref: "/dashboard/templates/amazon",
     useHref: "/dashboard/new?template=amazon",
-    badgeClass: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
-    topBar: "bg-gradient-to-r from-amber-500 to-orange-500",
-    gradient: "from-amber-500/[0.06] via-orange-500/[0.03] to-transparent",
-    iconBg: "bg-amber-500/10 text-amber-600 dark:text-amber-400",
+    badgeClass: "bg-platform-amazon-muted text-platform-amazon",
+    gradient: "from-platform-amazon/[0.06] via-platform-amazon/[0.02] to-transparent",
+    iconBg: "bg-platform-amazon/10 text-platform-amazon",
     Icon: ListOrdered,
     features: [
       { icon: ListOrdered, text: "标题 ≤ 200 字符 + 五点描述" },
@@ -82,10 +81,9 @@ const platformTemplates = [
     desc: "3 秒钩子 + 口播脚本 + Hashtag 组合",
     detailHref: "/dashboard/templates/tiktok",
     useHref: "/dashboard/new?template=tiktok",
-    badgeClass: "bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-300",
-    topBar: "bg-gradient-to-r from-cyan-500 to-teal-500",
-    gradient: "from-cyan-500/[0.06] via-teal-500/[0.03] to-transparent",
-    iconBg: "bg-cyan-500/10 text-cyan-600 dark:text-cyan-400",
+    badgeClass: "bg-platform-tiktok-muted text-platform-tiktok",
+    gradient: "from-platform-tiktok/[0.06] via-platform-tiktok/[0.02] to-transparent",
+    iconBg: "bg-platform-tiktok/10 text-platform-tiktok",
     Icon: Video,
     features: [
       { icon: Video, text: "60 秒分镜脚本（钩子→解决→CTA）" },
@@ -100,10 +98,9 @@ const platformTemplates = [
     desc: "品牌故事 + SEO Meta + 邮件营销",
     detailHref: "/dashboard/templates/shopify",
     useHref: "/dashboard/new?template=shopify",
-    badgeClass: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300",
-    topBar: "bg-gradient-to-r from-emerald-500 to-green-600",
-    gradient: "from-emerald-500/[0.06] via-green-500/[0.03] to-transparent",
-    iconBg: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
+    badgeClass: "bg-platform-shopify-muted text-platform-shopify",
+    gradient: "from-platform-shopify/[0.06] via-platform-shopify/[0.02] to-transparent",
+    iconBg: "bg-platform-shopify/10 text-platform-shopify",
     Icon: Heart,
     features: [
       { icon: Heart, text: "品牌故事 + 创始人叙事" },
@@ -124,20 +121,20 @@ const categoryLabels: Record<string, string> = {
 
 export default function TemplatesPage() {
   return (
-    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
-      <div className="mb-8">
+    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
+      <div className="mb-10">
         <h1 className="text-2xl font-bold tracking-tight">模板中心</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
+        <p className="mt-1.5 text-sm text-muted-foreground">
           不同平台有不同的内容规则与打法，选对模板，事半功倍
         </p>
       </div>
 
-      {/* Platform templates - Each card has its own distinct style */}
-      <div className="flex items-center gap-2 mb-4">
+      {/* Platform templates */}
+      <div className="flex items-center gap-2 mb-5">
         <h2 className="text-sm font-semibold">按平台</h2>
         <span className="text-[11px] text-muted-foreground">点击查看完整模板规则与示例</span>
       </div>
-      <div className="grid gap-5 lg:grid-cols-3 mb-12">
+      <div className="grid gap-5 lg:grid-cols-3 mb-16">
         {platformTemplates.map((t) => {
           const Icon = t.Icon
           return (
@@ -195,11 +192,11 @@ export default function TemplatesPage() {
       </div>
 
       {/* Industry templates — compact list */}
-      <div className="flex items-center gap-2 mb-4">
+      <div className="flex items-center gap-2 mb-5">
         <h2 className="text-sm font-semibold">按行业</h2>
         <span className="text-[11px] text-muted-foreground">基于行业特征预配置生成参数</span>
       </div>
-      <div className="rounded-xl border border-border/50 bg-card divide-y divide-border/40 mb-10">
+      <div className="rounded-xl border border-border/50 bg-card divide-y divide-border/40 mb-14">
         {industryTemplates.map((t) => (
           <Link
             key={t.id}
