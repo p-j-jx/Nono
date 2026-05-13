@@ -4,6 +4,7 @@ import { useEffect, useState, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { toast } from "sonner"
 import ProjectForm from "@/components/project-form"
+import { TemplateWizard } from "@/components/workspace/template-wizard"
 
 type PrefillData = {
   productName: string
@@ -33,9 +34,10 @@ type PrefillData = {
   generationIntensity: string
 }
 
-const TEMPLATE_PRESETS: Record<string, Partial<PrefillData>> = {
+// Templates that should use the wizard flow (platform + industry)
+const WIZARD_PRESETS: Record<string, Record<string, unknown>> = {
   // ===== Platform Templates =====
-  "amazon": {
+  amazon: {
     platform: "amazon",
     language: "en",
     targetAudience: "Amazon 全球买家",
@@ -44,7 +46,7 @@ const TEMPLATE_PRESETS: Record<string, Partial<PrefillData>> = {
     visualStyle: "minimal",
     targetCountry: "US",
   },
-  "shopify": {
+  shopify: {
     platform: "shopify",
     language: "en",
     targetAudience: "欧美独立站消费者",
@@ -53,7 +55,7 @@ const TEMPLATE_PRESETS: Record<string, Partial<PrefillData>> = {
     visualStyle: "brand",
     isBrandFocused: true,
   },
-  "tiktok": {
+  tiktok: {
     platform: "tiktok",
     language: "en",
     targetAudience: "TikTok 年轻用户 (16-30岁)",
@@ -62,7 +64,7 @@ const TEMPLATE_PRESETS: Record<string, Partial<PrefillData>> = {
     visualStyle: "promotional",
   },
   // ===== Industry Templates =====
-  "electronics": {
+  electronics: {
     category: "electronics",
     platform: "amazon",
     brandTone: "professional",
@@ -76,7 +78,7 @@ const TEMPLATE_PRESETS: Record<string, Partial<PrefillData>> = {
     keywords: "wireless, bluetooth, fast charging, high performance",
     useScenario: "通勤降噪、游戏电竞、远程办公、户外运动",
   },
-  "clothing": {
+  clothing: {
     category: "clothing",
     platform: "shopify",
     brandTone: "fashionable",
@@ -90,7 +92,7 @@ const TEMPLATE_PRESETS: Record<string, Partial<PrefillData>> = {
     keywords: "fashion, trendy, casual wear, streetwear, outfit",
     useScenario: "通勤职场、约会穿搭、休闲出街、旅行度假",
   },
-  "beauty": {
+  beauty: {
     category: "beauty",
     platform: "shopify",
     brandTone: "friendly",
@@ -104,7 +106,7 @@ const TEMPLATE_PRESETS: Record<string, Partial<PrefillData>> = {
     keywords: "skincare, organic, anti-aging, cruelty-free, natural",
     useScenario: "日常护肤、换季修复、约会妆前打底、送礼佳选",
   },
-  "home": {
+  home: {
     category: "home",
     platform: "amazon",
     brandTone: "friendly",
@@ -118,7 +120,7 @@ const TEMPLATE_PRESETS: Record<string, Partial<PrefillData>> = {
     keywords: "home decor, organizer, minimalist, space-saving, kitchen",
     useScenario: "客厅布置、厨房收纳、卧室装饰、办公桌面整理",
   },
-  "sports": {
+  sports: {
     category: "sports",
     platform: "amazon",
     brandTone: "professional",
@@ -183,13 +185,22 @@ function NewProjectContent() {
           toast.error("项目不存在或已删除")
           router.replace("/dashboard/new")
         })
-    } else if (templateId && TEMPLATE_PRESETS[templateId]) {
-      setPrefillData(TEMPLATE_PRESETS[templateId] as PrefillData)
     }
-  }, [reuseProjectId, templateId, router])
+  }, [reuseProjectId, router])
 
   if (prefillLoading) return <LoadingSkeleton />
 
+  // If template is a wizard preset → show the step-by-step wizard
+  if (templateId && WIZARD_PRESETS[templateId]) {
+    return (
+      <TemplateWizard
+        templateId={templateId}
+        preset={WIZARD_PRESETS[templateId]}
+      />
+    )
+  }
+
+  // Otherwise → generic form (for reuseProject or blank new project)
   return <ProjectForm initialData={prefillData || undefined} />
 }
 
