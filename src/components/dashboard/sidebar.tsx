@@ -153,6 +153,9 @@ export function DashboardSidebar() {
         <div
           className="fixed inset-0 z-50 bg-black/20 backdrop-blur-sm lg:hidden"
           onClick={close}
+          role="dialog"
+          aria-modal="true"
+          aria-label="导航菜单"
         >
           <aside
             className="fixed inset-y-0 left-0 z-50 w-60 bg-background border-r border-border/40 shadow-xl"

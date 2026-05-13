@@ -337,29 +337,30 @@ export function TemplateWizard({ templateId, preset }: TemplateWizardProps) {
       </div>
 
       {/* Step Indicator */}
-      <div className="flex items-center gap-3 mb-8">
+      <nav aria-label={`步骤 ${step} / 3`} className="flex items-center gap-3 mb-8">
         {[
           { n: 1, label: "选择内容" },
           { n: 2, label: "产品信息" },
           { n: 3, label: "创建生成" },
         ].map(({ n, label }) => (
-          <div key={n} className="flex items-center gap-2">
+          <div key={n} className="flex items-center gap-2" aria-current={step === n ? "step" : undefined}>
             <div
               className={`flex size-8 items-center justify-center rounded-full text-sm font-bold transition-colors ${
                 step >= n
                   ? `${theme.accentBg} text-white`
                   : "bg-muted text-muted-foreground"
               }`}
+              aria-hidden="true"
             >
               {step > n ? <Check className="size-4" /> : n}
             </div>
             <span className={`text-sm font-medium ${step >= n ? "" : "text-muted-foreground"}`}>
               {label}
             </span>
-            {n < 3 && <div className={`w-8 h-px ${step > n ? theme.accentBg : "bg-border"}`} />}
+            {n < 3 && <div className={`w-8 h-px ${step > n ? theme.accentBg : "bg-border"}`} aria-hidden="true" />}
           </div>
         ))}
-      </div>
+      </nav>
 
       {/* ===== STEP 1: Content Type Selection ===== */}
       {step === 1 && (

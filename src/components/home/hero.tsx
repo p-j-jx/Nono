@@ -11,28 +11,10 @@ export function Hero() {
         <div className="absolute inset-0 bg-gradient-to-b from-primary/[0.08] via-transparent to-background" />
 
         {/* Main glow orb */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[700px] bg-gradient-to-br from-primary/25 via-primary/10 to-transparent rounded-full blur-3xl" />
-
-        {/* Secondary orbs */}
-        <div className="absolute top-40 right-0 w-[500px] h-[500px] bg-gradient-to-bl from-cyan-500/15 to-transparent rounded-full blur-3xl" />
-        <div className="absolute top-60 left-0 w-[400px] h-[400px] bg-gradient-to-tr from-emerald-500/12 to-transparent rounded-full blur-3xl" />
-        <div className="absolute -bottom-40 left-1/3 w-[600px] h-[300px] bg-gradient-to-r from-primary/5 via-cyan-500/8 to-transparent rounded-full blur-3xl" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[600px] bg-gradient-to-br from-primary/20 via-primary/8 to-transparent rounded-full blur-3xl" />
 
         {/* Subtle grid */}
         <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.02)_1px,transparent_1px)] bg-[size:80px_80px] dark:bg-[linear-gradient(rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)]" />
-      </div>
-
-      {/* ── 浮动装饰元素 ── */}
-      <div aria-hidden className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
-        {/* Floating dots */}
-        <div className="absolute top-32 left-[10%] size-3 rounded-full bg-primary/20 animate-float" style={{animationDelay: "0s"}} />
-        <div className="absolute top-56 right-[15%] size-2 rounded-full bg-cyan-400/30 animate-float" style={{animationDelay: "1s"}} />
-        <div className="absolute bottom-40 left-[20%] size-4 rounded-full bg-emerald-400/20 animate-float" style={{animationDelay: "2s"}} />
-        <div className="absolute top-48 left-[40%] size-2.5 rounded-full bg-teal-400/25 animate-float" style={{animationDelay: "0.5s"}} />
-
-        {/* Decorative rings */}
-        <div className="absolute -top-20 right-[5%] size-72 rounded-full border border-primary/5 animate-float" style={{animationDelay: "1.5s"}} />
-        <div className="absolute -bottom-10 left-[5%] size-52 rounded-full border border-cyan-500/5 animate-float" style={{animationDelay: "2.5s"}} />
       </div>
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -46,24 +28,24 @@ export function Hero() {
             </div>
 
             {/* Headline */}
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.1] animate-fade-up">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.1] opacity-0 animate-fade-up">
               <span className="text-foreground">
                 AI 驱动，
               </span>
               <br />
-              <span className="bg-gradient-to-r from-primary via-primary/90 to-emerald-600 bg-clip-text text-transparent">
+              <span className="text-primary">
                 让跨境运营更简单
               </span>
             </h1>
 
             {/* Subtitle */}
-            <p className="mt-6 text-base sm:text-lg text-muted-foreground max-w-xl leading-relaxed animate-fade-up animation-delay-200">
+            <p className="mt-6 text-base sm:text-lg text-muted-foreground max-w-xl leading-relaxed opacity-0 animate-fade-up animation-delay-200">
               一站式生成亚马逊、Shopify、TikTok Shop 多平台商品文案与营销图片。
               支持中/英/西三语，助力中国品牌高效出海。
             </p>
 
             {/* CTA Buttons */}
-            <div className="mt-8 flex flex-col sm:flex-row items-start gap-4 animate-fade-up animation-delay-400">
+            <div className="mt-8 flex flex-col sm:flex-row items-start gap-4 opacity-0 animate-fade-up animation-delay-400">
               <Button
                 size="lg"
                 className="h-12 px-8 text-base gap-2 w-full sm:w-auto bg-conversion text-conversion-foreground hover:bg-conversion/90 shadow-lg shadow-conversion/25 hover:shadow-xl hover:shadow-conversion/30 transition-all duration-300"
@@ -82,26 +64,25 @@ export function Hero() {
               </Button>
             </div>
 
-            {/* Stats */}
-            <div className="mt-12 sm:mt-16 grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-8 border-t border-border/30 pt-8 animate-fade-up animation-delay-600">
+            {/* Trust signals */}
+            <div className="mt-12 sm:mt-16 flex flex-wrap items-center gap-3 border-t border-border/30 pt-8 opacity-0 animate-fade-up animation-delay-600">
               {[
-                ["3", "个首发平台"],
-                ["3", "种输出语言"],
-                ["5", "类内容结果"],
-                ["2", "类营销图片"],
-              ].map(([value, label]) => (
-                <div key={label} className="text-center sm:text-left">
-                  <div className="text-2xl sm:text-3xl font-bold bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text text-transparent">
-                    {value}
-                  </div>
-                  <div className="mt-1 text-sm text-muted-foreground">{label}</div>
-                </div>
+                "Amazon / Shopify / TikTok",
+                "中英西三语",
+                "文案 + 营销图",
+              ].map((tag) => (
+                <span
+                  key={tag}
+                  className="inline-flex items-center rounded-md bg-muted px-3 py-1.5 text-xs font-medium text-muted-foreground ring-1 ring-border/50 ring-inset"
+                >
+                  {tag}
+                </span>
               ))}
             </div>
           </div>
 
           {/* ── 右侧视觉预览 ── */}
-          <div className="relative hidden lg:block animate-fade-right animation-delay-300">
+          <div className="relative hidden lg:block opacity-0 animate-fade-right animation-delay-300">
             <div className="relative">
               {/* Main browser window mockup */}
               <div className="relative rounded-2xl border border-border/40 bg-gradient-to-b from-background/95 to-background/80 backdrop-blur-xl shadow-2xl shadow-primary/10 overflow-hidden">
@@ -260,19 +241,8 @@ export function Hero() {
                 </div>
               </div>
 
-              {/* Decorative floating card behind mockup */}
-              <div className="absolute -bottom-4 -right-4 -z-10 size-full rounded-2xl border border-border/20 bg-gradient-to-br from-primary/5 to-cyan-500/5" />
-              <div className="absolute -top-4 -left-4 -z-10 size-full rounded-2xl border border-border/10 bg-gradient-to-tr from-emerald-500/5 to-transparent" />
-            </div>
-
-            {/* Floating label */}
-            <div className="absolute -bottom-6 -left-6 inline-flex items-center gap-2 rounded-xl border border-border/30 bg-background/90 backdrop-blur-sm px-4 py-2.5 shadow-lg animate-float" style={{animationDelay: "1s"}}>
-              <div className="flex -space-x-1">
-                {["bg-primary", "bg-cyan-500", "bg-emerald-500"].map((c) => (
-                  <div key={c} className={`size-5 rounded-full ${c} ring-2 ring-background`} />
-                ))}
-              </div>
-              <span className="text-xs font-medium text-muted-foreground">助力跨境卖家高效出海</span>
+              {/* Subtle shadow card behind mockup */}
+              <div className="absolute -bottom-3 -right-3 -z-10 size-full rounded-2xl border border-border/15 bg-muted/30" />
             </div>
           </div>
         </div>

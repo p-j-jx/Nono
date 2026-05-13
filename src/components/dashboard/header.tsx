@@ -43,6 +43,7 @@ export function DashboardHeader() {
             className="lg:hidden -ml-1.5"
             onClick={toggle}
             aria-label={open ? "关闭菜单" : "打开菜单"}
+            aria-expanded={open}
           >
             {open ? <X className="size-4" /> : <Menu className="size-4" />}
           </Button>
@@ -71,8 +72,8 @@ export function DashboardHeader() {
           </Button>
 
           <DropdownMenu>
-            <DropdownMenuTrigger className="flex size-8 items-center justify-center rounded-full hover:bg-muted transition-colors outline-none">
-              <div className="flex size-7 items-center justify-center rounded-full bg-primary/10 text-primary text-xs font-medium">
+            <DropdownMenuTrigger className="flex size-10 items-center justify-center rounded-full hover:bg-muted transition-colors outline-none" aria-label="用户菜单">
+              <div className="flex size-8 items-center justify-center rounded-full bg-primary/10 text-primary text-xs font-medium">
                 {session?.user?.name?.charAt(0)?.toUpperCase() || "U"}
               </div>
             </DropdownMenuTrigger>

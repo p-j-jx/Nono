@@ -84,7 +84,8 @@ export function Navbar() {
             variant="ghost"
             size="icon"
             onClick={() => setOpen(!open)}
-            aria-label="Toggle menu"
+            aria-label={open ? "关闭菜单" : "打开菜单"}
+            aria-expanded={open}
           >
             {open ? <X className="size-5" /> : <Menu className="size-5" />}
           </Button>

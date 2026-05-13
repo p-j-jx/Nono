@@ -123,13 +123,6 @@ const categoryLabels: Record<string, string> = {
 }
 
 export default function TemplatesPage() {
-  // Group industry templates by category
-  const byCategory: Record<string, IndustryTemplate[]> = {}
-  for (const t of industryTemplates) {
-    if (!byCategory[t.category]) byCategory[t.category] = []
-    byCategory[t.category].push(t)
-  }
-
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8">
@@ -149,10 +142,8 @@ export default function TemplatesPage() {
           const Icon = t.Icon
           return (
             <Card key={t.id} className="group relative overflow-hidden h-full transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 flex flex-col">
-              {/* Top bar */}
-              <div aria-hidden className={`absolute top-0 left-0 right-0 h-1 ${t.topBar}`} />
-              {/* Bg gradient */}
-              <div aria-hidden className={`absolute inset-0 bg-gradient-to-br ${t.gradient} opacity-50 group-hover:opacity-100 transition-opacity duration-300`} />
+              {/* Bg gradient — subtle platform tint */}
+              <div aria-hidden className={`absolute inset-0 bg-gradient-to-br ${t.gradient} opacity-40 group-hover:opacity-70 transition-opacity duration-300`} />
 
               <CardHeader className="relative pb-3">
                 <div className="flex items-start justify-between gap-2 mb-2">
@@ -203,38 +194,33 @@ export default function TemplatesPage() {
         })}
       </div>
 
-      {/* Industry templates */}
+      {/* Industry templates — compact list */}
       <div className="flex items-center gap-2 mb-4">
         <h2 className="text-sm font-semibold">按行业</h2>
         <span className="text-[11px] text-muted-foreground">基于行业特征预配置生成参数</span>
       </div>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 mb-10">
-        {Object.entries(byCategory).map(([category, categoryTemplates]) => (
-          <Link key={category} href={`/dashboard/new?template=${categoryTemplates[0].id}`}>
-            <Card className="relative overflow-hidden h-full transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 hover:border-primary/20 cursor-pointer group">
-              <CardContent className="p-5">
-                <div className="flex size-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary/10 to-violet-500/10 mb-3 group-hover:from-primary/20 group-hover:to-violet-500/20 transition-colors">
-                  <LayoutTemplate className="size-5 text-primary" />
-                </div>
-                <h3 className="text-sm font-semibold mb-1">
-                  {categoryLabels[category] || category}
-                </h3>
-                <p className="text-xs text-muted-foreground mb-3">
-                  {categoryTemplates.length} 个模板
-                </p>
-                <ul className="space-y-1">
-                  {categoryTemplates.map((t) => (
-                    <li key={t.id} className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                      <span className="size-1 rounded-full bg-primary/30 shrink-0" />
-                      {t.name}
-                    </li>
-                  ))}
-                </ul>
-                <div className="mt-3 text-xs font-medium text-primary/70 group-hover:text-primary transition-colors inline-flex items-center gap-1">
-                  使用模板 <ArrowRight className="size-3 transition-transform duration-300 group-hover:translate-x-0.5" />
-                </div>
-              </CardContent>
-            </Card>
+      <div className="rounded-xl border border-border/50 bg-card divide-y divide-border/40 mb-10">
+        {industryTemplates.map((t) => (
+          <Link
+            key={t.id}
+            href={`/dashboard/new?template=${t.id}`}
+            className="flex items-center justify-between gap-4 px-5 py-3.5 transition-colors hover:bg-muted/50 group first:rounded-t-xl last:rounded-b-xl"
+          >
+            <div className="flex items-center gap-3 min-w-0">
+              <span className="flex size-8 items-center justify-center rounded-lg bg-primary/8 text-primary shrink-0">
+                <LayoutTemplate className="size-4" />
+              </span>
+              <div className="min-w-0">
+                <div className="text-sm font-medium truncate">{t.name}</div>
+                <div className="text-xs text-muted-foreground truncate">{t.description}</div>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <Badge variant="outline" className="text-[10px] hidden sm:inline-flex">
+                {categoryLabels[t.category] || t.category}
+              </Badge>
+              <ArrowRight className="size-3.5 text-muted-foreground/40 group-hover:text-primary group-hover:translate-x-0.5 transition-all duration-200" />
+            </div>
           </Link>
         ))}
       </div>
