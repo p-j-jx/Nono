@@ -1,20 +1,58 @@
 import { ScrollAnimate } from "@/components/scroll-animate"
-import { FileText, ImageIcon, Languages, Sparkles, LayoutDashboard, History, ArrowUpRight } from "lucide-react"
+import { FileText, ImageIcon, Languages, Sparkles, LayoutDashboard, History } from "lucide-react"
+
+const features = [
+  {
+    icon: FileText,
+    title: "智能文案生成",
+    description: "一键生成商品标题、要点描述、短描述和长描述，针对不同平台智能优化",
+    tags: ["标题优化", "要点描述", "SEO 文案"],
+    span: "lg:col-span-7",
+    size: "large" as const,
+  },
+  {
+    icon: ImageIcon,
+    title: "AI 商品图生成",
+    description: "自动生成专业商品主图和场景图，无需摄影棚和模特",
+    span: "lg:col-span-5",
+    size: "medium" as const,
+  },
+  {
+    icon: Languages,
+    title: "多语言适配",
+    description: "中、英、西语一键切换",
+    span: "",
+    size: "small" as const,
+  },
+  {
+    icon: Sparkles,
+    title: "多平台优化",
+    description: "Amazon · Shopify · TikTok",
+    span: "",
+    size: "small" as const,
+  },
+  {
+    icon: LayoutDashboard,
+    title: "项目化管理",
+    description: "以产品为单位管理所有生成内容，清晰有序，方便复用和迭代",
+    span: "",
+    size: "medium" as const,
+  },
+  {
+    icon: History,
+    title: "历史记录",
+    description: "搜索、筛选和收藏所有生成记录，方便复用和迭代优化",
+    span: "",
+    size: "medium" as const,
+  },
+]
 
 export function Features() {
   return (
     <section id="features" className="relative overflow-hidden border-t border-border/30 py-20 sm:py-28">
-      <div aria-hidden className="absolute inset-0 -z-10">
-        <div className="absolute top-1/4 left-0 w-[600px] h-[600px] bg-gradient-to-r from-primary/5 to-transparent rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-gradient-to-l from-cyan-500/5 to-transparent rounded-full blur-3xl" />
-      </div>
-
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <ScrollAnimate>
           <div className="mx-auto max-w-2xl text-center mb-16">
-            <div className="mb-4 inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-medium text-primary">
-              核心功能
-            </div>
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
               强大而简洁的运营工具
             </h2>
@@ -24,109 +62,88 @@ export function Features() {
           </div>
         </ScrollAnimate>
 
-        {/* Row 1: Hero feature + stacked cards */}
-        <div className="grid gap-5 lg:grid-cols-12 mb-5">
-          {/* 智能文案生成 — hero card spans 7 cols */}
+        {/* Row 1: Hero feature + secondary */}
+        <div className="grid gap-px lg:grid-cols-12 rounded-2xl border border-border/50 bg-border/50 overflow-hidden mb-px">
+          {/* 智能文案生成 — hero card */}
           <ScrollAnimate className="lg:col-span-7">
-            <div className="group relative h-full rounded-2xl border border-primary/15 bg-gradient-to-br from-primary/[0.08] via-primary/[0.02] to-transparent p-8 transition-all duration-500 hover:shadow-xl hover:-translate-y-1">
-              <div aria-hidden className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br from-primary/[0.04] to-transparent pointer-events-none" />
-              <div aria-hidden className="absolute top-0 right-0 size-32 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                <div className="absolute top-0 right-0 size-16 border-t-2 border-r-2 border-primary/20 rounded-tr-2xl" />
-              </div>
-
-              <div className="flex size-14 items-center justify-center rounded-2xl bg-primary/12 ring-1 ring-primary/20 mb-5 transition-transform duration-300 group-hover:scale-110">
-                <FileText className="size-7 text-primary" />
+            <div className="bg-card p-8 h-full">
+              <div className="flex size-12 items-center justify-center rounded-xl bg-primary/10 mb-5">
+                <FileText className="size-6 text-primary" />
               </div>
               <h3 className="text-xl font-semibold mb-3">智能文案生成</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed mb-6 max-w-lg">
+              <p className="text-sm text-muted-foreground leading-relaxed mb-5 max-w-lg">
                 AI 一键生成高质量商品标题、要点描述、短描述和长描述，针对不同平台智能优化，持续提升转化率
               </p>
-              <div className="flex flex-wrap gap-3 text-xs">
-                <span className="rounded-full bg-primary/10 px-3 py-1 text-primary font-medium">标题优化</span>
-                <span className="rounded-full bg-primary/10 px-3 py-1 text-primary font-medium">要点描述</span>
-                <span className="rounded-full bg-primary/10 px-3 py-1 text-primary font-medium">SEO 文案</span>
+              <div className="flex flex-wrap gap-2 text-xs">
+                {["标题优化", "要点描述", "SEO 文案"].map((tag) => (
+                  <span key={tag} className="rounded-md bg-primary/8 px-2.5 py-1 text-primary font-medium">
+                    {tag}
+                  </span>
+                ))}
               </div>
             </div>
           </ScrollAnimate>
 
-          {/* Right column stacked */}
-          <div className="lg:col-span-5 flex flex-col gap-5">
-            {/* AI商品图生成 */}
-            <ScrollAnimate delay={100}>
-              <div className="group relative rounded-2xl border border-cyan-200/40 dark:border-cyan-800/20 bg-gradient-to-br from-cyan-500/20 to-cyan-600/5 p-6 transition-all duration-500 hover:shadow-xl hover:-translate-y-1">
-                <div className="flex items-start gap-5">
-                  <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-cyan-500/15 ring-1 ring-cyan-200/40 transition-transform duration-300 group-hover:scale-110">
-                    <ImageIcon className="size-6 text-cyan-600 dark:text-cyan-400" />
-                  </div>
-                  <div className="min-w-0">
-                    <h3 className="font-semibold text-[15px] mb-1.5">AI商品图生成</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      自动生成专业商品主图和场景图，无需摄影棚和模特
-                    </p>
-                  </div>
-                  <ArrowUpRight className="size-4 text-cyan-500 shrink-0 mt-1 opacity-0 group-hover:opacity-100 transition-opacity" />
-                </div>
+          {/* AI 商品图 */}
+          <ScrollAnimate className="lg:col-span-5" delay={100}>
+            <div className="bg-card p-8 h-full">
+              <div className="flex size-12 items-center justify-center rounded-xl bg-platform-tiktok/10 mb-5">
+                <ImageIcon className="size-6 text-platform-tiktok" />
               </div>
-            </ScrollAnimate>
-
-            {/* Two mini cards side by side */}
-            <div className="grid grid-cols-2 gap-5">
-              <ScrollAnimate delay={200}>
-                <div className="group relative rounded-2xl border border-teal-200/40 dark:border-teal-800/20 bg-gradient-to-br from-teal-500/20 to-teal-600/5 p-5 transition-all duration-500 hover:shadow-xl hover:-translate-y-1">
-                  <div className="flex size-10 items-center justify-center rounded-lg bg-teal-500/15 ring-1 ring-teal-200/40 mb-3 transition-transform duration-300 group-hover:scale-110">
-                    <Languages className="size-5 text-teal-600 dark:text-teal-400" />
-                  </div>
-                  <h3 className="font-semibold text-sm mb-1.5">多语言适配</h3>
-                  <p className="text-xs text-muted-foreground leading-relaxed">中、英、西语一键切换</p>
-                </div>
-              </ScrollAnimate>
-
-              <ScrollAnimate delay={300}>
-                <div className="group relative rounded-2xl border border-emerald-200/40 dark:border-emerald-800/20 bg-gradient-to-br from-emerald-500/20 to-emerald-600/5 p-5 transition-all duration-500 hover:shadow-xl hover:-translate-y-1">
-                  <div className="flex size-10 items-center justify-center rounded-lg bg-emerald-500/15 ring-1 ring-emerald-200/40 mb-3 transition-transform duration-300 group-hover:scale-110">
-                    <Sparkles className="size-5 text-emerald-600 dark:text-emerald-400" />
-                  </div>
-                  <h3 className="font-semibold text-sm mb-1.5">多平台优化</h3>
-                  <p className="text-xs text-muted-foreground leading-relaxed">Amazon · Shopify · TikTok</p>
-                </div>
-              </ScrollAnimate>
+              <h3 className="text-lg font-semibold mb-2">AI 商品图生成</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                自动生成专业商品主图和场景图，无需摄影棚和模特
+              </p>
             </div>
-          </div>
+          </ScrollAnimate>
         </div>
 
-        {/* Row 2: Two remaining cards */}
-        <div className="grid gap-5 sm:grid-cols-2">
-          <ScrollAnimate delay={400}>
-            <div className="group relative rounded-2xl border border-primary/15 dark:border-primary/8 bg-gradient-to-br from-primary/12 to-primary/5 p-6 transition-all duration-500 hover:shadow-xl hover:-translate-y-1">
-              <div className="flex items-start gap-5">
-                <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-primary/12 ring-1 ring-primary/20 transition-transform duration-300 group-hover:scale-110">
-                  <LayoutDashboard className="size-6 text-primary" />
-                </div>
-                <div className="min-w-0">
-                  <h3 className="font-semibold text-[15px] mb-1.5">项目化管理</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    以产品为单位管理所有生成内容，每个项目独立管理文案记录、图片版本和历史，清晰有序，方便复用和迭代
-                  </p>
-                </div>
-                <ArrowUpRight className="size-4 text-primary shrink-0 mt-1 opacity-0 group-hover:opacity-100 transition-opacity" />
+        {/* Row 2: Two small cards */}
+        <div className="grid gap-px grid-cols-2 rounded-2xl border border-border/50 bg-border/50 overflow-hidden mb-px">
+          <ScrollAnimate delay={200}>
+            <div className="bg-card p-6 h-full">
+              <div className="flex size-10 items-center justify-center rounded-lg bg-platform-shopify/10 mb-3">
+                <Languages className="size-5 text-platform-shopify" />
               </div>
+              <h3 className="font-semibold text-sm mb-1">多语言适配</h3>
+              <p className="text-xs text-muted-foreground leading-relaxed">中、英、西语一键切换</p>
+            </div>
+          </ScrollAnimate>
+
+          <ScrollAnimate delay={300}>
+            <div className="bg-card p-6 h-full">
+              <div className="flex size-10 items-center justify-center rounded-lg bg-platform-amazon/10 mb-3">
+                <Sparkles className="size-5 text-platform-amazon" />
+              </div>
+              <h3 className="font-semibold text-sm mb-1">多平台优化</h3>
+              <p className="text-xs text-muted-foreground leading-relaxed">Amazon · Shopify · TikTok</p>
+            </div>
+          </ScrollAnimate>
+        </div>
+
+        {/* Row 3: Two medium cards */}
+        <div className="grid gap-px sm:grid-cols-2 rounded-2xl border border-border/50 bg-border/50 overflow-hidden">
+          <ScrollAnimate delay={400}>
+            <div className="bg-card p-8 h-full">
+              <div className="flex size-12 items-center justify-center rounded-xl bg-primary/10 mb-5">
+                <LayoutDashboard className="size-6 text-primary" />
+              </div>
+              <h3 className="text-lg font-semibold mb-2">项目化管理</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                以产品为单位管理所有生成内容，每个项目独立管理文案记录、图片版本和历史
+              </p>
             </div>
           </ScrollAnimate>
 
           <ScrollAnimate delay={500}>
-            <div className="group relative rounded-2xl border border-cyan-200/30 dark:border-cyan-800/15 bg-gradient-to-br from-cyan-500/15 to-cyan-600/5 p-6 transition-all duration-500 hover:shadow-xl hover:-translate-y-1">
-              <div className="flex items-start gap-5">
-                <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-cyan-500/12 ring-1 ring-cyan-200/30 transition-transform duration-300 group-hover:scale-110">
-                  <History className="size-6 text-cyan-600 dark:text-cyan-400" />
-                </div>
-                <div className="min-w-0">
-                  <h3 className="font-semibold text-[15px] mb-1.5">历史记录</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    随时随地查看和管理所有生成记录，支持搜索、筛选和收藏，方便复用和迭代优化
-                  </p>
-                </div>
-                <ArrowUpRight className="size-4 text-cyan-500 shrink-0 mt-1 opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="bg-card p-8 h-full">
+              <div className="flex size-12 items-center justify-center rounded-xl bg-platform-tiktok/10 mb-5">
+                <History className="size-6 text-platform-tiktok" />
               </div>
+              <h3 className="text-lg font-semibold mb-2">历史记录</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                搜索、筛选和收藏所有生成记录，方便复用和迭代优化
+              </p>
             </div>
           </ScrollAnimate>
         </div>

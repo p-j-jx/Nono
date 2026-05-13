@@ -6,10 +6,8 @@ type StatDef = {
   icon: typeof Package
   label: string
   value: string
-  gradient: string
   iconBg: string
   iconColor: string
-  barColor: string
 }
 
 function buildStats(props: {
@@ -24,50 +22,40 @@ function buildStats(props: {
       icon: Package,
       label: "项目总数",
       value: String(props.projectCount),
-      gradient: "from-primary/10 via-primary/5 to-transparent",
-      iconBg: "bg-gradient-to-br from-primary to-violet-600",
-      iconColor: "text-white",
-      barColor: "bg-primary",
+      iconBg: "bg-primary/10",
+      iconColor: "text-primary",
     },
     {
       key: "generations",
       icon: Sparkles,
       label: "生成次数",
       value: String(props.totalGenerations),
-      gradient: "from-amber-500/10 via-amber-500/5 to-transparent",
-      iconBg: "bg-gradient-to-br from-amber-500 to-orange-600",
-      iconColor: "text-white",
-      barColor: "bg-gradient-to-r from-amber-500 to-orange-500",
+      iconBg: "bg-platform-amazon-muted",
+      iconColor: "text-platform-amazon",
     },
     {
       key: "today",
       icon: BarChart3,
       label: "今日生成",
       value: String(props.todayRecords),
-      gradient: "from-emerald-500/10 via-emerald-500/5 to-transparent",
-      iconBg: "bg-gradient-to-br from-emerald-500 to-teal-600",
-      iconColor: "text-white",
-      barColor: "bg-gradient-to-r from-emerald-500 to-teal-500",
+      iconBg: "bg-platform-shopify-muted",
+      iconColor: "text-platform-shopify",
     },
     {
       key: "favorites",
       icon: Star,
       label: "收藏内容",
       value: String(props.favoritedCount),
-      gradient: "from-violet-500/10 via-violet-500/5 to-transparent",
-      iconBg: "bg-gradient-to-br from-violet-500 to-purple-600",
-      iconColor: "text-white",
-      barColor: "bg-gradient-to-r from-violet-500 to-purple-500",
+      iconBg: "bg-violet-500/10",
+      iconColor: "text-violet-600 dark:text-violet-400",
     },
     {
       key: "platforms",
       icon: Globe,
       label: "支持平台",
       value: "7",
-      gradient: "from-sky-500/10 via-sky-500/5 to-transparent",
-      iconBg: "bg-gradient-to-br from-sky-500 to-blue-600",
-      iconColor: "text-white",
-      barColor: "bg-gradient-to-r from-sky-500 to-blue-500",
+      iconBg: "bg-sky-500/10",
+      iconColor: "text-sky-600 dark:text-sky-400",
     },
   ]
 }
@@ -90,31 +78,14 @@ export function StatCards(props: StatCardsProps) {
         return (
           <Card
             key={stat.key}
-            className="group relative overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 hover:border-transparent"
+            className="group relative overflow-hidden transition-colors duration-200 hover:border-primary/20"
           >
-            {/* Top gradient bar */}
-            <div
-              aria-hidden
-              className={`absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r ${stat.barColor}`}
-            />
-
-            {/* Background gradient glow */}
-            <div
-              aria-hidden
-              className={`absolute inset-0 bg-gradient-to-b ${stat.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
-            />
-
-            <CardContent className="p-4 relative">
+            <CardContent className="p-4">
               <div className="flex items-center gap-3">
                 <div
-                  className={`relative flex size-10 shrink-0 items-center justify-center rounded-xl ${stat.iconBg} shadow-lg shadow-current/10`}
+                  className={`flex size-10 shrink-0 items-center justify-center rounded-xl ${stat.iconBg}`}
                 >
                   <Icon className={`size-[18px] ${stat.iconColor}`} />
-                  {/* Decorative ring */}
-                  <div
-                    aria-hidden
-                    className="absolute inset-0 rounded-xl ring-1 ring-inset ring-white/20"
-                  />
                 </div>
                 <div className="min-w-0">
                   <p className="text-[11px] font-medium text-muted-foreground tracking-wide uppercase">
@@ -138,12 +109,6 @@ export function StatCards(props: StatCardsProps) {
                   ))}
                 </div>
               )}
-
-              {/* Subtle decorative dot */}
-              <div
-                aria-hidden
-                className="absolute -bottom-2 -right-2 size-16 rounded-full bg-gradient-to-br from-foreground/[0.02] to-transparent blur-sm"
-              />
             </CardContent>
           </Card>
         )

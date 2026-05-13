@@ -34,7 +34,7 @@ export function Footer() {
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           <div className="lg:col-span-1">
             <Link href="/" className="mb-4 flex items-center gap-2 group">
-              <div className="flex size-8 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-violet-600 text-primary-foreground shadow-lg shadow-primary/20 transition-transform group-hover:scale-105">
+              <div className="flex size-8 items-center justify-center rounded-xl bg-primary text-primary-foreground">
                 <Sparkles className="size-4" />
               </div>
               <span className="text-base font-bold">

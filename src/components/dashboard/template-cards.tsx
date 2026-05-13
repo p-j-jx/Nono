@@ -9,10 +9,8 @@ const showcaseTemplates = [
     id: "amazon",
     href: "/dashboard/templates/amazon",
     platform: "Amazon",
-    badgeClass: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
-    topBar: "bg-gradient-to-r from-amber-500 to-orange-500",
-    gradient: "from-amber-500/[0.04] to-orange-500/[0.02]",
-    iconBg: "bg-amber-500/10 text-amber-600 dark:text-amber-400",
+    badgeClass: "bg-platform-amazon-muted text-platform-amazon",
+    iconBg: "bg-platform-amazon/10 text-platform-amazon",
     icon: ListOrdered,
     title: "Listing 转化型",
     desc: "严格遵循 Amazon SEO 规则",
@@ -23,24 +21,20 @@ const showcaseTemplates = [
     id: "tiktok",
     href: "/dashboard/templates/tiktok",
     platform: "TikTok Shop",
-    badgeClass: "bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-300",
-    topBar: "bg-gradient-to-r from-cyan-500 to-teal-500",
-    gradient: "from-cyan-500/[0.04] to-teal-500/[0.02]",
-    iconBg: "bg-cyan-500/10 text-cyan-600 dark:text-cyan-400",
+    badgeClass: "bg-platform-tiktok-muted text-platform-tiktok",
+    iconBg: "bg-platform-tiktok/10 text-platform-tiktok",
     icon: Video,
     title: "短视频带货型",
     desc: "3 秒钩子 + 口播脚本 + Hashtag",
     metas: ["开场钩子", "60s 分镜", "爆款 Hashtag"],
-    snippet: "\"Wait—这条裙子真的只要 $29?\" 😱 朋友们看完都让我发链接…",
+    snippet: '"Wait—这条裙子真的只要 $29?" 😱 朋友们看完都让我发链接…',
   },
   {
     id: "shopify",
     href: "/dashboard/templates/shopify",
     platform: "Shopify",
-    badgeClass: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300",
-    topBar: "bg-gradient-to-r from-emerald-500 to-green-600",
-    gradient: "from-emerald-500/[0.04] to-green-500/[0.02]",
-    iconBg: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
+    badgeClass: "bg-platform-shopify-muted text-platform-shopify",
+    iconBg: "bg-platform-shopify/10 text-platform-shopify",
     icon: Sparkles,
     title: "品牌独立站型",
     desc: "品牌故事 + SEO Meta + 邮件",
@@ -52,7 +46,7 @@ const showcaseTemplates = [
 export function TemplateCards() {
   return (
     <div>
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-5">
         <div className="flex items-center gap-2">
           <h2 className="text-sm font-semibold">场景模板</h2>
           <span className="text-[11px] text-muted-foreground">不同平台、不同打法</span>
@@ -67,10 +61,7 @@ export function TemplateCards() {
           const Icon = t.icon
           return (
             <Link key={t.id} href={t.href}>
-              <Card className="group relative overflow-hidden h-full transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 hover:border-transparent cursor-pointer">
-                <div aria-hidden className={`absolute top-0 left-0 right-0 h-[3px] ${t.topBar}`} />
-                <div aria-hidden className={`absolute inset-0 bg-gradient-to-b ${t.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
-
+              <Card className="group relative overflow-hidden h-full transition-colors duration-200 hover:border-primary/20 cursor-pointer">
                 <CardContent className="p-4 relative space-y-3">
                   <div className="flex items-center justify-between">
                     <Badge variant="outline" className={`text-[10px] font-medium ${t.badgeClass}`}>
@@ -101,7 +92,7 @@ export function TemplateCards() {
                   </div>
 
                   <div className="flex items-center gap-1 text-xs font-medium text-primary/70 group-hover:text-primary transition-colors">
-                    查看完整模板 <ArrowRight className="size-3 transition-transform duration-300 group-hover:translate-x-0.5" />
+                    查看完整模板 <ArrowRight className="size-3 transition-transform duration-200 group-hover:translate-x-0.5" />
                   </div>
                 </CardContent>
               </Card>
