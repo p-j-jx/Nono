@@ -44,7 +44,7 @@ export function QuickActions() {
         const Icon = action.icon
         return (
           <Link key={action.title} href={action.href}>
-            <Card className="group relative overflow-hidden transition-colors duration-200 hover:border-primary/20 h-full">
+            <Card className="group relative overflow-hidden transition-colors duration-200 hover:border-primary/20 h-full cursor-pointer">
               <CardContent className="p-5 relative">
                 <div
                   className={`flex size-10 items-center justify-center rounded-xl ${action.iconBg} mb-3`}

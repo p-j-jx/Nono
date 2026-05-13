@@ -78,7 +78,7 @@ export function StatCards(props: StatCardsProps) {
         return (
           <Card
             key={stat.key}
-            className="group relative overflow-hidden transition-colors duration-200 hover:border-primary/20"
+            className="relative overflow-hidden"
           >
             <CardContent className="p-4">
               <div className="flex items-center gap-3">

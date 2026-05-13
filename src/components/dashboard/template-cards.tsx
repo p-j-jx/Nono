@@ -61,7 +61,7 @@ export function TemplateCards() {
           const Icon = t.icon
           return (
             <Link key={t.id} href={t.href}>
-              <Card className="group relative overflow-hidden h-full transition-colors duration-200 hover:border-primary/20 cursor-pointer">
+              <Card className="group relative overflow-hidden h-full transition-colors duration-200 hover:border-primary/20 cursor-pointer" role="article">
                 <CardContent className="p-4 relative space-y-3">
                   <div className="flex items-center justify-between">
                     <Badge variant="outline" className={`text-[10px] font-medium ${t.badgeClass}`}>
