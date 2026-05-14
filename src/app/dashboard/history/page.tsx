@@ -169,7 +169,7 @@ export default async function HistoryPage({
     if (platform) params.set("platform", platform)
     if (favorited) params.set("favorited", "true")
     if (p > 1) params.set("page", String(p))
-    return `/dashboard/dashboard/history?${params.toString()}`
+    return `/dashboard/history?${params.toString()}`
   }
 
   return (

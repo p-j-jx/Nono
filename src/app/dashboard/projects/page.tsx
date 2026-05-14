@@ -2,7 +2,7 @@ import { auth } from "@/lib/auth"
 import { prisma } from "@/db/prisma"
 import { redirect } from "next/navigation"
 import Link from "next/link"
-import { Search, SlidersHorizontal, ArrowUpDown, Plus, FolderKanban } from "lucide-react"
+import { Search, Plus, FolderKanban } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -104,11 +104,10 @@ export default async function ProjectsPage({
       </form>
 
       {projects.length === 0 ? (
-        <Card className="relative overflow-hidden border-dashed">
-          <div aria-hidden className="absolute inset-0 bg-gradient-to-br from-primary/[0.02] to-violet-500/[0.02]" />
+        <Card className="border-dashed">
           <CardContent className="flex flex-col items-center justify-center text-center py-16">
-            <div className="size-14 rounded-xl bg-gradient-to-br from-primary/10 to-violet-500/10 flex items-center justify-center mb-4">
-              <FolderKanban className="size-7 text-primary/40" />
+            <div className="size-14 rounded-xl bg-muted/50 flex items-center justify-center mb-4">
+              <FolderKanban className="size-7 text-muted-foreground/40" />
             </div>
             <h3 className="text-base font-semibold mb-1">
               {q || platform ? "没有找到匹配的项目" : "还没有项目"}
@@ -119,7 +118,7 @@ export default async function ProjectsPage({
                 : "创建你的第一个项目，开始 AI 跨境电商之旅"}
             </p>
             <div className="flex gap-3">
-              <Button render={<a href="/dashboard/new" />} className="gap-2 shadow-lg shadow-primary/20">
+              <Button render={<a href="/dashboard/new" />} className="gap-2">
                 <Plus className="size-4" />
                 创建项目
               </Button>

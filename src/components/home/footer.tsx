@@ -6,7 +6,6 @@ const footerLinks = [
     title: "产品",
     links: [
       { label: "功能介绍", href: "/#features" },
-      { label: "价格方案", href: "/pricing" },
       { label: "平台支持", href: "/#platforms" },
     ],
   },

@@ -2,7 +2,7 @@ import Link from "next/link"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { ProjectCard } from "./project-card"
-import { Package, Sparkles, Plus, LayoutTemplate } from "lucide-react"
+import { Package, Plus, LayoutTemplate } from "lucide-react"
 
 type ProjectListProject = {
   id: string
@@ -16,34 +16,17 @@ type ProjectListProject = {
 export function ProjectList({ projects }: { projects: ProjectListProject[] }) {
   if (projects.length === 0) {
     return (
-      <Card className="relative overflow-hidden border-dashed">
-        <div aria-hidden className="absolute inset-0 bg-gradient-to-br from-primary/[0.03] to-emerald-500/[0.03]" />
-        {/* Decorative gradient orb */}
-        <div
-          aria-hidden
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gradient-to-br from-primary/8 to-violet-500/8 rounded-full blur-3xl"
-        />
-        <CardContent className="flex flex-col items-center justify-center text-center py-16 relative">
-          <div className="relative mb-6">
-            <div className="size-16 rounded-2xl bg-gradient-to-br from-primary/10 to-violet-500/10 ring-1 ring-primary/20 flex items-center justify-center shadow-lg shadow-primary/5">
-              <Package className="size-8 text-primary/50" />
-            </div>
-            {/* Decorative dots */}
-            <div
-              aria-hidden
-              className="absolute -top-1 -right-1 size-3 rounded-full bg-primary/20"
-            />
-            <div
-              aria-hidden
-              className="absolute -bottom-1 -left-1 size-2 rounded-full bg-emerald-500/20"
-            />
+      <Card className="border-dashed">
+        <CardContent className="flex flex-col items-center justify-center text-center py-16">
+          <div className="size-16 rounded-2xl bg-primary/8 flex items-center justify-center mb-6">
+            <Package className="size-8 text-primary/50" />
           </div>
           <h3 className="text-base font-semibold mb-1">开始你的跨境之旅</h3>
           <p className="text-sm text-muted-foreground mb-6 max-w-sm">
             创建第一个项目，AI 将为你生成适配多平台的商品文案和营销图片
           </p>
           <div className="flex flex-col sm:flex-row gap-3">
-            <Button render={<a href="/dashboard/new" />} className="gap-2 shadow-lg shadow-primary/20">
+            <Button render={<a href="/dashboard/new" />} className="gap-2">
               <Plus className="size-4" />
               创建项目
             </Button>

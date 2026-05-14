@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect } from "react"
 import { AlertTriangle, CheckCircle2, Lightbulb, RefreshCw, Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
