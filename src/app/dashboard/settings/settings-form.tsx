@@ -289,15 +289,16 @@ export function SettingsForm({
       <Card>
         <CardHeader>
           <CardTitle className="text-lg">关于 API 密钥</CardTitle>
-          <CardDescription>
-            <ul className="mt-2 space-y-2 text-sm list-disc list-inside">
-              <li>密钥仅存储在数据库中，仅用于调用 AI 服务</li>
-              <li>如不配置，系统将使用模拟数据展示功能</li>
-              <li>你也可以在服务器 .env 文件中配置 DEEPSEEK_API_KEY 作为全局密钥</li>
-              <li>用户配置的密钥优先级高于环境变量</li>
-            </ul>
-          </CardDescription>
+          <CardDescription>密钥安全与优先级说明</CardDescription>
         </CardHeader>
+        <CardContent>
+          <ul className="space-y-2 text-sm text-muted-foreground list-disc list-inside">
+            <li>密钥仅存储在数据库中，仅用于调用 AI 服务</li>
+            <li>如不配置，系统将使用模拟数据展示功能</li>
+            <li>也可在服务器 .env 文件中配置 DEEPSEEK_API_KEY 作为全局密钥</li>
+            <li>用户配置的密钥优先级高于环境变量</li>
+          </ul>
+        </CardContent>
       </Card>
     </div>
   )

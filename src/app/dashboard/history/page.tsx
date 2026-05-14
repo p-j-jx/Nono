@@ -250,13 +250,11 @@ export default async function HistoryPage({
 
       {/* Records */}
       {allRecords.length === 0 ? (
-        <Card className="py-16 overflow-hidden relative">
-          <div aria-hidden className="absolute top-0 right-0 size-40 bg-gradient-to-bl from-primary/5 to-transparent rounded-bl-full" />
-          <div aria-hidden className="absolute bottom-0 left-0 size-32 bg-gradient-to-tr from-amber-500/5 to-transparent rounded-tr-full" />
-          <CardContent className="flex flex-col items-center justify-center text-center relative">
+        <Card className="py-16">
+          <CardContent className="flex flex-col items-center justify-center text-center">
             {hasFilters ? (
               <>
-                <div className="flex size-16 items-center justify-center rounded-2xl bg-gradient-to-br from-muted/80 to-muted/30 ring-1 ring-border/50 mb-6">
+                <div className="flex size-16 items-center justify-center rounded-2xl bg-muted/50 mb-6">
                   <SearchX className="size-8 text-muted-foreground/60" />
                 </div>
                 <h3 className="text-lg font-semibold mb-2">没有匹配的记录</h3>
@@ -272,7 +270,7 @@ export default async function HistoryPage({
               </>
             ) : (
               <>
-                <div className="flex size-16 items-center justify-center rounded-2xl bg-gradient-to-br from-primary/10 to-amber-500/10 ring-1 ring-primary/20 mb-6">
+                <div className="flex size-16 items-center justify-center rounded-2xl bg-primary/8 mb-6">
                   <HistoryIcon className="size-8 text-primary/60" />
                 </div>
                 <h3 className="text-lg font-semibold mb-2">还没有生成记录</h3>

@@ -454,7 +454,7 @@ export function ProjectDetail({ project }: { project: Project }) {
               type="button"
               disabled={generating !== null || batchProgress?.running || false}
               onClick={() => handleGenerate(type.key)}
-              className={`group relative rounded-xl border ${type.borderColor} bg-gradient-to-br ${type.gradient} p-5 text-left transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:border-primary/30 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-none`}
+              className="group relative rounded-xl border border-border/50 bg-card p-5 text-left transition-colors duration-200 hover:border-primary/30 hover:bg-muted/20 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <div
                 className={`flex size-10 items-center justify-center rounded-lg bg-background/80 ring-1 ring-border/50 mb-3 ${type.iconColor}`}

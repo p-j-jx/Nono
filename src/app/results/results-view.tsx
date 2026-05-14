@@ -346,7 +346,7 @@ export function ResultsView({ project }: { project: Project }) {
   const imageTypes = ["mainImage", "sceneImage", "banner", "socialMediaImage", "promoPoster"]
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
+    <div className="min-h-screen bg-background">
       {/* Header */}
       <div className="border-b bg-background/80 backdrop-blur-sm sticky top-0 z-10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
@@ -435,14 +435,7 @@ export function ResultsView({ project }: { project: Project }) {
               return (
                 <Card
                   key={type}
-                  className={`mb-4 border-l-4 overflow-hidden ${
-                    record ? "" : "opacity-50"
-                  }`}
-                  style={{
-                    borderLeftColor: record
-                      ? `var(--${type === "title" ? "blue" : type === "bulletPoints" ? "emerald" : type === "shortDesc" ? "violet" : "amber"}-500)`
-                      : undefined,
-                  }}
+                  className={`mb-4 overflow-hidden ${record ? "" : "opacity-50"}`}
                 >
                   <CardHeader className="pb-3">
                     <div className="flex items-center justify-between">
@@ -641,14 +634,7 @@ export function ResultsView({ project }: { project: Project }) {
               return (
                 <Card
                   key={type}
-                  className={`mb-4 border-l-4 overflow-hidden ${
-                    record ? "" : "opacity-50"
-                  }`}
-                  style={{
-                    borderLeftColor: record
-                      ? `var(--${type === "mainImage" ? "pink" : "cyan"}-500)`
-                      : undefined,
-                  }}
+                  className={`mb-4 overflow-hidden ${record ? "" : "opacity-50"}`}
                 >
                   <CardHeader className="pb-3">
                     <div className="flex items-center justify-between">

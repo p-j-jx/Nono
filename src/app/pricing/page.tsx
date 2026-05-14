@@ -88,11 +88,11 @@ export default async function PricingPage() {
               {tiers.map((tier) => (
                 <div
                   key={tier.id}
-                  className={`relative rounded-2xl border transition-all duration-300 ${
+                  className={`relative rounded-2xl border bg-card p-8 ${
                     tier.highlighted
-                      ? "border-primary/50 shadow-xl shadow-primary/5 scale-105 lg:scale-110 hover:shadow-2xl hover:shadow-primary/10"
-                      : "border-border/50 hover:shadow-lg hover:-translate-y-1"
-                  } bg-card p-8`}
+                      ? "border-primary/40 shadow-lg shadow-primary/8 bg-primary/[0.02]"
+                      : "border-border/50"
+                  }`}
                 >
                   {tier.highlighted && (
                     <div className="absolute -top-3 left-1/2 -translate-x-1/2">
