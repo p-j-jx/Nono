@@ -89,7 +89,7 @@ export function DashboardHeader() {
                 <User className="size-4" />
                 工作台
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => router.push("/history")}>
+              <DropdownMenuItem onClick={() => router.push("/dashboard/history")}>
                 <History className="size-4" />
                 历史记录
               </DropdownMenuItem>

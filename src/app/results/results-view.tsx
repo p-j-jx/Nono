@@ -326,7 +326,7 @@ export function ResultsView({ project }: { project: Project }) {
   }
 
   function handleSaveToHistory() {
-    router.push("/history")
+    router.push("/dashboard/history")
   }
 
   function handleDownloadRecord(record: typeof records[0]) {

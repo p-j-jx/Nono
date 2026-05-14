@@ -20,7 +20,7 @@ const actions = [
     iconColor: "text-platform-amazon",
   },
   {
-    href: "/history",
+    href: "/dashboard/history",
     icon: History,
     title: "查看历史",
     desc: "浏览所有生成记录和收藏内容",

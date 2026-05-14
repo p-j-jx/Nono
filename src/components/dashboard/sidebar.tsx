@@ -39,7 +39,7 @@ const navSections = [
     label: "资产管理",
     items: [
       { label: "项目列表", href: "/dashboard/projects", icon: FolderKanban },
-      { label: "历史记录", href: "/history", icon: History },
+      { label: "历史记录", href: "/dashboard/history", icon: History },
       { label: "收藏内容", href: "/dashboard/favorites", icon: Star },
       { label: "导出中心", href: "/dashboard/exports", icon: Download },
     ],
