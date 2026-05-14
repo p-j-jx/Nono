@@ -96,8 +96,7 @@ export function ExportsClient({
     <div className="space-y-6">
       {/* Export cards with buttons */}
       <div className="grid gap-4 sm:grid-cols-2">
-        <Card className="relative overflow-hidden transition-all duration-300 hover:shadow-md group">
-          <div aria-hidden className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-primary to-violet-500" />
+        <Card>
           <CardContent className="p-5 flex items-center justify-between">
             <div>
               <h3 className="text-sm font-semibold">文案导出</h3>
@@ -121,8 +120,7 @@ export function ExportsClient({
           </CardContent>
         </Card>
 
-        <Card className="relative overflow-hidden transition-all duration-300 hover:shadow-md group">
-          <div aria-hidden className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-emerald-500 to-teal-500" />
+        <Card>
           <CardContent className="p-5 flex items-center justify-between">
             <div>
               <h3 className="text-sm font-semibold">数据表格</h3>

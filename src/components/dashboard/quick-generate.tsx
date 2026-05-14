@@ -185,8 +185,7 @@ export function QuickGenerate({
       <div className="grid gap-8 lg:grid-cols-5">
         {/* Left: Form */}
         <div className="lg:col-span-2 space-y-6">
-          <Card className="relative overflow-hidden">
-            <div aria-hidden className={`absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r ${accentGradient}`} />
+          <Card>
             <CardContent className="p-5 space-y-4">
               <h2 className="text-sm font-semibold">商品信息</h2>
 
@@ -257,8 +256,7 @@ export function QuickGenerate({
           </Card>
 
           {/* Content type selection */}
-          <Card className="relative overflow-hidden">
-            <div aria-hidden className={`absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r ${accentGradient}`} />
+          <Card>
             <CardContent className="p-5 space-y-3">
               <h2 className="text-sm font-semibold">生成类型</h2>
               <div className="grid grid-cols-1 gap-2">
@@ -322,8 +320,7 @@ export function QuickGenerate({
 
         {/* Right: Results */}
         <div className="lg:col-span-3">
-          <Card className="relative overflow-hidden h-full">
-            <div aria-hidden className={`absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r ${accentGradient}`} />
+          <Card className="h-full">
             <CardContent className="p-5">
               <h2 className="text-sm font-semibold mb-4">生成结果</h2>
 
@@ -336,8 +333,8 @@ export function QuickGenerate({
 
               {!generating && !results && (
                 <div className="flex flex-col items-center justify-center py-16 text-center">
-                  <div className={`size-12 rounded-xl bg-gradient-to-br ${accentColor}/10 flex items-center justify-center mb-4`}>
-                    <Sparkles className={`size-6 ${accentColor}/50`} />
+                  <div className="size-12 rounded-xl bg-muted/50 flex items-center justify-center mb-4">
+                    <Sparkles className="size-6 text-muted-foreground/40" />
                   </div>
                   <h3 className="text-sm font-semibold mb-1">等待生成</h3>
                   <p className="text-xs text-muted-foreground max-w-xs">

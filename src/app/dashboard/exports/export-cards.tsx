@@ -129,16 +129,13 @@ export function ExportCards({
         return (
           <Card
             key={card.key}
-            className={`group relative overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 hover:border-transparent ${
-              isDisabled ? "opacity-70" : ""
-            }`}
+            className={isDisabled ? "opacity-70" : ""}
           >
-            <div aria-hidden className={`absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r ${card.gradient}`} />
             <CardContent className="p-5">
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-3">
-                  <div className={`flex size-10 items-center justify-center rounded-xl bg-gradient-to-br ${card.iconBg}`}>
-                    <Icon className={`size-5 ${card.iconColor}`} />
+                  <div className={`flex size-10 items-center justify-center rounded-xl ${card.iconColor} bg-muted/50`}>
+                    <Icon className="size-5" />
                   </div>
                   <div>
                     <h3 className="text-sm font-semibold">{card.title}</h3>

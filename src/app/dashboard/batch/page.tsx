@@ -235,11 +235,10 @@ export default function BatchPage() {
         <>
           {/* Step 1: Download template + Upload */}
           <div className="grid gap-4 sm:grid-cols-2 mb-6">
-            <Card className="relative overflow-hidden transition-all duration-300 hover:shadow-md group cursor-pointer" onClick={handleDownloadTemplate}>
-              <div aria-hidden className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-emerald-500 to-teal-500" />
+            <Card className="cursor-pointer hover:bg-muted/20 transition-colors" onClick={handleDownloadTemplate}>
               <CardContent className="p-5 flex items-center gap-4">
-                <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500/10 to-teal-500/10">
-                  <Download className="size-5 text-emerald-600 dark:text-emerald-400" />
+                <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-primary/8">
+                  <Download className="size-5 text-primary" />
                 </div>
                 <div>
                   <h3 className="text-sm font-semibold">下载模板</h3>
@@ -249,13 +248,12 @@ export default function BatchPage() {
             </Card>
 
             <Card
-              className="relative overflow-hidden transition-all duration-300 hover:shadow-md group cursor-pointer"
+              className="cursor-pointer hover:bg-muted/20 transition-colors"
               onClick={() => fileInputRef.current?.click()}
             >
-              <div aria-hidden className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-amber-500 to-orange-500" />
               <CardContent className="p-5 flex items-center gap-4">
-                <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500/10 to-orange-500/10">
-                  <Upload className="size-5 text-amber-600 dark:text-amber-400" />
+                <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-muted/50">
+                  <Upload className="size-5 text-muted-foreground" />
                 </div>
                 <div>
                   <h3 className="text-sm font-semibold">上传 CSV</h3>
@@ -273,8 +271,7 @@ export default function BatchPage() {
           </div>
 
           {/* Or paste CSV */}
-          <Card className="relative overflow-hidden mb-6">
-            <div aria-hidden className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-primary to-violet-500" />
+          <Card className="mb-6">
             <CardContent className="p-5">
               <h3 className="text-sm font-semibold mb-2">或直接粘贴 CSV 数据</h3>
               <textarea
@@ -297,8 +294,7 @@ export default function BatchPage() {
 
           {/* Parsed data preview */}
           {parsedData && parsedData.rows.length > 0 && (
-            <Card className="relative overflow-hidden mb-6">
-              <div aria-hidden className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-emerald-500 to-teal-500" />
+            <Card className="mb-6">
               <CardContent className="p-5">
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="text-sm font-semibold">
@@ -396,16 +392,15 @@ export default function BatchPage() {
         </>
       ) : (
         /* Import results */
-        <Card className="relative overflow-hidden">
-          <div aria-hidden className={`absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r ${importResults.failed > 0 ? "from-amber-500 to-orange-500" : "from-emerald-500 to-teal-500"}`} />
+        <Card>
           <CardContent className="flex flex-col items-center justify-center text-center py-12">
             {importResults.failed === 0 ? (
-              <div className="size-14 rounded-xl bg-gradient-to-br from-emerald-500/10 to-teal-500/10 flex items-center justify-center mb-4">
-                <Check className="size-7 text-emerald-500" />
+              <div className="size-14 rounded-xl bg-primary/8 flex items-center justify-center mb-4">
+                <Check className="size-7 text-primary" />
               </div>
             ) : (
-              <div className="size-14 rounded-xl bg-gradient-to-br from-amber-500/10 to-orange-500/10 flex items-center justify-center mb-4">
-                <AlertCircle className="size-7 text-amber-500" />
+              <div className="size-14 rounded-xl bg-muted/50 flex items-center justify-center mb-4">
+                <AlertCircle className="size-7 text-muted-foreground" />
               </div>
             )}
             <h3 className="text-base font-semibold mb-1">导入完成</h3>

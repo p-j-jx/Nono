@@ -75,11 +75,10 @@ export default async function FavoritesPage({
       </div>
 
       {records.length === 0 ? (
-        <Card className="relative overflow-hidden border-dashed">
-          <div aria-hidden className="absolute inset-0 bg-gradient-to-br from-violet-500/[0.02] to-primary/[0.02]" />
+        <Card className="border-dashed">
           <CardContent className="flex flex-col items-center justify-center text-center py-16">
-            <div className="size-14 rounded-xl bg-gradient-to-br from-violet-500/10 to-primary/10 flex items-center justify-center mb-4">
-              <Star className="size-7 text-violet-500/40" />
+            <div className="size-14 rounded-xl bg-muted/50 flex items-center justify-center mb-4">
+              <Star className="size-7 text-muted-foreground/40" />
             </div>
             <h3 className="text-base font-semibold mb-1">还没有收藏内容</h3>
             <p className="text-sm text-muted-foreground mb-2 max-w-sm">
