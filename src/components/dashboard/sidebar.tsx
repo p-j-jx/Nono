@@ -15,6 +15,8 @@ import {
   LayoutTemplate,
   Settings,
   Sparkles,
+  Swords,
+  ShieldCheck,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useSidebar } from "./sidebar-context"
@@ -33,6 +35,13 @@ const navSections = [
       { label: "文案生成", href: "/dashboard/copy", icon: FileText },
       { label: "图片生成", href: "/dashboard/images", icon: ImageIcon },
       { label: "批量生成", href: "/dashboard/batch", icon: Upload },
+    ],
+  },
+  {
+    label: "分析工具",
+    items: [
+      { label: "竞品分析", href: "/dashboard/competitor", icon: Swords },
+      { label: "质量检查", href: "/dashboard/quality", icon: ShieldCheck },
     ],
   },
   {

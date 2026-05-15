@@ -5,6 +5,31 @@ import { prisma } from "@/db/prisma"
 const VALID_PLATFORMS = ["amazon", "shopify", "tiktok", "ebay", "etsy", "walmart", "aliexpress"]
 const VALID_LANGUAGES = ["zh", "en", "es", "de", "fr", "ja", "pt", "ar"]
 
+export async function GET() {
+  const session = await auth()
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "请先登录" }, { status: 401 })
+  }
+
+  try {
+    const projects = await prisma.productProject.findMany({
+      where: { userId: session.user.id },
+      orderBy: { updatedAt: "desc" },
+      include: {
+        records: {
+          select: { contentType: true, content: true },
+          orderBy: { createdAt: "desc" },
+        },
+      },
+    })
+
+    return NextResponse.json({ projects })
+  } catch (err) {
+    console.error("[Projects/list]", err)
+    return NextResponse.json({ error: "获取项目列表失败" }, { status: 500 })
+  }
+}
+
 export async function POST(req: Request) {
   const session = await auth()
   if (!session?.user?.id) {
