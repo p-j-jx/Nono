@@ -46,6 +46,8 @@ import {
   PanelTop,
   Share2,
   ImageDown,
+  FileDown,
+  ShieldCheck,
 } from "lucide-react"
 import { toast } from "sonner"
 import type { Project, GenerationRecord } from "@/types"
@@ -59,6 +61,13 @@ import {
   contentTypeGroups,
   platformContentTypes,
 } from "@/types"
+import ListingChecker from "@/components/dashboard/listing-checker"
+import {
+  exportForPlatform,
+  downloadExport,
+  getAvailableFormats,
+  type ExportFormat,
+} from "@/lib/platform-export"
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   FileText, ListOrdered, AlignLeft, BookOpen, ImageIcon, ImagePlus,
@@ -471,6 +480,106 @@ export function ProjectDetail({ project }: { project: Project }) {
           )
         })}
       </div>
+
+      {/* ─── Quality Checker & Export ─────────────────────────── */}
+      {records.length > 0 && (() => {
+        const copyRecords = records.filter(
+          (r) => r.content && ["title", "bulletPoints", "shortDesc", "longDesc", "adCopy", "seoKeywords", "brandStory"].includes(r.contentType)
+        )
+        const formats = getAvailableFormats(project.platform)
+
+        return copyRecords.length > 0 ? (
+          <div className="grid gap-4 sm:grid-cols-2 mb-10">
+            {/* Quality Checker */}
+            <Card>
+              <CardHeader className="pb-2">
+                <div className="flex items-center gap-2">
+                  <ShieldCheck className="size-5 text-emerald-600 dark:text-emerald-400" />
+                  <CardTitle className="text-sm">Listing 质量检查</CardTitle>
+                </div>
+                <CardDescription className="text-xs">
+                  基于平台规则的内容合规检测
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {(() => {
+                  // Find the newest text record to check
+                  const textTypes = ["title", "bulletPoints", "shortDesc", "longDesc"] as const
+                  const checksToShow = textTypes
+                    .map((ct) => {
+                      const rec = copyRecords.find((r) => r.contentType === ct)
+                      return rec ? { contentType: ct, content: rec.content! } : null
+                    })
+                    .filter(Boolean) as Array<{ contentType: string; content: string }>
+
+                  if (checksToShow.length === 0) return <p className="text-xs text-muted-foreground">暂无可检查的文案内容</p>
+
+                  return checksToShow.map((item) => (
+                    <div key={item.contentType}>
+                      <p className="text-xs font-medium text-muted-foreground mb-1.5">
+                        {contentTypeLabels[item.contentType]}
+                      </p>
+                      <ListingChecker
+                        platform={project.platform}
+                        contentType={item.contentType}
+                        content={item.content}
+                        keywords={project.keywords}
+                        brandName={project.brandName}
+                        sellingPoints={project.sellingPoints}
+                        bannedWords={project.bannedWords}
+                      />
+                    </div>
+                  ))
+                })()}
+              </CardContent>
+            </Card>
+
+            {/* Platform Export */}
+            <Card>
+              <CardHeader className="pb-2">
+                <div className="flex items-center gap-2">
+                  <FileDown className="size-5 text-blue-600 dark:text-blue-400" />
+                  <CardTitle className="text-sm">平台格式导出</CardTitle>
+                </div>
+                <CardDescription className="text-xs">
+                  导出为平台可直接导入的文件格式
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  {formats.map((f) => (
+                    <button
+                      key={f.format}
+                      type="button"
+                      onClick={() => {
+                        const result = exportForPlatform(
+                          f.format,
+                          project.productName,
+                          records,
+                          {
+                            brandName: project.brandName || undefined,
+                            keywords: project.keywords || undefined,
+                            platform: platformLabels[project.platform] || project.platform,
+                          }
+                        )
+                        downloadExport(result)
+                        toast.success(`已导出 ${f.label}`)
+                      }}
+                      className="flex w-full items-start gap-3 rounded-lg border border-border/50 p-3 text-left transition-colors hover:bg-muted/30"
+                    >
+                      <FileDown className="size-4 mt-0.5 shrink-0 text-muted-foreground" />
+                      <div className="min-w-0">
+                        <p className="text-sm font-medium">{f.label}</p>
+                        <p className="text-xs text-muted-foreground">{f.desc}</p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        ) : null
+      })()}
 
       {/* Generated Results - Version Grouped */}
       {records.length > 0 && (
