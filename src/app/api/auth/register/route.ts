@@ -20,17 +20,6 @@ export async function POST(req: Request) {
       )
     }
 
-    const existing = await prisma.user.findUnique({
-      where: { email },
-    })
-
-    if (existing) {
-      return NextResponse.json(
-        { error: "该邮箱已被注册" },
-        { status: 409 }
-      )
-    }
-
     const hashedPassword = await bcrypt.hash(password, 12)
 
     await prisma.user.create({
@@ -42,9 +31,16 @@ export async function POST(req: Request) {
     })
 
     return NextResponse.json({ success: true })
-  } catch (err) {
-    console.error("注册失败详情:", err instanceof Error ? err.message : err)
-    console.error("完整错误:", err)
+  } catch (err: unknown) {
+    // Handle unique constraint violation (race condition safe)
+    const prismaErr = err as { code?: string }
+    if (prismaErr.code === "P2002") {
+      return NextResponse.json(
+        { error: "该邮箱已被注册" },
+        { status: 409 }
+      )
+    }
+    console.error("[Register]", err)
     return NextResponse.json(
       { error: "注册失败，请稍后再试" },
       { status: 500 }

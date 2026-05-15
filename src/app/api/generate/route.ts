@@ -389,7 +389,8 @@ export async function POST(req: Request) {
     })
 
     return NextResponse.json({ record })
-  } catch {
+  } catch (err) {
+    console.error("[Generate]", err)
     return NextResponse.json({ error: "生成失败" }, { status: 500 })
   }
 }

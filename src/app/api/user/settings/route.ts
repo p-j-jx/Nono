@@ -28,7 +28,8 @@ export async function PUT(req: Request) {
     })
 
     return NextResponse.json({ success: true })
-  } catch {
+  } catch (err) {
+    console.error("[Settings]", err)
     return NextResponse.json({ error: "保存失败" }, { status: 500 })
   }
 }

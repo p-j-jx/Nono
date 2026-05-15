@@ -83,7 +83,8 @@ export async function POST(req: Request) {
     })
 
     return NextResponse.json({ project })
-  } catch {
+  } catch (err) {
+    console.error("[Projects]", err)
     return NextResponse.json({ error: "创建项目失败" }, { status: 500 })
   }
 }

@@ -85,10 +85,17 @@ export async function POST(req: Request) {
 
         const text = response.choices[0]?.message?.content || ""
         if (text) {
-          const parsed = JSON.parse(text)
-          return NextResponse.json({ suggestions: parsed })
+          // Strip markdown code fences if present
+          const clean = text.replace(/^```(?:json)?\s*\n?/i, "").replace(/\n?```\s*$/i, "").trim()
+          try {
+            const parsed = JSON.parse(clean)
+            return NextResponse.json({ suggestions: parsed })
+          } catch {
+            console.error("[Suggestions] AI returned invalid JSON:", text.slice(0, 200))
+          }
         }
-      } catch {
+      } catch (err) {
+        console.error("[Suggestions] API call failed:", err)
         // Fall through to mock
       }
     }
@@ -96,7 +103,8 @@ export async function POST(req: Request) {
     // Mock fallback
     const suggestions = generateMockSuggestions(productName)
     return NextResponse.json({ suggestions })
-  } catch {
+  } catch (err) {
+    console.error("[Suggestions]", err)
     return NextResponse.json({ error: "生成建议失败" }, { status: 500 })
   }
 }

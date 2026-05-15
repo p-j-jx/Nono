@@ -52,7 +52,8 @@ export async function GET(req: Request) {
     }
 
     return NextResponse.json({ error: "不支持的导出类型" }, { status: 400 })
-  } catch {
+  } catch (err) {
+    console.error("[Export]", err)
     return NextResponse.json({ error: "导出失败" }, { status: 500 })
   }
 }

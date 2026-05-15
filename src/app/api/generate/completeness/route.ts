@@ -57,7 +57,8 @@ export async function POST(req: Request) {
   }
 
   try {
-    const { projectId, mode } = await req.json()
+    const body = await req.json()
+    const { projectId, mode } = body
 
     let data: Record<string, unknown>
 
@@ -71,7 +72,6 @@ export async function POST(req: Request) {
       data = project as unknown as Record<string, unknown>
     } else {
       // Accept data directly from the request body
-      const body = await req.json()
       data = body.data || body
       // Remove non-field keys
       delete data.projectId
@@ -81,7 +81,8 @@ export async function POST(req: Request) {
 
     const result = computeScore(data, mode || "standard")
     return NextResponse.json(result)
-  } catch {
+  } catch (err) {
+    console.error("[Completeness]", err)
     return NextResponse.json({ error: "评分失败" }, { status: 500 })
   }
 }

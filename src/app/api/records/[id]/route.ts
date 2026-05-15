@@ -68,7 +68,8 @@ export async function PATCH(
     })
 
     return NextResponse.json({ record: updated })
-  } catch {
+  } catch (err) {
+    console.error("[Records/update]", err)
     return NextResponse.json({ error: "更新记录失败" }, { status: 500 })
   }
 }

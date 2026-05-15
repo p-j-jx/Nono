@@ -118,7 +118,8 @@ export async function PUT(
     })
 
     return NextResponse.json({ project: updated })
-  } catch {
+  } catch (err) {
+    console.error("[Projects/update]", err)
     return NextResponse.json({ error: "更新项目失败" }, { status: 500 })
   }
 }
