@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/db/prisma"
+import { rateLimit } from "@/lib/rate-limit"
 
 const contentTypeLabels: Record<string, string> = {
   title: "商品标题",
@@ -262,6 +263,22 @@ export async function POST(req: Request) {
   const session = await auth()
   if (!session?.user?.id) {
     return NextResponse.json({ error: "请先登录" }, { status: 401 })
+  }
+
+  // Rate limit: 30 requests per minute per user
+  const { success, remaining, retryAfterMs } = rateLimit(
+    `generate:${session.user.id}`,
+    30,
+    60_000
+  )
+  if (!success) {
+    return NextResponse.json(
+      { error: `请求过于频繁，请 ${Math.ceil(retryAfterMs / 1000)} 秒后再试` },
+      {
+        status: 429,
+        headers: { "Retry-After": String(Math.ceil(retryAfterMs / 1000)) },
+      }
+    )
   }
 
   try {

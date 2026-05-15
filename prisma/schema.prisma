@@ -99,6 +99,9 @@ model ProductProject {
   updatedAt             DateTime           @updatedAt
   records               GenerationRecord[]
   user                  User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, updatedAt(sort: Desc)])
+  @@index([userId, platform])
 }
 
 model GenerationRecord {
@@ -111,4 +114,8 @@ model GenerationRecord {
   favorited   Boolean        @default(false)
   createdAt   DateTime       @default(now())
   project     ProductProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId, contentType])
+  @@index([projectId, createdAt(sort: Desc)])
+  @@index([favorited])
 }
