@@ -17,6 +17,7 @@ import {
   Sparkles,
   Swords,
   ShieldCheck,
+  Calculator,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useSidebar } from "./sidebar-context"
@@ -42,6 +43,7 @@ const navSections = [
     items: [
       { label: "竞品分析", href: "/dashboard/competitor", icon: Swords },
       { label: "质量检查", href: "/dashboard/quality", icon: ShieldCheck },
+      { label: "税务计算", href: "/dashboard/tax", icon: Calculator },
     ],
   },
   {
