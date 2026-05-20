@@ -54,6 +54,34 @@ export async function GET() {
     const tables = await db.execute(
       "SELECT name FROM sqlite_master WHERE type='table'"
     )
+    const existingTables = new Set(tables.rows.map((r) => (r.name as string).toLowerCase()))
+
+    // Create new tables that don't exist yet
+    if (!existingTables.has("analysisrecord")) {
+      try {
+        await db.execute(`
+          CREATE TABLE "AnalysisRecord" (
+            "id" TEXT NOT NULL PRIMARY KEY,
+            "userId" TEXT NOT NULL,
+            "projectId" TEXT,
+            "projectName" TEXT,
+            "analysisType" TEXT NOT NULL,
+            "inputData" TEXT NOT NULL,
+            "resultData" TEXT NOT NULL,
+            "summary" TEXT,
+            "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            CONSTRAINT "AnalysisRecord_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE
+          )
+        `)
+        await db.execute(`CREATE INDEX "AnalysisRecord_userId_createdAt_idx" ON "AnalysisRecord"("userId", "createdAt" DESC)`)
+        await db.execute(`CREATE INDEX "AnalysisRecord_userId_analysisType_idx" ON "AnalysisRecord"("userId", "analysisType")`)
+        results["AnalysisRecord (table)"] = "已创建 ✅"
+      } catch (e) {
+        results["AnalysisRecord (table)"] = `失败: ${e instanceof Error ? e.message : String(e)}`
+      }
+    } else {
+      results["AnalysisRecord (table)"] = "已存在"
+    }
 
     for (const table of tables.rows) {
       const tableName = table.name as string

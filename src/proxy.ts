@@ -35,5 +35,6 @@ export const config = {
     "/api/generate/:path*",
     "/api/records/:path*",
     "/api/user/:path*",
+    "/api/analysis/:path*",
   ],
 }

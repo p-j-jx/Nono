@@ -43,20 +43,37 @@ model VerificationToken {
 }
 
 model User {
-  id             String           @id @default(cuid())
-  name           String?
-  email          String           @unique
-  emailVerified  DateTime?
-  image          String?
-  password       String?
-  apiKey         String?
-  apiKeyProvider String           @default("deepseek")
-  imageApiKey    String?
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
-  accounts       Account[]
-  projects       ProductProject[]
-  sessions       Session[]
+  id              String           @id @default(cuid())
+  name            String?
+  email           String           @unique
+  emailVerified   DateTime?
+  image           String?
+  password        String?
+  apiKey          String?
+  apiKeyProvider  String           @default("deepseek")
+  imageApiKey     String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  accounts        Account[]
+  projects        ProductProject[]
+  sessions        Session[]
+  analysisRecords AnalysisRecord[]
+}
+
+model AnalysisRecord {
+  id           String   @id @default(cuid())
+  userId       String
+  projectId    String?
+  projectName  String?
+  analysisType String   // "competitor" | "quality"
+  inputData    String   // JSON: competitor input or content checked
+  resultData   String   // JSON: full report
+  summary      String?  // Short text summary for list display
+  createdAt    DateTime @default(now())
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([userId, analysisType])
 }
 
 model ProductProject {

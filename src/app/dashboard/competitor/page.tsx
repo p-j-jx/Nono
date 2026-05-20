@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import {
   Swords,
   ArrowRight,
@@ -11,6 +11,9 @@ import {
   TrendingUp,
   Target,
   Search,
+  History,
+  Trash2,
+  Clock,
 } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -21,6 +24,15 @@ import {
   analyzeCompetitor,
   type CompetitorReport,
 } from "@/lib/competitor-analysis"
+
+type AnalysisHistoryItem = {
+  id: string
+  projectName: string | null
+  summary: string | null
+  inputData: string
+  resultData: string
+  createdAt: string
+}
 
 type ProjectOption = {
   id: string
@@ -42,14 +54,28 @@ export default function CompetitorPage() {
   const [compDesc, setCompDesc] = useState("")
   const [report, setReport] = useState<CompetitorReport | null>(null)
   const [analyzing, setAnalyzing] = useState(false)
+  const [history, setHistory] = useState<AnalysisHistoryItem[]>([])
+  const [showHistory, setShowHistory] = useState(false)
 
-  // Fetch user's projects
+  const loadHistory = useCallback(async () => {
+    try {
+      const res = await fetch("/api/analysis?type=competitor&limit=20")
+      const data = await res.json()
+      if (res.ok && data.records) {
+        setHistory(data.records)
+      }
+    } catch {
+      // ignore
+    }
+  }, [])
+
+  // Fetch user's projects + history
   useEffect(() => {
     async function load() {
       try {
-        const res = await fetch("/api/projects")
-        const data = await res.json()
-        if (res.ok && data.projects) {
+        const [projRes] = await Promise.all([fetch("/api/projects"), loadHistory()])
+        const data = await projRes.json()
+        if (projRes.ok && data.projects) {
           setProjects(data.projects)
         }
       } catch {
@@ -59,11 +85,11 @@ export default function CompetitorPage() {
       }
     }
     load()
-  }, [])
+  }, [loadHistory])
 
   const selectedProject = projects.find((p) => p.id === selectedProjectId)
 
-  function handleAnalyze() {
+  async function handleAnalyze() {
     if (!selectedProject) {
       toast.error("请先选择一个项目")
       return
@@ -83,7 +109,7 @@ export default function CompetitorPage() {
       }
     }
 
-    const result = analyzeCompetitor({
+    const input = {
       platform: selectedProject.platform,
       your: {
         title: myContent.title,
@@ -96,21 +122,141 @@ export default function CompetitorPage() {
         bulletPoints: compBullets.trim() || undefined,
         description: compDesc.trim() || undefined,
       },
-    })
+    }
 
+    const result = analyzeCompetitor(input)
     setReport(result)
+
+    // Save to history
+    try {
+      const summary = `关键词缺口 ${result.keywordGap.missing.length} · 卖点差异 ${result.sellingPointDiff.competitorUnique.length} · 建议 ${result.suggestions.length}`
+      await fetch("/api/analysis", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          projectId: selectedProject.id,
+          projectName: selectedProject.productName,
+          analysisType: "competitor",
+          inputData: JSON.stringify({
+            competitorTitle: compTitle.trim(),
+            competitorBullets: compBullets.trim(),
+            competitorDesc: compDesc.trim(),
+          }),
+          resultData: JSON.stringify(result),
+          summary,
+        }),
+      })
+      await loadHistory()
+    } catch {
+      // ignore save errors
+    }
+
     setAnalyzing(false)
     toast.success("分析完成")
   }
 
+  function loadHistoryRecord(item: AnalysisHistoryItem) {
+    try {
+      const input = JSON.parse(item.inputData) as {
+        competitorTitle?: string
+        competitorBullets?: string
+        competitorDesc?: string
+      }
+      const result = JSON.parse(item.resultData) as CompetitorReport
+
+      setCompTitle(input.competitorTitle || "")
+      setCompBullets(input.competitorBullets || "")
+      setCompDesc(input.competitorDesc || "")
+      setReport(result)
+      setShowHistory(false)
+      toast.success("已加载历史分析")
+    } catch {
+      toast.error("加载历史记录失败")
+    }
+  }
+
+  async function deleteHistoryRecord(id: string, e: React.MouseEvent) {
+    e.stopPropagation()
+    try {
+      const res = await fetch(`/api/analysis/${id}`, { method: "DELETE" })
+      if (!res.ok) throw new Error()
+      setHistory((prev) => prev.filter((h) => h.id !== id))
+      toast.success("已删除")
+    } catch {
+      toast.error("删除失败")
+    }
+  }
+
   return (
     <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-8">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold tracking-tight">竞品分析</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          对比竞品 Listing 内容，找出关键词差距和优化机会
-        </p>
+      <div className="mb-6 flex items-start justify-between gap-3 flex-wrap">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">竞品分析</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            对比竞品 Listing 内容，找出关键词差距和优化机会
+          </p>
+        </div>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setShowHistory((v) => !v)}
+          className="gap-1.5"
+        >
+          <History className="size-4" />
+          历史记录 {history.length > 0 && `(${history.length})`}
+        </Button>
       </div>
+
+      {/* History panel */}
+      {showHistory && (
+        <Card className="mb-6">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm">分析历史</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {history.length === 0 ? (
+              <p className="py-3 text-xs text-muted-foreground text-center">
+                暂无历史记录，完成一次分析后会自动保存
+              </p>
+            ) : (
+              <div className="space-y-2 max-h-72 overflow-y-auto">
+                {history.map((item) => (
+                  <div
+                    key={item.id}
+                    onClick={() => loadHistoryRecord(item)}
+                    className="group flex items-start gap-3 rounded-lg border border-border/50 p-3 cursor-pointer hover:bg-muted/30 transition-colors"
+                  >
+                    <Clock className="size-3.5 mt-0.5 shrink-0 text-muted-foreground" />
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-sm font-medium">
+                          {item.projectName || "未关联项目"}
+                        </span>
+                        <span className="text-[10px] text-muted-foreground">
+                          {new Date(item.createdAt).toLocaleString("zh-CN")}
+                        </span>
+                      </div>
+                      {item.summary && (
+                        <p className="text-xs text-muted-foreground mt-0.5">
+                          {item.summary}
+                        </p>
+                      )}
+                    </div>
+                    <button
+                      type="button"
+                      onClick={(e) => deleteHistoryRecord(item.id, e)}
+                      className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:text-destructive"
+                      title="删除"
+                    >
+                      <Trash2 className="size-3.5" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
 
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Left: Input */}
