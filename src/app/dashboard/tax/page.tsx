@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect, useCallback } from "react"
 import {
   Calculator,
   Loader2,
@@ -13,10 +13,22 @@ import {
   Euro,
   FileText,
   AlertTriangle,
+  History,
+  Clock,
+  Trash2,
 } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
+
+type AnalysisHistoryItem = {
+  id: string
+  projectName: string | null
+  summary: string | null
+  inputData: string
+  resultData: string
+  createdAt: string
+}
 
 type CalcResult = {
   calculation: Record<string, unknown>
@@ -40,6 +52,64 @@ export default function TaxPage() {
   const [quantity, setQuantity] = useState("100")
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<CalcResult | null>(null)
+  const [history, setHistory] = useState<AnalysisHistoryItem[]>([])
+  const [showHistory, setShowHistory] = useState(false)
+
+  const loadHistory = useCallback(async () => {
+    try {
+      const res = await fetch("/api/analysis?type=tax&limit=20")
+      const data = await res.json()
+      if (res.ok && data.records) {
+        setHistory(data.records)
+      }
+    } catch {
+      // ignore
+    }
+  }, [])
+
+  useEffect(() => {
+    loadHistory()
+  }, [loadHistory])
+
+  function loadHistoryRecord(item: AnalysisHistoryItem) {
+    try {
+      const input = JSON.parse(item.inputData) as {
+        productName: string
+        hsCode?: string
+        destinationCountry: string
+        shippingMode: string
+        unitPrice: string | number
+        weight: string | number
+        quantity: string | number
+      }
+      const data = JSON.parse(item.resultData) as CalcResult
+
+      setProductName(input.productName || "")
+      setHsCode(input.hsCode || "")
+      setDestinationCountry(input.destinationCountry || "德国")
+      setShippingMode(input.shippingMode || "air")
+      setUnitPrice(String(input.unitPrice || ""))
+      setWeight(String(input.weight || ""))
+      setQuantity(String(input.quantity || "100"))
+      setResult(data)
+      setShowHistory(false)
+      toast.success("已加载历史记录")
+    } catch {
+      toast.error("加载历史记录失败")
+    }
+  }
+
+  async function deleteHistoryRecord(id: string, e: React.MouseEvent) {
+    e.stopPropagation()
+    try {
+      const res = await fetch(`/api/analysis/${id}`, { method: "DELETE" })
+      if (!res.ok) throw new Error()
+      setHistory((prev) => prev.filter((h) => h.id !== id))
+      toast.success("已删除")
+    } catch {
+      toast.error("删除失败")
+    }
+  }
 
   async function handleCalculate() {
     if (!productName.trim() || !unitPrice || !weight || !quantity) {
@@ -73,6 +143,37 @@ export default function TaxPage() {
 
       setResult(data)
       toast.success("税务计算完成")
+
+      // Save to history
+      try {
+        const c = data.calculation as Record<string, unknown>
+        const totalLanded = typeof c.total_landed_cost_batch === "number"
+          ? c.total_landed_cost_batch.toFixed(2)
+          : "?"
+        const summary = `${destinationCountry} · ${productName.trim()} × ${quantity} · 落地 ¥${totalLanded}`
+        await fetch("/api/analysis", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            projectName: productName.trim(),
+            analysisType: "tax",
+            inputData: JSON.stringify({
+              productName: productName.trim(),
+              hsCode: hsCode.trim(),
+              destinationCountry,
+              shippingMode,
+              unitPrice,
+              weight,
+              quantity,
+            }),
+            resultData: JSON.stringify(data),
+            summary,
+          }),
+        })
+        await loadHistory()
+      } catch {
+        // ignore save errors
+      }
     } catch {
       toast.error("网络错误，请重试")
     } finally {
@@ -84,12 +185,74 @@ export default function TaxPage() {
 
   return (
     <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-8">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold tracking-tight">欧洲出口税务计算</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          输入产品信息，AI 自动联网查询欧盟最新税率，计算落地成本
-        </p>
+      <div className="mb-6 flex items-start justify-between gap-3 flex-wrap">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">欧洲出口税务计算</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            输入产品信息，AI 自动联网查询欧盟最新税率，计算落地成本
+          </p>
+        </div>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setShowHistory((v) => !v)}
+          className="gap-1.5"
+        >
+          <History className="size-4" />
+          历史记录 {history.length > 0 && `(${history.length})`}
+        </Button>
       </div>
+
+      {/* History panel */}
+      {showHistory && (
+        <Card className="mb-6">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm">计算历史</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {history.length === 0 ? (
+              <p className="py-3 text-xs text-muted-foreground text-center">
+                暂无历史记录，完成一次计算后会自动保存
+              </p>
+            ) : (
+              <div className="space-y-2 max-h-72 overflow-y-auto">
+                {history.map((item) => (
+                  <div
+                    key={item.id}
+                    onClick={() => loadHistoryRecord(item)}
+                    className="group flex items-start gap-3 rounded-lg border border-border/50 p-3 cursor-pointer hover:bg-muted/30 transition-colors"
+                  >
+                    <Clock className="size-3.5 mt-0.5 shrink-0 text-muted-foreground" />
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-sm font-medium">
+                          {item.projectName || "未命名计算"}
+                        </span>
+                        <span className="text-[10px] text-muted-foreground">
+                          {new Date(item.createdAt).toLocaleString("zh-CN")}
+                        </span>
+                      </div>
+                      {item.summary && (
+                        <p className="text-xs text-muted-foreground mt-0.5">
+                          {item.summary}
+                        </p>
+                      )}
+                    </div>
+                    <button
+                      type="button"
+                      onClick={(e) => deleteHistoryRecord(item.id, e)}
+                      className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:text-destructive"
+                      title="删除"
+                    >
+                      <Trash2 className="size-3.5" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
 
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Left: Input */}

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/db/prisma"
 
-const VALID_TYPES = ["competitor", "quality"]
+const VALID_TYPES = ["competitor", "quality", "tax"]
 
 let tableEnsured = false
 
