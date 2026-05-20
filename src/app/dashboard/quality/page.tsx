@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
+import { useSearchParams } from "next/navigation"
 import {
   ShieldCheck,
   Loader2,
@@ -45,6 +46,8 @@ type ProjectOption = {
 const TEXT_TYPES = ["title", "bulletPoints", "shortDesc", "longDesc", "adCopy", "seoKeywords", "brandStory"]
 
 export default function QualityPage() {
+  const searchParams = useSearchParams()
+  const recordIdFromUrl = searchParams.get("recordId")
   const [projects, setProjects] = useState<ProjectOption[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedProjectId, setSelectedProjectId] = useState<string>("")
@@ -81,6 +84,23 @@ export default function QualityPage() {
     }
     load()
   }, [loadHistory])
+
+  // Auto-select project from URL ?recordId=xxx (uses record's projectId)
+  useEffect(() => {
+    if (!recordIdFromUrl || history.length === 0 || projects.length === 0) return
+    const item = history.find((h) => h.id === recordIdFromUrl)
+    if (item) {
+      try {
+        // The quality record's input contains the project context; find by projectName
+        const matchingProject = projects.find((p) => p.productName === item.projectName)
+        if (matchingProject) {
+          setSelectedProjectId(matchingProject.id)
+        }
+      } catch {
+        // ignore
+      }
+    }
+  }, [recordIdFromUrl, history, projects])
 
   const selectedProject = projects.find((p) => p.id === selectedProjectId)
 

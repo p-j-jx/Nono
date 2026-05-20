@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
+import { useSearchParams } from "next/navigation"
 import {
   Calculator,
   Loader2,
@@ -43,6 +44,8 @@ const SHIPPING_MODES = [
 ]
 
 export default function TaxPage() {
+  const searchParams = useSearchParams()
+  const recordIdFromUrl = searchParams.get("recordId")
   const [productName, setProductName] = useState("")
   const [hsCode, setHsCode] = useState("")
   const [destinationCountry, setDestinationCountry] = useState("德国")
@@ -70,6 +73,36 @@ export default function TaxPage() {
   useEffect(() => {
     loadHistory()
   }, [loadHistory])
+
+  // Auto-load record from URL ?recordId=xxx
+  useEffect(() => {
+    if (!recordIdFromUrl || history.length === 0) return
+    const item = history.find((h) => h.id === recordIdFromUrl)
+    if (item) {
+      try {
+        const input = JSON.parse(item.inputData) as {
+          productName: string
+          hsCode?: string
+          destinationCountry: string
+          shippingMode: string
+          unitPrice: string | number
+          weight: string | number
+          quantity: string | number
+        }
+        const data = JSON.parse(item.resultData) as CalcResult
+        setProductName(input.productName || "")
+        setHsCode(input.hsCode || "")
+        setDestinationCountry(input.destinationCountry || "德国")
+        setShippingMode(input.shippingMode || "air")
+        setUnitPrice(String(input.unitPrice || ""))
+        setWeight(String(input.weight || ""))
+        setQuantity(String(input.quantity || "100"))
+        setResult(data)
+      } catch {
+        // ignore
+      }
+    }
+  }, [recordIdFromUrl, history])
 
   function loadHistoryRecord(item: AnalysisHistoryItem) {
     try {

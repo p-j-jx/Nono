@@ -218,9 +218,14 @@ export default async function HistoryPage({
               {records.map((record) => {
                 const cfg = analysisTypeConfig[record.analysisType] || analysisTypeConfig.competitor
                 const Icon = cfg.icon
+                const targetUrl = `${cfg.href}?recordId=${record.id}`
                 return (
-                  <Card key={record.id} className="transition-all duration-300 hover:shadow-md hover:border-primary/20">
-                    <CardContent className="py-4">
+                  <Link
+                    key={record.id}
+                    href={targetUrl}
+                    className="block rounded-xl border border-border bg-card hover:border-primary/30 hover:bg-muted/20 transition-colors"
+                  >
+                    <div className="py-4 px-6">
                       <div className="flex items-start gap-4">
                         <div className={`flex size-9 shrink-0 items-center justify-center rounded-lg ${cfg.color}`}>
                           <Icon className="size-4" />
@@ -244,18 +249,15 @@ export default async function HistoryPage({
                               <Clock className="size-3" />
                               {formatDate(new Date(record.createdAt))}
                             </span>
-                            <Link
-                              href={cfg.href}
-                              className="flex items-center gap-1 text-[11px] text-primary/70 hover:text-primary transition-colors"
-                            >
+                            <span className="flex items-center gap-1 text-[11px] text-primary/70">
                               <ExternalLink className="size-3" />
-                              前往工具
-                            </Link>
+                              点击查看
+                            </span>
                           </div>
                         </div>
                       </div>
-                    </CardContent>
-                  </Card>
+                    </div>
+                  </Link>
                 )
               })}
             </div>

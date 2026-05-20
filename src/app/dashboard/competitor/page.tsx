@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
+import { useSearchParams } from "next/navigation"
 import {
   Swords,
   ArrowRight,
@@ -46,6 +47,8 @@ type ProjectOption = {
 }
 
 export default function CompetitorPage() {
+  const searchParams = useSearchParams()
+  const recordIdFromUrl = searchParams.get("recordId")
   const [projects, setProjects] = useState<ProjectOption[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedProjectId, setSelectedProjectId] = useState<string>("")
@@ -86,6 +89,28 @@ export default function CompetitorPage() {
     }
     load()
   }, [loadHistory])
+
+  // Auto-load record from URL ?recordId=xxx
+  useEffect(() => {
+    if (!recordIdFromUrl || history.length === 0) return
+    const item = history.find((h) => h.id === recordIdFromUrl)
+    if (item) {
+      try {
+        const input = JSON.parse(item.inputData) as {
+          competitorTitle?: string
+          competitorBullets?: string
+          competitorDesc?: string
+        }
+        const result = JSON.parse(item.resultData) as CompetitorReport
+        setCompTitle(input.competitorTitle || "")
+        setCompBullets(input.competitorBullets || "")
+        setCompDesc(input.competitorDesc || "")
+        setReport(result)
+      } catch {
+        // ignore
+      }
+    }
+  }, [recordIdFromUrl, history])
 
   const selectedProject = projects.find((p) => p.id === selectedProjectId)
 
