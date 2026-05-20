@@ -27,6 +27,9 @@ import {
   Star,
   ChevronLeft,
   ChevronRight,
+  Swords,
+  ShieldCheck,
+  Calculator,
 } from "lucide-react"
 import { Highlight } from "@/components/highlight"
 
@@ -36,38 +39,35 @@ const contentTypeConfig: Record<
   string,
   { label: string; icon: typeof FileText; color: string }
 > = {
-  title: {
-    label: "商品标题",
-    icon: FileText,
-    color: "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300",
+  title: { label: "商品标题", icon: FileText, color: "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300" },
+  bulletPoints: { label: "要点描述", icon: ListOrdered, color: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300" },
+  shortDesc: { label: "短描述", icon: AlignLeft, color: "bg-violet-100 text-violet-700 dark:bg-violet-900/40 dark:text-violet-300" },
+  longDesc: { label: "长描述", icon: BookOpen, color: "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300" },
+  mainImage: { label: "商品主图", icon: ImageIcon, color: "bg-pink-100 text-pink-700 dark:bg-pink-900/40 dark:text-pink-300" },
+  sceneImage: { label: "场景图", icon: ImagePlus, color: "bg-cyan-100 text-cyan-700 dark:bg-cyan-900/40 dark:text-cyan-300" },
+}
+
+const analysisTypeConfig: Record<
+  string,
+  { label: string; icon: typeof FileText; color: string; href: string }
+> = {
+  competitor: {
+    label: "竞品分析",
+    icon: Swords,
+    color: "bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-300",
+    href: "/dashboard/competitor",
   },
-  bulletPoints: {
-    label: "要点描述",
-    icon: ListOrdered,
-    color:
-      "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300",
+  quality: {
+    label: "质量检查",
+    icon: ShieldCheck,
+    color: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300",
+    href: "/dashboard/quality",
   },
-  shortDesc: {
-    label: "短描述",
-    icon: AlignLeft,
-    color:
-      "bg-violet-100 text-violet-700 dark:bg-violet-900/40 dark:text-violet-300",
-  },
-  longDesc: {
-    label: "长描述",
-    icon: BookOpen,
-    color:
-      "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300",
-  },
-  mainImage: {
-    label: "商品主图",
-    icon: ImageIcon,
-    color: "bg-pink-100 text-pink-700 dark:bg-pink-900/40 dark:text-pink-300",
-  },
-  sceneImage: {
-    label: "场景图",
-    icon: ImagePlus,
-    color: "bg-cyan-100 text-cyan-700 dark:bg-cyan-900/40 dark:text-cyan-300",
+  tax: {
+    label: "税务计算",
+    icon: Calculator,
+    color: "bg-violet-100 text-violet-700 dark:bg-violet-900/40 dark:text-violet-300",
+    href: "/dashboard/tax",
   },
 }
 
@@ -101,25 +101,207 @@ export default async function HistoryPage({
     platform?: string
     page?: string
     favorited?: string
+    tab?: string
+    analysisType?: string
   }>
 }) {
   const session = await auth()
   if (!session?.user?.id) return null
 
   const sp = await searchParams
-  const { q, contentType, platform } = sp
+  const { q, contentType, platform, analysisType } = sp
+  const tab = sp.tab === "analysis" ? "analysis" : "content"
   const page = Math.max(1, Number(sp.page) || 1)
   const favorited = sp.favorited === "true"
+
+  // Tab nav helper
+  function tabUrl(t: "content" | "analysis") {
+    return t === "content" ? "/dashboard/history" : "/dashboard/history?tab=analysis"
+  }
+
+  if (tab === "analysis") {
+    // ── Analysis Records Tab ─────────────────────────────────
+    const where: { userId: string; analysisType?: string } = {
+      userId: session.user.id,
+    }
+    if (analysisType && ["competitor", "quality", "tax"].includes(analysisType)) {
+      where.analysisType = analysisType
+    }
+
+    const [records, totalCount] = await Promise.all([
+      prisma.analysisRecord.findMany({
+        where,
+        orderBy: { createdAt: "desc" },
+        skip: (page - 1) * PAGE_SIZE,
+        take: PAGE_SIZE,
+      }),
+      prisma.analysisRecord.count({ where }),
+    ])
+
+    const totalPages = Math.ceil(totalCount / PAGE_SIZE)
+    const hasFilters = !!analysisType
+
+    function buildAnalysisPageUrl(p: number): string {
+      const params = new URLSearchParams()
+      params.set("tab", "analysis")
+      if (analysisType) params.set("analysisType", analysisType)
+      if (p > 1) params.set("page", String(p))
+      return `/dashboard/history?${params.toString()}`
+    }
+
+    return (
+      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-8">
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold tracking-tight">历史记录</h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            共 {totalCount} 条分析记录
+          </p>
+        </div>
+
+        {/* Tabs */}
+        <TabNav active="analysis" tabUrl={tabUrl} />
+
+        {/* Analysis type filter */}
+        <div className="flex items-center gap-2 mb-6 flex-wrap">
+          <Link
+            href="/dashboard/history?tab=analysis"
+            className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+              !analysisType ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-muted/80"
+            }`}
+          >
+            全部
+          </Link>
+          {Object.entries(analysisTypeConfig).map(([key, cfg]) => {
+            const Icon = cfg.icon
+            const active = analysisType === key
+            return (
+              <Link
+                key={key}
+                href={`/dashboard/history?tab=analysis&analysisType=${key}`}
+                className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+                  active ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-muted/80"
+                }`}
+              >
+                <Icon className="size-3" />
+                {cfg.label}
+              </Link>
+            )
+          })}
+        </div>
+
+        {/* Records */}
+        {records.length === 0 ? (
+          <Card className="py-16">
+            <CardContent className="flex flex-col items-center justify-center text-center">
+              <div className="flex size-16 items-center justify-center rounded-2xl bg-primary/8 mb-6">
+                <HistoryIcon className="size-8 text-primary/60" />
+              </div>
+              <h3 className="text-lg font-semibold mb-2">
+                {hasFilters ? "没有匹配的分析记录" : "还没有分析记录"}
+              </h3>
+              <p className="text-sm text-muted-foreground mb-6 max-w-xs">
+                使用「竞品分析」「质量检查」或「税务计算」后，记录会出现在这里
+              </p>
+              {hasFilters && (
+                <Link
+                  href="/dashboard/history?tab=analysis"
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+                >
+                  清除筛选
+                </Link>
+              )}
+            </CardContent>
+          </Card>
+        ) : (
+          <>
+            <div className="space-y-3">
+              {records.map((record) => {
+                const cfg = analysisTypeConfig[record.analysisType] || analysisTypeConfig.competitor
+                const Icon = cfg.icon
+                return (
+                  <Card key={record.id} className="transition-all duration-300 hover:shadow-md hover:border-primary/20">
+                    <CardContent className="py-4">
+                      <div className="flex items-start gap-4">
+                        <div className={`flex size-9 shrink-0 items-center justify-center rounded-lg ${cfg.color}`}>
+                          <Icon className="size-4" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="text-sm font-medium truncate">
+                              {record.projectName || "未命名"}
+                            </span>
+                            <Badge variant="secondary" className="shrink-0 text-[10px] px-1.5 py-0">
+                              {cfg.label}
+                            </Badge>
+                          </div>
+                          {record.summary && (
+                            <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+                              {record.summary}
+                            </p>
+                          )}
+                          <div className="flex items-center gap-3 mt-2">
+                            <span className="flex items-center gap-1 text-[11px] text-muted-foreground/60">
+                              <Clock className="size-3" />
+                              {formatDate(new Date(record.createdAt))}
+                            </span>
+                            <Link
+                              href={cfg.href}
+                              className="flex items-center gap-1 text-[11px] text-primary/70 hover:text-primary transition-colors"
+                            >
+                              <ExternalLink className="size-3" />
+                              前往工具
+                            </Link>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )
+              })}
+            </div>
+
+            {totalPages > 1 && (
+              <div className="flex items-center justify-between mt-8 pt-6 border-t border-border/40">
+                <p className="text-sm text-muted-foreground">共 {totalCount} 条记录</p>
+                <div className="flex items-center gap-2">
+                  {page > 1 && (
+                    <Link
+                      href={buildAnalysisPageUrl(page - 1)}
+                      className="inline-flex items-center gap-1 rounded-lg border border-border/50 px-3 py-1.5 text-sm font-medium hover:bg-muted transition-colors"
+                    >
+                      <ChevronLeft className="size-4" />
+                      上一页
+                    </Link>
+                  )}
+                  <span className="text-sm text-muted-foreground px-2">
+                    第 {page}/{totalPages} 页
+                  </span>
+                  {page < totalPages && (
+                    <Link
+                      href={buildAnalysisPageUrl(page + 1)}
+                      className="inline-flex items-center gap-1 rounded-lg border border-border/50 px-3 py-1.5 text-sm font-medium hover:bg-muted transition-colors"
+                    >
+                      下一页
+                      <ChevronRight className="size-4" />
+                    </Link>
+                  )}
+                </div>
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    )
+  }
+
+  // ── Content Records Tab (default) ───────────────────────────
   const hasFilters = !!(q || contentType || platform || favorited)
 
-  // Build where clause
   const projectFilter: {
     userId: string
     productName?: { contains: string }
     platform?: string
-  } = {
-    userId: session.user.id,
-  }
+  } = { userId: session.user.id }
   if (q) projectFilter.productName = { contains: q }
   if (platform) projectFilter.platform = platform
 
@@ -127,9 +309,7 @@ export default async function HistoryPage({
     project: typeof projectFilter
     contentType?: string
     favorited?: boolean
-  } = {
-    project: projectFilter,
-  }
+  } = { project: projectFilter }
   if (contentType) where.contentType = contentType
   if (favorited) where.favorited = true
 
@@ -140,13 +320,7 @@ export default async function HistoryPage({
       skip: (page - 1) * PAGE_SIZE,
       take: PAGE_SIZE,
       include: {
-        project: {
-          select: {
-            productName: true,
-            platform: true,
-            id: true,
-          },
-        },
+        project: { select: { productName: true, platform: true, id: true } },
       },
     }),
     prisma.generationRecord.count({ where }),
@@ -161,7 +335,6 @@ export default async function HistoryPage({
     platform: record.project.platform,
   }))
 
-  // Build query string for pagination
   function buildPageUrl(p: number): string {
     const params = new URLSearchParams()
     if (q) params.set("q", q)
@@ -174,25 +347,20 @@ export default async function HistoryPage({
 
   return (
     <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-8">
-      {/* Header */}
       <div className="mb-6">
         <h1 className="text-2xl font-bold tracking-tight">历史记录</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          {hasFilters
-            ? `找到 ${totalCount} 条匹配的记录`
-            : `共 ${totalCount} 条生成记录`}
+          {hasFilters ? `找到 ${totalCount} 条匹配的记录` : `共 ${totalCount} 条生成记录`}
         </p>
       </div>
+
+      {/* Tabs */}
+      <TabNav active="content" tabUrl={tabUrl} />
 
       {/* Search & Filter */}
       <form className="flex flex-wrap items-end gap-3 mb-6">
         <div className="flex-1 min-w-[200px]">
-          <Input
-            name="q"
-            placeholder="搜索项目名称..."
-            defaultValue={q || ""}
-            className="h-9"
-          />
+          <Input name="q" placeholder="搜索项目名称..." defaultValue={q || ""} className="h-9" />
         </div>
         <Select name="contentType" defaultValue={contentType || ""}>
           <SelectTrigger className="h-9 w-[130px]">
@@ -221,9 +389,7 @@ export default async function HistoryPage({
         </Select>
         <input type="hidden" name="favorited" value={favorited ? "true" : ""} />
         <input type="hidden" name="page" value="1" />
-        <Button type="submit" size="sm" variant="secondary">
-          筛选
-        </Button>
+        <Button type="submit" size="sm" variant="secondary">筛选</Button>
         {hasFilters && (
           <Button size="sm" variant="ghost" render={<a href="/dashboard/history" />}>
             清除
@@ -231,24 +397,18 @@ export default async function HistoryPage({
         )}
       </form>
 
-      {/* Favorite filter toggle */}
       <div className="flex items-center gap-2 mb-4">
         <Link
           href={favorited ? "/dashboard/history" : `/dashboard/history?favorited=true`}
           className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-colors ${
-            favorited
-              ? "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300"
-              : "bg-muted text-muted-foreground hover:bg-muted/80"
+            favorited ? "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300" : "bg-muted text-muted-foreground hover:bg-muted/80"
           }`}
         >
-          <Star
-            className={`size-3.5 ${favorited ? "fill-amber-500 text-amber-500" : ""}`}
-          />
+          <Star className={`size-3.5 ${favorited ? "fill-amber-500 text-amber-500" : ""}`} />
           已收藏
         </Link>
       </div>
 
-      {/* Records */}
       {allRecords.length === 0 ? (
         <Card className="py-16">
           <CardContent className="flex flex-col items-center justify-center text-center">
@@ -258,9 +418,7 @@ export default async function HistoryPage({
                   <SearchX className="size-8 text-muted-foreground/60" />
                 </div>
                 <h3 className="text-lg font-semibold mb-2">没有匹配的记录</h3>
-                <p className="text-sm text-muted-foreground mb-1">
-                  试试调整搜索条件或筛选器
-                </p>
+                <p className="text-sm text-muted-foreground mb-1">试试调整搜索条件或筛选器</p>
                 <Link
                   href="/dashboard/history"
                   className="mt-4 inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
@@ -294,45 +452,29 @@ export default async function HistoryPage({
               const config = contentTypeConfig[record.contentType]
               const Icon = config?.icon || FileText
               const label = config?.label || record.contentType
-              const colorClass =
-                config?.color || "bg-muted text-muted-foreground"
+              const colorClass = config?.color || "bg-muted text-muted-foreground"
 
               return (
-                <Card
-                  key={record.id}
-                  className="transition-all duration-300 hover:shadow-md hover:border-primary/20"
-                >
+                <Card key={record.id} className="transition-all duration-300 hover:shadow-md hover:border-primary/20">
                   <CardContent className="py-4">
                     <div className="flex items-start gap-4">
-                      {/* Type Icon */}
-                      <div
-                        className={`flex size-9 shrink-0 items-center justify-center rounded-lg ${colorClass}`}
-                      >
+                      <div className={`flex size-9 shrink-0 items-center justify-center rounded-lg ${colorClass}`}>
                         <Icon className="size-4" />
                       </div>
-
-                      {/* Content */}
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
                           <Link
                             href={`/results?projectId=${record.projectId}`}
                             className="text-sm font-medium hover:text-primary transition-colors truncate"
                           >
-                            <Highlight
-                              text={record.projectName}
-                              query={q || undefined}
-                            />
+                            <Highlight text={record.projectName} query={q || undefined} />
                           </Link>
-                          <Badge
-                            variant="secondary"
-                            className="shrink-0 text-[10px] px-1.5 py-0"
-                          >
+                          <Badge variant="secondary" className="shrink-0 text-[10px] px-1.5 py-0">
                             {label}
                           </Badge>
                           {record.platform && (
                             <span className="shrink-0 text-[10px] text-muted-foreground/60">
-                              {platformLabels[record.platform] ||
-                                record.platform}
+                              {platformLabels[record.platform] || record.platform}
                             </span>
                           )}
                           {record.favorited && (
@@ -342,10 +484,7 @@ export default async function HistoryPage({
 
                         {record.content && (
                           <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
-                            <Highlight
-                              text={record.content}
-                              query={q || undefined}
-                            />
+                            <Highlight text={record.content} query={q || undefined} />
                           </p>
                         )}
                         {record.imageUrl && !record.content && (
@@ -382,12 +521,9 @@ export default async function HistoryPage({
             })}
           </div>
 
-          {/* Pagination */}
           {totalPages > 1 && (
             <div className="flex items-center justify-between mt-8 pt-6 border-t border-border/40">
-              <p className="text-sm text-muted-foreground">
-                共 {totalCount} 条记录
-              </p>
+              <p className="text-sm text-muted-foreground">共 {totalCount} 条记录</p>
               <div className="flex items-center gap-2">
                 {page > 1 && (
                   <Link
@@ -398,9 +534,7 @@ export default async function HistoryPage({
                     上一页
                   </Link>
                 )}
-                <span className="text-sm text-muted-foreground px-2">
-                  第 {page}/{totalPages} 页
-                </span>
+                <span className="text-sm text-muted-foreground px-2">第 {page}/{totalPages} 页</span>
                 {page < totalPages && (
                   <Link
                     href={buildPageUrl(page + 1)}
@@ -415,6 +549,39 @@ export default async function HistoryPage({
           )}
         </>
       )}
+    </div>
+  )
+}
+
+function TabNav({
+  active,
+  tabUrl,
+}: {
+  active: "content" | "analysis"
+  tabUrl: (t: "content" | "analysis") => string
+}) {
+  return (
+    <div className="flex items-center gap-1 mb-6 border-b border-border/40">
+      <Link
+        href={tabUrl("content")}
+        className={`px-4 py-2.5 text-sm font-medium transition-colors border-b-2 -mb-px ${
+          active === "content"
+            ? "border-primary text-primary"
+            : "border-transparent text-muted-foreground hover:text-foreground"
+        }`}
+      >
+        生成内容
+      </Link>
+      <Link
+        href={tabUrl("analysis")}
+        className={`px-4 py-2.5 text-sm font-medium transition-colors border-b-2 -mb-px ${
+          active === "analysis"
+            ? "border-primary text-primary"
+            : "border-transparent text-muted-foreground hover:text-foreground"
+        }`}
+      >
+        分析记录
+      </Link>
     </div>
   )
 }
