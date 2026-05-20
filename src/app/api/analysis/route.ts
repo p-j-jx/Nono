@@ -4,7 +4,55 @@ import { prisma } from "@/db/prisma"
 
 const VALID_TYPES = ["competitor", "quality"]
 
+let tableEnsured = false
+
+/** Lazily create AnalysisRecord table + indexes on Turso if missing. */
+async function ensureTable() {
+  if (tableEnsured) return
+  try {
+    const { createClient } = await import("@libsql/client")
+    const dbUrl = process.env.DATABASE_URL
+    const authToken = process.env.TURSO_AUTH_TOKEN
+    if (!dbUrl) {
+      tableEnsured = true
+      return
+    }
+    const db = createClient({ url: dbUrl.trim(), authToken: authToken?.trim() })
+    const tables = await db.execute(
+      "SELECT name FROM sqlite_master WHERE type='table' AND lower(name)='analysisrecord'"
+    )
+    if (tables.rows.length === 0) {
+      await db.execute(`
+        CREATE TABLE IF NOT EXISTS "AnalysisRecord" (
+          "id" TEXT NOT NULL PRIMARY KEY,
+          "userId" TEXT NOT NULL,
+          "projectId" TEXT,
+          "projectName" TEXT,
+          "analysisType" TEXT NOT NULL,
+          "inputData" TEXT NOT NULL,
+          "resultData" TEXT NOT NULL,
+          "summary" TEXT,
+          "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          CONSTRAINT "AnalysisRecord_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE
+        )
+      `)
+      try {
+        await db.execute(
+          `CREATE INDEX IF NOT EXISTS "AnalysisRecord_userId_createdAt_idx" ON "AnalysisRecord"("userId", "createdAt" DESC)`
+        )
+        await db.execute(
+          `CREATE INDEX IF NOT EXISTS "AnalysisRecord_userId_analysisType_idx" ON "AnalysisRecord"("userId", "analysisType")`
+        )
+      } catch {}
+    }
+    tableEnsured = true
+  } catch (err) {
+    console.error("[Analysis/ensureTable]", err)
+  }
+}
+
 export async function GET(req: Request) {
+  await ensureTable()
   const session = await auth()
   if (!session?.user?.id) {
     return NextResponse.json({ error: "请先登录" }, { status: 401 })
@@ -34,6 +82,7 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
+  await ensureTable()
   const session = await auth()
   if (!session?.user?.id) {
     return NextResponse.json({ error: "请先登录" }, { status: 401 })
