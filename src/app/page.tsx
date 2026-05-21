@@ -6,6 +6,7 @@ import { Features } from "@/components/home/features"
 import { OutputShowcase } from "@/components/home/output-showcase"
 import { HowItWorks } from "@/components/home/how-it-works"
 import { UseCases } from "@/components/home/use-cases"
+import { Pricing } from "@/components/home/pricing"
 import { FAQ } from "@/components/home/faq"
 import { CTASection } from "@/components/home/cta-section"
 import { Footer } from "@/components/home/footer"
@@ -37,6 +38,7 @@ export default async function Home() {
         <OutputShowcase />
         <HowItWorks />
         <UseCases />
+        <Pricing />
         <FAQ />
         <CTASection />
       </main>

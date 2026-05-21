@@ -8,9 +8,9 @@ import { useSession } from "next-auth/react"
 import { Button, buttonVariants } from "@/components/ui/button"
 
 const navLinks = [
-  { label: "首页", href: "/" },
   { label: "功能", href: "/#features" },
   { label: "平台", href: "/#platforms" },
+  { label: "价格", href: "/#pricing" },
   { label: "常见问题", href: "/#faq" },
 ]
 
