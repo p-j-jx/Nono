@@ -10,7 +10,8 @@ import { Button, buttonVariants } from "@/components/ui/button"
 const navLinks = [
   { label: "首页", href: "/" },
   { label: "功能", href: "/#features" },
-  { label: "关于", href: "/#about" },
+  { label: "平台", href: "/#platforms" },
+  { label: "常见问题", href: "/#faq" },
 ]
 
 export function Navbar() {
