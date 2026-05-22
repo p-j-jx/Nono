@@ -50,15 +50,17 @@ Amazon Flat File TSV、Shopify CSV、通用 TXT 一键导出。带 BOM 兼容 Ex
 
 ## 📸 界面预览
 
-> 截图位于 `docs/screenshots/` 目录
+### 着陆页
+![Landing](docs/screenshots/landing.png)
 
-| 着陆页 | 工作台 |
-|--------|--------|
-| ![Landing](docs/screenshots/landing.png) | ![Dashboard](docs/screenshots/dashboard.png) |
+### 工作台 · Dashboard
+![Dashboard](docs/screenshots/dashboard.png)
 
-| 文案生成 | 质量检查 |
-|----------|----------|
-| ![Generation](docs/screenshots/generation.png) | ![Quality](docs/screenshots/quality.png) |
+### 项目列表 · 一目了然管理多个 SKU
+![Projects](docs/screenshots/projects.png)
+
+### 模板中心 · 平台 + 行业双维度模板
+![Templates](docs/screenshots/templates.png)
 
 ---
 
