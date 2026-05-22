@@ -1,6 +1,7 @@
 import { auth } from "@/lib/auth"
 import { prisma } from "@/db/prisma"
 import { DashboardBackground } from "@/components/dashboard/dashboard-background"
+import { OnboardingBanner } from "@/components/dashboard/onboarding-banner"
 import { WelcomeHeader } from "@/components/dashboard/welcome-header"
 import { QuickActions } from "@/components/dashboard/quick-actions"
 import { StatCards } from "@/components/dashboard/stat-cards"
@@ -47,6 +48,13 @@ export default async function DashboardPage() {
     <>
       <DashboardBackground />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
+        {/* Onboarding banner — only shown to new users without projects */}
+        {projects.length === 0 && (
+          <section className="mb-8">
+            <OnboardingBanner hasProjects={false} />
+          </section>
+        )}
+
         {/* Welcome + Quick Actions — tight cluster */}
         <div className="space-y-6">
           <section>

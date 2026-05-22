@@ -52,3 +52,9 @@ next-env.d.ts
 src/cookies.txt
 
 .vercel
+
+# AI assistant context files (contain internal dev notes, do not publish)
+CLAUDE.md
+AGENTS.md
+.claude/
+.mailmap-cleanup
