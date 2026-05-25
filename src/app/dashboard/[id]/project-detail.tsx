@@ -51,6 +51,7 @@ import {
 } from "lucide-react"
 import { toast } from "sonner"
 import { EmptyState } from "@/components/ui/empty-state"
+import { safeFetch, showApiErrorToast, type ApiError } from "@/lib/api-error"
 import type { Project, GenerationRecord } from "@/types"
 import {
   platformLabels,
@@ -133,25 +134,28 @@ export function ProjectDetail({ project }: { project: Project }) {
   async function handleGenerate(contentType: string) {
     setGenerating(contentType)
 
-    try {
-      const res = await fetch("/api/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          projectId: project.id,
-          contentType,
-        }),
+    const [data, err] = await safeFetch<{ record: GenerationRecord }>("/api/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        projectId: project.id,
+        contentType,
+      }),
+    })
+
+    setGenerating(null)
+
+    if (err) {
+      showApiErrorToast(err, {
+        title: `${contentTypeLabels[contentType] || contentType} 生成失败`,
+        onRetry: () => handleGenerate(contentType),
       })
+      return
+    }
 
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error)
-
+    if (data?.record) {
       setRecords((prev) => [data.record, ...prev])
       toast.success(`${contentTypeLabels[contentType] || contentType} 生成成功！`)
-    } catch {
-      toast.error("生成失败，请稍后再试")
-    } finally {
-      setGenerating(null)
     }
   }
 
@@ -227,41 +231,72 @@ export function ProjectDetail({ project }: { project: Project }) {
 
   async function handleBatchGenerate() {
     const types = generationTypes.map((t) => t.key)
-    const errors: string[] = []
-    let completed = 0
-
     setBatchProgress({ running: true, completed: 0, total: types.length, errors: [] })
 
+    // Collect results in a local accumulator; not React state, so no immutability lint hit.
+    const results: { type: string; ok: boolean; err?: ApiError }[] = []
+    let stopped = false
+
     for (const type of types) {
-      try {
-        const res = await fetch("/api/generate", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ projectId: project.id, contentType: type }),
-        })
-        const data = await res.json()
-        if (res.ok) {
-          setRecords((prev) => [data.record, ...prev])
-        } else {
-          errors.push(type)
+      const [data, err] = await safeFetch<{ record: GenerationRecord }>("/api/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ projectId: project.id, contentType: type }),
+      })
+
+      if (err) {
+        results.push({ type, ok: false, err })
+        if (err.kind === "rate_limit" || err.kind === "quota" || err.kind === "auth") {
+          stopped = true
         }
-      } catch {
-        errors.push(type)
+      } else if (data?.record) {
+        const newRecord = data.record
+        setRecords((prev) => [newRecord, ...prev])
+        results.push({ type, ok: true })
       }
-      completed++
-      setBatchProgress((prev) =>
-        prev ? { ...prev, completed, errors: [...errors] } : null
-      )
+
+      const failedSoFar = results.filter((r) => !r.ok).map((r) => r.type)
+      setBatchProgress({
+        running: true,
+        completed: results.length,
+        total: types.length,
+        errors: failedSoFar,
+      })
+
+      if (stopped) break
     }
 
-    if (errors.length > 0) {
-      toast.error(
-        `已完成 ${types.length - errors.length}/${types.length}，${errors.length} 项生成失败`
-      )
-    } else {
-      toast.success("全部 6 项内容生成完成！")
-    }
     setBatchProgress(null)
+
+    const failed = results.filter((r) => !r.ok)
+    const failedTypes = failed.map((r) => r.type)
+    const firstError = failed[0]?.err
+
+    if (failedTypes.length === 0) {
+      toast.success(`全部 ${types.length} 项内容生成完成！`)
+    } else if (failedTypes.length === results.length && firstError) {
+      // 全部失败 — 用第一个错误的信息提示，提供重试
+      showApiErrorToast(firstError, {
+        title: "批量生成失败",
+        onRetry: handleBatchGenerate,
+      })
+    } else {
+      const failedLabels = failedTypes.map((t) => contentTypeLabels[t] || t).join("、")
+      toast.warning(
+        `已完成 ${types.length - failedTypes.length}/${types.length}，失败：${failedLabels}`,
+        {
+          duration: 5000,
+          action: {
+            label: "重试失败项",
+            onClick: async () => {
+              for (const type of failedTypes) {
+                await handleGenerate(type)
+              }
+            },
+          },
+        }
+      )
+    }
   }
 
   async function handleToggleFavorite(recordId: string, current: boolean) {
