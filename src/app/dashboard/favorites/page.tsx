@@ -1,9 +1,8 @@
 import { auth } from "@/lib/auth"
 import { prisma } from "@/db/prisma"
 import { redirect } from "next/navigation"
-import { Star, FileText, ImageIcon } from "lucide-react"
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
+import { Star, FileText, ImageIcon, Sparkles, LayoutTemplate } from "lucide-react"
+import { EmptyState } from "@/components/ui/empty-state"
 import { FavoritesClient } from "./favorites-client"
 import Link from "next/link"
 
@@ -75,17 +74,20 @@ export default async function FavoritesPage({
       </div>
 
       {records.length === 0 ? (
-        <Card className="border-dashed">
-          <CardContent className="flex flex-col items-center justify-center text-center py-16">
-            <div className="size-14 rounded-xl bg-muted/50 flex items-center justify-center mb-4">
-              <Star className="size-7 text-muted-foreground/40" />
-            </div>
-            <h3 className="text-base font-semibold mb-1">还没有收藏内容</h3>
-            <p className="text-sm text-muted-foreground mb-2 max-w-sm">
-              在生成结果中点击收藏按钮，优质内容会保存在这里
-            </p>
-          </CardContent>
-        </Card>
+        <EmptyState
+          icon={Star}
+          title={activeTab === "image" ? "还没有收藏的图片" : "还没有收藏的文案"}
+          description={
+            activeTab === "image"
+              ? "AI 生成图片后点击星标，喜欢的素材会保存在这里方便复用"
+              : "生成文案后点击星标，优质内容会保存在这里方便复用"
+          }
+          actions={[
+            { label: "去生成内容", href: "/dashboard/new", icon: Sparkles },
+            { label: "看看模板", href: "/dashboard/templates", icon: LayoutTemplate, variant: "outline" },
+          ]}
+          hint="提示：星标内容会同步出现在「导出中心」，可一键导出"
+        />
       ) : (
         <FavoritesClient records={records} activeTab={activeTab} />
       )}

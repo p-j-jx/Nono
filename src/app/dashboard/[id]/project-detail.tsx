@@ -50,6 +50,7 @@ import {
   ShieldCheck,
 } from "lucide-react"
 import { toast } from "sonner"
+import { EmptyState } from "@/components/ui/empty-state"
 import type { Project, GenerationRecord } from "@/types"
 import {
   platformLabels,
@@ -480,6 +481,19 @@ export function ProjectDetail({ project }: { project: Project }) {
           )
         })}
       </div>
+
+      {/* ─── Empty state — when project has no generated content yet ── */}
+      {records.length === 0 && (
+        <div className="mb-10">
+          <EmptyState
+            icon={Sparkles}
+            title="还没有生成内容"
+            description="点上方任意一个生成按钮，AI 会基于你填写的产品信息为你生成对应的文案或图片"
+            size="md"
+            hint="生成后这里会出现：内容版本管理、质量检查、平台格式导出"
+          />
+        </div>
+      )}
 
       {/* ─── Quality Checker & Export ─────────────────────────── */}
       {records.length > 0 && (() => {

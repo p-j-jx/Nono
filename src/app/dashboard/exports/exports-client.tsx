@@ -1,9 +1,10 @@
 "use client"
 
 import { useState } from "react"
-import { Download, FileText, Loader2, Check } from "lucide-react"
+import { Download, FileText, Loader2, FolderPlus, LayoutTemplate } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { EmptyState } from "@/components/ui/empty-state"
 import { toast } from "sonner"
 import { platformLabels, downloadTextFile } from "@/types"
 
@@ -166,12 +167,16 @@ export function ExportsClient({
       <div>
         <h2 className="text-sm font-semibold mb-3">最近项目</h2>
         {projects.length === 0 ? (
-          <Card className="border-dashed">
-            <CardContent className="flex flex-col items-center justify-center text-center py-8">
-              <Download className="size-8 text-muted-foreground/30 mb-2" />
-              <p className="text-sm text-muted-foreground">还没有项目可以导出</p>
-            </CardContent>
-          </Card>
+          <EmptyState
+            icon={Download}
+            title="还没有可导出的项目"
+            description="先创建项目并生成文案内容，然后回到这里一键打包导出"
+            actions={[
+              { label: "创建项目", href: "/dashboard/new", icon: FolderPlus },
+              { label: "用模板快速开始", href: "/dashboard/templates", icon: LayoutTemplate, variant: "outline" },
+            ]}
+            size="sm"
+          />
         ) : (
           <div className="space-y-2">
             {projects.map((p) => (
