@@ -2,6 +2,7 @@ import { auth } from "@/lib/auth"
 import { prisma } from "@/db/prisma"
 import { DashboardBackground } from "@/components/dashboard/dashboard-background"
 import { OnboardingBanner } from "@/components/dashboard/onboarding-banner"
+import { UsageBar, DEFAULT_MONTHLY_QUOTA } from "@/components/dashboard/usage-bar"
 import { WelcomeHeader } from "@/components/dashboard/welcome-header"
 import { QuickActions } from "@/components/dashboard/quick-actions"
 import { StatCards } from "@/components/dashboard/stat-cards"
@@ -18,14 +19,16 @@ export default async function DashboardPage() {
   const today = new Date()
   today.setHours(0, 0, 0, 0)
 
-  const [projects, totalRecords, todayRecords] = await Promise.all([
+  // Start of current month for usage quota tracking (resets monthly)
+  const monthStart = new Date()
+  monthStart.setDate(1)
+  monthStart.setHours(0, 0, 0, 0)
+
+  const [projects, todayRecords, monthGenerations, monthAnalyses] = await Promise.all([
     prisma.productProject.findMany({
       where: { userId: session.user.id },
       orderBy: { updatedAt: "desc" },
       include: { _count: { select: { records: true } } },
-    }),
-    prisma.generationRecord.count({
-      where: { project: { userId: session.user.id } },
     }),
     prisma.generationRecord.count({
       where: {
@@ -33,6 +36,20 @@ export default async function DashboardPage() {
         createdAt: { gte: today },
       },
     }),
+    // Generations counted toward this month's quota
+    prisma.generationRecord.count({
+      where: {
+        project: { userId: session.user.id },
+        createdAt: { gte: monthStart },
+      },
+    }),
+    // Analyses also count toward quota (competitor / quality / tax)
+    prisma.analysisRecord.count({
+      where: {
+        userId: session.user.id,
+        createdAt: { gte: monthStart },
+      },
+    }).catch(() => 0), // AnalysisRecord table may not exist on fresh DB
   ])
 
   const favoritedCount = await prisma.generationRecord.count({
@@ -43,6 +60,7 @@ export default async function DashboardPage() {
   })
 
   const totalGenerations = projects.reduce((sum, p) => sum + p._count.records, 0)
+  const monthlyUsed = monthGenerations + monthAnalyses
 
   return (
     <>
@@ -52,6 +70,17 @@ export default async function DashboardPage() {
         {projects.length === 0 && (
           <section className="mb-8">
             <OnboardingBanner hasProjects={false} />
+          </section>
+        )}
+
+        {/* Usage bar — only shown to users who have started using the platform */}
+        {projects.length > 0 && (
+          <section className="mb-6">
+            <UsageBar
+              used={monthlyUsed}
+              quota={DEFAULT_MONTHLY_QUOTA}
+              breakdown={{ generations: monthGenerations, analyses: monthAnalyses }}
+            />
           </section>
         )}
 
