@@ -1,8 +1,11 @@
 "use client"
 
+import { useState } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { toast } from "sonner"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
-import { FileText, Sparkles, Copy } from "lucide-react"
+import { FileText, Sparkles, Copy, Loader2 } from "lucide-react"
 import { platformLabels, languageLabels } from "@/types"
 
 function relativeTime(date: Date): string {
@@ -48,10 +51,33 @@ type ProjectCardProps = {
 }
 
 export function ProjectCard({ id, productName, platform, language, recordCount, updatedAt }: ProjectCardProps) {
+  const router = useRouter()
+  const [cloning, setCloning] = useState(false)
   const platformLabel = platformLabels[platform] || platform
   const badgeColor = platformBadgeColors[platform] || "bg-muted text-muted-foreground"
   const topBar = platformTopBars[platform] || "bg-gradient-to-r from-primary to-primary/50"
   const platformInitial = platformLabel.charAt(0)
+
+  async function handleClone(e: React.MouseEvent) {
+    e.preventDefault()
+    e.stopPropagation()
+    if (cloning) return
+
+    setCloning(true)
+    try {
+      const res = await fetch(`/api/projects/${id}/clone`, { method: "POST" })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || "复制失败")
+      toast.success(`已复制：${data.project.productName}`)
+      router.push(`/dashboard/${data.projectId}`)
+      router.refresh()
+    } catch (err) {
+      console.error("Clone project failed:", err)
+      toast.error("复制项目失败")
+      setCloning(false)
+    }
+    // Don't reset cloning state on success — navigation will unmount this card
+  }
 
   return (
     <Link href={`/dashboard/${id}`}>
@@ -110,14 +136,25 @@ export function ProjectCard({ id, productName, platform, language, recordCount, 
           </div>
           {/* Copy project shortcut */}
           <div className="mt-3 pt-3 border-t border-border/40 flex items-center justify-between">
-            <Link
-              href={`/dashboard/new?reuseProjectId=${id}`}
-              onClick={(e) => e.stopPropagation()}
-              className="inline-flex items-center gap-1 text-[11px] text-muted-foreground hover:text-primary transition-colors"
+            <button
+              type="button"
+              onClick={handleClone}
+              disabled={cloning}
+              title="一键复制项目（不复制生成内容）"
+              className="inline-flex items-center gap-1 text-[11px] text-muted-foreground hover:text-primary transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              <Copy className="size-3" />
-              复制项目
-            </Link>
+              {cloning ? (
+                <>
+                  <Loader2 className="size-3 animate-spin" />
+                  复制中...
+                </>
+              ) : (
+                <>
+                  <Copy className="size-3" />
+                  复制项目
+                </>
+              )}
+            </button>
             <Link
               href={`/results?projectId=${id}`}
               onClick={(e) => e.stopPropagation()}
