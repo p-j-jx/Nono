@@ -18,6 +18,8 @@ import {
   Swords,
   ShieldCheck,
   Calculator,
+  PanelLeftClose,
+  PanelLeftOpen,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useSidebar } from "./sidebar-context"
@@ -74,89 +76,153 @@ function NavLink({
   icon: Icon,
   label,
   active,
+  collapsed,
   onClick,
 }: {
   href: string
   icon: typeof LayoutDashboard
   label: string
   active: boolean
+  collapsed: boolean
   onClick?: () => void
 }) {
   return (
     <Link
       href={href}
       onClick={onClick}
+      title={collapsed ? label : undefined}
       className={cn(
-        "flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200",
+        "flex items-center gap-2.5 rounded-lg text-sm font-medium transition-all duration-200",
+        collapsed ? "justify-center px-2 py-2.5" : "px-3 py-2.5",
         active
           ? "bg-primary/10 text-primary shadow-sm"
           : "text-muted-foreground hover:bg-muted hover:text-foreground"
       )}
     >
       <Icon className="size-4 shrink-0" />
-      <span>{label}</span>
-      {active && (
-        <div aria-hidden className="ml-auto size-1.5 rounded-full bg-primary" />
+      {!collapsed && (
+        <>
+          <span>{label}</span>
+          {active && (
+            <div aria-hidden className="ml-auto size-1.5 rounded-full bg-primary" />
+          )}
+        </>
       )}
     </Link>
   )
 }
 
-function NavSection({ children, label }: { children: React.ReactNode; label: string }) {
+function NavSection({
+  children,
+  label,
+  collapsed,
+}: {
+  children: React.ReactNode
+  label: string
+  collapsed: boolean
+}) {
   return (
     <div>
-      <p className="px-3 pb-1 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/50">
-        {label}
-      </p>
-      <div className="space-y-0.5">{children}</div>
+      {!collapsed && (
+        <p className="px-3 pb-1 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/50">
+          {label}
+        </p>
+      )}
+      <div className={cn("space-y-0.5", collapsed && "pt-1")}>{children}</div>
     </div>
   )
 }
 
 export function DashboardSidebar() {
   const pathname = usePathname()
-  const { open, close } = useSidebar()
+  const { open, close, collapsed, toggleCollapsed } = useSidebar()
 
   const isActive = (href: string) => {
     if (href === "/dashboard") return pathname === "/dashboard"
     return pathname.startsWith(href)
   }
 
-  const sidebarContent = (
-    <div className="flex h-full flex-col py-4 px-3 gap-6">
-      {/* Logo */}
-      <Link href="/dashboard" className="flex items-center gap-2 px-3" onClick={close}>
-        <div className="flex size-7 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm">
-          <Sparkles className="size-3.5" />
-        </div>
-        <span className="text-sm font-bold">
-          AI<span className="text-primary">跨境通</span>
-        </span>
-      </Link>
+  // Mobile drawer always shows expanded view regardless of desktop collapsed state
+  function renderContent(forceExpanded = false) {
+    const isCollapsed = forceExpanded ? false : collapsed
+    return (
+      <div className="flex h-full flex-col py-4 gap-6">
+        {/* Logo */}
+        <Link
+          href="/dashboard"
+          className={cn(
+            "flex items-center gap-2",
+            isCollapsed ? "justify-center px-2" : "px-6"
+          )}
+          onClick={close}
+          title={isCollapsed ? "AI 跨境通" : undefined}
+        >
+          <div className="flex size-7 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm shrink-0">
+            <Sparkles className="size-3.5" />
+          </div>
+          {!isCollapsed && (
+            <span className="text-sm font-bold">
+              AI<span className="text-primary">跨境通</span>
+            </span>
+          )}
+        </Link>
 
-      {/* Navigation */}
-      <nav className="flex-1 flex flex-col gap-5 overflow-y-auto">
-        {navSections.map((section) => (
-          <NavSection key={section.label} label={section.label}>
-            {section.items.map((item) => (
-              <NavLink
-                key={item.href + item.label}
-                {...item}
-                active={isActive(item.href)}
-                onClick={close}
-              />
-            ))}
-          </NavSection>
-        ))}
-      </nav>
-    </div>
-  )
+        {/* Navigation */}
+        <nav
+          className={cn(
+            "flex-1 flex flex-col gap-5 overflow-y-auto",
+            isCollapsed ? "px-2" : "px-3"
+          )}
+        >
+          {navSections.map((section) => (
+            <NavSection key={section.label} label={section.label} collapsed={isCollapsed}>
+              {section.items.map((item) => (
+                <NavLink
+                  key={item.href + item.label}
+                  {...item}
+                  active={isActive(item.href)}
+                  collapsed={isCollapsed}
+                  onClick={close}
+                />
+              ))}
+            </NavSection>
+          ))}
+        </nav>
+
+        {/* Collapse toggle — desktop only, hidden on mobile drawer */}
+        {!forceExpanded && (
+          <div className={cn("hidden lg:flex border-t border-border/40 pt-3", isCollapsed ? "px-2 justify-center" : "px-3 justify-end")}>
+            <button
+              type="button"
+              onClick={toggleCollapsed}
+              title={isCollapsed ? "展开侧栏 (Ctrl+B)" : "折叠侧栏 (Ctrl+B)"}
+              className="inline-flex items-center justify-center gap-1.5 rounded-md p-2 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+            >
+              {isCollapsed ? (
+                <PanelLeftOpen className="size-4" />
+              ) : (
+                <>
+                  <PanelLeftClose className="size-4" />
+                  <span className="text-xs">折叠</span>
+                </>
+              )}
+            </button>
+          </div>
+        )}
+      </div>
+    )
+  }
 
   return (
     <>
       {/* Desktop sidebar */}
-      <aside className="hidden lg:flex lg:flex-col lg:w-56 lg:shrink-0 border-r border-border/40 bg-background/80 backdrop-blur-xl">
-        {sidebarContent}
+      <aside
+        className={cn(
+          "hidden lg:flex lg:flex-col lg:shrink-0 border-r border-border/40 bg-background/80 backdrop-blur-xl transition-[width] duration-200",
+          collapsed ? "lg:w-16" : "lg:w-56"
+        )}
+      >
+        {renderContent()}
       </aside>
 
       {/* Mobile overlay */}
@@ -172,7 +238,7 @@ export function DashboardSidebar() {
             className="fixed inset-y-0 left-0 z-50 w-60 bg-background border-r border-border/40 shadow-xl"
             onClick={(e) => e.stopPropagation()}
           >
-            {sidebarContent}
+            {renderContent(true)}
           </aside>
         </div>
       )}

@@ -3,6 +3,7 @@ import { redirect } from "next/navigation"
 import { DashboardHeader } from "@/components/dashboard/header"
 import { DashboardSidebar } from "@/components/dashboard/sidebar"
 import { SidebarProvider } from "@/components/dashboard/sidebar-context"
+import { CommandPalette } from "@/components/dashboard/command-palette"
 import { SessionProvider } from "next-auth/react"
 
 export default async function DashboardLayout({
@@ -33,6 +34,7 @@ export default async function DashboardLayout({
             <main className="flex-1">{children}</main>
           </div>
         </div>
+        <CommandPalette />
       </SidebarProvider>
     </SessionProvider>
   )

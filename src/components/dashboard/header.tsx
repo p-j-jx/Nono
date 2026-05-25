@@ -14,6 +14,7 @@ import {
   Settings,
   Menu,
   X,
+  Search,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -60,7 +61,31 @@ export function DashboardHeader() {
         </div>
 
         {/* Right: actions */}
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-2">
+          {/* Command palette trigger — discoverable Ctrl+K hint */}
+          <button
+            type="button"
+            onClick={() => window.dispatchEvent(new CustomEvent("open-command-palette"))}
+            aria-label="搜索功能 (Ctrl+K)"
+            className="hidden sm:inline-flex items-center gap-2 rounded-lg border border-border/60 bg-muted/30 hover:bg-muted h-8 pl-2.5 pr-2 text-xs text-muted-foreground transition-colors"
+          >
+            <Search className="size-3.5" />
+            <span>搜索</span>
+            <kbd className="hidden md:inline-flex items-center gap-0.5 rounded border border-border/60 bg-background px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">
+              <span className="text-[11px]">⌘</span>K
+            </kbd>
+          </button>
+
+          {/* Mobile-only icon-only search */}
+          <button
+            type="button"
+            onClick={() => window.dispatchEvent(new CustomEvent("open-command-palette"))}
+            aria-label="搜索"
+            className="sm:hidden inline-flex items-center justify-center rounded-md size-8 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+          >
+            <Search className="size-4" />
+          </button>
+
           <Button
             variant="ghost"
             size="icon-sm"
