@@ -18,7 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { Eye, EyeOff, Loader2, Check } from "lucide-react"
+import { Eye, EyeOff, Loader2, Check, Ticket } from "lucide-react"
 import { toast } from "sonner"
 
 interface SettingsFormProps {
@@ -27,6 +27,8 @@ interface SettingsFormProps {
   initialImageApiKey: string
   initialName: string
   email: string
+  bonusQuota: number
+  monthlyQuota: number
 }
 
 export function SettingsForm({
@@ -35,6 +37,8 @@ export function SettingsForm({
   initialImageApiKey,
   initialName,
   email,
+  bonusQuota: initialBonusQuota,
+  monthlyQuota,
 }: SettingsFormProps) {
   const [apiKey, setApiKey] = useState(initialApiKey)
   const [provider, setProvider] = useState(initialProvider)
@@ -46,6 +50,9 @@ export function SettingsForm({
   const [saved, setSaved] = useState(false)
   const [savingAccount, setSavingAccount] = useState(false)
   const [savedAccount, setSavedAccount] = useState(false)
+  const [inviteCode, setInviteCode] = useState("")
+  const [redeeming, setRedeeming] = useState(false)
+  const [bonusQuota, setBonusQuota] = useState(initialBonusQuota)
 
   async function handleSave() {
     setSaving(true)
@@ -117,6 +124,27 @@ export function SettingsForm({
       toast.error(err instanceof Error ? err.message : "保存失败")
     } finally {
       setSavingAccount(false)
+    }
+  }
+
+  async function handleRedeem() {
+    if (!inviteCode.trim()) return
+    setRedeeming(true)
+    try {
+      const res = await fetch("/api/user/redeem", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code: inviteCode.trim() }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || "兑换失败")
+      setBonusQuota(data.bonusQuota)
+      setInviteCode("")
+      toast.success(data.message)
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "兑换失败")
+    } finally {
+      setRedeeming(false)
     }
   }
 
@@ -283,6 +311,50 @@ export function SettingsForm({
               支持兼容 OpenAI Images API 的服务商。不配置时将使用服务器环境变量中的密钥。
             </p>
           </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-lg">
+            <Ticket className="size-5 text-violet-500" />
+            邀请码兑换
+          </CardTitle>
+          <CardDescription>
+            输入邀请码获取额外月度生成额度。
+            当前额度：{monthlyQuota} + {bonusQuota} 次/月
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex gap-3">
+            <Input
+              value={inviteCode}
+              onChange={(e) => setInviteCode(e.target.value.toUpperCase())}
+              placeholder="请输入邀请码"
+              className="font-mono tracking-wider uppercase"
+              maxLength={12}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") handleRedeem()
+              }}
+            />
+            <Button
+              onClick={handleRedeem}
+              disabled={redeeming || !inviteCode.trim()}
+              className="shrink-0 gap-2"
+            >
+              {redeeming ? (
+                <Loader2 className="size-4 animate-spin" />
+              ) : (
+                <Ticket className="size-4" />
+              )}
+              兑换
+            </Button>
+          </div>
+          {bonusQuota > 0 && (
+            <p className="mt-3 text-sm text-green-600 dark:text-green-400">
+              已通过邀请码获得 {bonusQuota} 次额外额度
+            </p>
+          )}
         </CardContent>
       </Card>
 

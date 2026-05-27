@@ -37,5 +37,6 @@ export const config = {
     "/api/records/:path*",
     "/api/user/:path*",
     "/api/analysis/:path*",
+    "/api/admin/:path*",
   ],
 }

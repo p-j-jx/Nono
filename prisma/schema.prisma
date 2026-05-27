@@ -52,12 +52,25 @@ model User {
   apiKey          String?
   apiKeyProvider  String           @default("deepseek")
   imageApiKey     String?
+  bonusQuota      Int              @default(0)
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
   accounts        Account[]
   projects        ProductProject[]
   sessions        Session[]
   analysisRecords AnalysisRecord[]
+}
+
+model InviteCode {
+  id         String    @id @default(cuid())
+  code       String    @unique
+  bonusQuota Int       @default(200)
+  maxUses    Int       @default(1)
+  usedCount  Int       @default(0)
+  createdAt  DateTime  @default(now())
+  expiresAt  DateTime?
+
+  @@index([code])
 }
 
 model AnalysisRecord {

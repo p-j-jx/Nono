@@ -11,6 +11,7 @@ import {
   Package,
 } from "lucide-react"
 import { platformLabels, contentTypeLabels } from "@/types"
+import { InviteCodeManager } from "@/components/admin/invite-codes"
 
 export const dynamic = "force-dynamic"
 
@@ -288,6 +289,11 @@ export default async function AdminDashboard() {
             )}
           </CardContent>
         </Card>
+      </div>
+
+      {/* Invite Code Manager */}
+      <div className="mt-6">
+        <InviteCodeManager />
       </div>
 
       {/* Footer hint */}

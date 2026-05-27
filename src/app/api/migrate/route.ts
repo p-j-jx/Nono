@@ -9,6 +9,7 @@ const REQUIRED_COLUMNS: Record<string, { name: string; def: string }[]> = {
     { name: "apiKey", def: "TEXT" },
     { name: "apiKeyProvider", def: "TEXT NOT NULL DEFAULT 'deepseek'" },
     { name: "imageApiKey", def: "TEXT" },
+    { name: "bonusQuota", def: "INTEGER NOT NULL DEFAULT 0" },
   ],
   ProductProject: [
     { name: "brandName", def: "TEXT" },
@@ -81,6 +82,29 @@ export async function GET() {
       }
     } else {
       results["AnalysisRecord (table)"] = "已存在"
+    }
+
+    // InviteCode table
+    if (!existingTables.has("invitecode")) {
+      try {
+        await db.execute(`
+          CREATE TABLE "InviteCode" (
+            "id" TEXT NOT NULL PRIMARY KEY,
+            "code" TEXT NOT NULL,
+            "bonusQuota" INTEGER NOT NULL DEFAULT 200,
+            "maxUses" INTEGER NOT NULL DEFAULT 1,
+            "usedCount" INTEGER NOT NULL DEFAULT 0,
+            "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            "expiresAt" DATETIME
+          )
+        `)
+        await db.execute(`CREATE UNIQUE INDEX "InviteCode_code_key" ON "InviteCode"("code")`)
+        results["InviteCode (table)"] = "已创建 ✅"
+      } catch (e) {
+        results["InviteCode (table)"] = `失败: ${e instanceof Error ? e.message : String(e)}`
+      }
+    } else {
+      results["InviteCode (table)"] = "已存在"
     }
 
     for (const table of tables.rows) {

@@ -1,6 +1,7 @@
 import { auth } from "@/lib/auth"
 import { prisma } from "@/db/prisma"
 import { redirect } from "next/navigation"
+import { MONTHLY_QUOTA } from "@/lib/quota"
 import { SettingsForm } from "./settings-form"
 
 export default async function SettingsPage() {
@@ -9,7 +10,7 @@ export default async function SettingsPage() {
 
   const user = await prisma.user.findUnique({
     where: { id: session.user.id },
-    select: { apiKey: true, apiKeyProvider: true, imageApiKey: true, name: true, email: true },
+    select: { apiKey: true, apiKeyProvider: true, imageApiKey: true, name: true, email: true, bonusQuota: true },
   })
 
   return (
@@ -27,6 +28,8 @@ export default async function SettingsPage() {
         initialImageApiKey={user?.imageApiKey || ""}
         initialName={user?.name || ""}
         email={user?.email || ""}
+        bonusQuota={user?.bonusQuota ?? 0}
+        monthlyQuota={MONTHLY_QUOTA}
       />
     </div>
   )
