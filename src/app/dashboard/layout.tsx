@@ -6,6 +6,7 @@ import { DashboardSidebar } from "@/components/dashboard/sidebar"
 import { SidebarProvider } from "@/components/dashboard/sidebar-context"
 import { CommandPalette } from "@/components/dashboard/command-palette"
 import { SessionProvider } from "next-auth/react"
+import { PostHogProvider } from "@/components/posthog-provider"
 
 export default async function DashboardLayout({
   children,
@@ -27,6 +28,7 @@ export default async function DashboardLayout({
 
   return (
     <SessionProvider session={serializableSession}>
+      <PostHogProvider>
       <SidebarProvider>
         <div className="min-h-screen flex">
           <DashboardSidebar isAdmin={isAdminEmail(session.user.email)} />
@@ -37,6 +39,7 @@ export default async function DashboardLayout({
         </div>
         <CommandPalette />
       </SidebarProvider>
+      </PostHogProvider>
     </SessionProvider>
   )
 }

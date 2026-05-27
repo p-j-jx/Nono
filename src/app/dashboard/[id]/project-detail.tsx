@@ -52,6 +52,7 @@ import {
 import { toast } from "sonner"
 import { EmptyState } from "@/components/ui/empty-state"
 import { safeFetch, showApiErrorToast, type ApiError } from "@/lib/api-error"
+import { trackEvent } from "@/lib/posthog"
 import type { Project, GenerationRecord } from "@/types"
 import {
   platformLabels,
@@ -156,6 +157,11 @@ export function ProjectDetail({ project }: { project: Project }) {
     if (data?.record) {
       setRecords((prev) => [data.record, ...prev])
       toast.success(`${contentTypeLabels[contentType] || contentType} 生成成功！`)
+      trackEvent("content_generated", {
+        content_type: contentType,
+        platform: project.platform,
+        project_id: project.id,
+      })
     }
   }
 

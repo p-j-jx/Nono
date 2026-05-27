@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/select"
 import { Eye, EyeOff, Loader2, Check, Ticket } from "lucide-react"
 import { toast } from "sonner"
+import { trackEvent } from "@/lib/posthog"
 
 interface SettingsFormProps {
   initialApiKey: string
@@ -141,6 +142,7 @@ export function SettingsForm({
       setBonusQuota(data.bonusQuota)
       setInviteCode("")
       toast.success(data.message)
+      trackEvent("invite_code_redeemed", { bonus: data.added })
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "兑换失败")
     } finally {

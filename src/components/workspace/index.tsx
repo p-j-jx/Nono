@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react"
 import { useRouter } from "next/navigation"
+import { trackEvent } from "@/lib/posthog"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -227,6 +228,11 @@ export function WorkspaceForm({ initialData, projectId }: WorkspaceFormProps) {
       const result = await res.json()
       if (!res.ok) throw new Error(result.error)
       toast.success(isEditing ? "项目更新成功！" : "项目创建成功！")
+      trackEvent(isEditing ? "project_updated" : "project_created", {
+        platform: form.platform,
+        language: form.language,
+        project_id: result.project.id,
+      })
       router.push(`/dashboard/${result.project.id}`)
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "操作失败")
