@@ -8,10 +8,23 @@ export default async function SettingsPage() {
   const session = await auth()
   if (!session?.user?.id) redirect("/login")
 
-  const user = await prisma.user.findUnique({
-    where: { id: session.user.id },
-    select: { apiKey: true, apiKeyProvider: true, imageApiKey: true, name: true, email: true, bonusQuota: true },
-  })
+  let user: {
+    apiKey: string | null; apiKeyProvider: string; imageApiKey: string | null
+    name: string | null; email: string; bonusQuota?: number
+  } | null = null
+  try {
+    user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { apiKey: true, apiKeyProvider: true, imageApiKey: true, name: true, email: true, bonusQuota: true },
+    })
+  } catch {
+    // bonusQuota column may not exist yet
+    const fallback = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { apiKey: true, apiKeyProvider: true, imageApiKey: true, name: true, email: true },
+    })
+    if (fallback) user = { ...fallback, bonusQuota: 0 }
+  }
 
   return (
     <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8 py-8">

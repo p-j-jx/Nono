@@ -34,10 +34,20 @@ export async function checkMonthlyQuota(
   userId: string
 ): Promise<QuotaResult> {
   // 查用户信息（email 用于判断管理员，bonusQuota 用于额外额度）
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-    select: { email: true, bonusQuota: true },
-  })
+  // bonusQuota 列可能还未迁移，用 try/catch 兜底
+  let user: { email: string; bonusQuota?: number } | null = null
+  try {
+    user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { email: true, bonusQuota: true },
+    })
+  } catch {
+    // bonusQuota column missing — fall back to email-only query
+    user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { email: true },
+    }) as { email: string; bonusQuota?: number } | null
+  }
 
   // 管理员无限额度
   if (user && isAdminEmail(user.email)) {
