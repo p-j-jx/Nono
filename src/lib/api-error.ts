@@ -53,6 +53,15 @@ export async function parseApiError(res: Response): Promise<ApiError> {
     }
   }
   if (status === 403) {
+    // Distinguish quota-exceeded from generic permission errors
+    if (raw && /quota|额度|配额|QUOTA_EXCEEDED/i.test(raw)) {
+      return {
+        kind: "quota",
+        message: raw,
+        raw,
+        status,
+      }
+    }
     return {
       kind: "forbidden",
       message: raw || "没有权限执行此操作",

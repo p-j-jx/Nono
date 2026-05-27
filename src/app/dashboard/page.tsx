@@ -2,7 +2,8 @@ import { auth } from "@/lib/auth"
 import { prisma } from "@/db/prisma"
 import { DashboardBackground } from "@/components/dashboard/dashboard-background"
 import { OnboardingBanner } from "@/components/dashboard/onboarding-banner"
-import { UsageBar, DEFAULT_MONTHLY_QUOTA } from "@/components/dashboard/usage-bar"
+import { UsageBar } from "@/components/dashboard/usage-bar"
+import { MONTHLY_QUOTA } from "@/lib/quota"
 import { WelcomeHeader } from "@/components/dashboard/welcome-header"
 import { QuickActions } from "@/components/dashboard/quick-actions"
 import { StatCards } from "@/components/dashboard/stat-cards"
@@ -78,7 +79,7 @@ export default async function DashboardPage() {
           <section className="mb-6">
             <UsageBar
               used={monthlyUsed}
-              quota={DEFAULT_MONTHLY_QUOTA}
+              quota={MONTHLY_QUOTA}
               breakdown={{ generations: monthGenerations, analyses: monthAnalyses }}
             />
           </section>

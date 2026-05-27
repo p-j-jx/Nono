@@ -1,9 +1,9 @@
 import { Zap, AlertCircle } from "lucide-react"
 import { cn } from "@/lib/utils"
 
-// Free tier default. Will be replaced with per-user quota when billing
-// is wired up (User.monthlyQuota field).
-export const DEFAULT_MONTHLY_QUOTA = 500
+// Free tier default fallback. The real value is passed as a prop from the
+// server component (sourced from MONTHLY_QUOTA env var via lib/quota.ts).
+export const DEFAULT_MONTHLY_QUOTA = 50
 
 type UsageBarProps = {
   used: number
@@ -35,7 +35,10 @@ export function UsageBar({
     ? "text-amber-600 dark:text-amber-400"
     : "text-primary"
 
-  const message = isDanger
+  const isExhausted = remaining === 0
+  const message = isExhausted
+    ? "本月额度已用完，生成功能暂停，下月自动恢复"
+    : isDanger
     ? `本月额度即将用完，仅剩 ${remaining} 次`
     : isWarning
     ? `已用 ${percentage}%，请合理安排剩余 ${remaining} 次`

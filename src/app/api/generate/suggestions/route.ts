@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/db/prisma"
+import { checkMonthlyQuota } from "@/lib/quota"
 
 function generateMockSuggestions(productName: string) {
   return {
@@ -42,6 +43,18 @@ export async function POST(req: Request) {
   const session = await auth()
   if (!session?.user?.id) {
     return NextResponse.json({ error: "请先登录" }, { status: 401 })
+  }
+
+  // Monthly quota check — hard block when exhausted
+  const quota = await checkMonthlyQuota(session.user.id)
+  if (!quota.allowed) {
+    return NextResponse.json(
+      {
+        error: `本月免费额度已用完（${quota.used}/${quota.limit}次），请下月再试或升级套餐`,
+        kind: "QUOTA_EXCEEDED",
+      },
+      { status: 403 }
+    )
   }
 
   try {
