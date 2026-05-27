@@ -17,6 +17,7 @@ import {
   Sparkles,
   Swords,
   ShieldCheck,
+  Shield,
   Calculator,
   PanelLeftClose,
   PanelLeftOpen,
@@ -133,7 +134,7 @@ function NavSection({
   )
 }
 
-export function DashboardSidebar() {
+export function DashboardSidebar({ isAdmin = false }: { isAdmin?: boolean }) {
   const pathname = usePathname()
   const { open, close, collapsed, toggleCollapsed } = useSidebar()
 
@@ -188,6 +189,27 @@ export function DashboardSidebar() {
             </NavSection>
           ))}
         </nav>
+
+        {/* Admin entry — only visible to admin users */}
+        {isAdmin && (
+          <div className={cn("border-t border-border/40 pt-3", isCollapsed ? "px-2" : "px-3")}>
+            <Link
+              href="/admin"
+              onClick={close}
+              title={isCollapsed ? "管理后台" : undefined}
+              className={cn(
+                "flex items-center gap-2.5 rounded-lg text-sm font-medium transition-all duration-200",
+                isCollapsed ? "justify-center px-2 py-2.5" : "px-3 py-2.5",
+                pathname.startsWith("/admin")
+                  ? "bg-amber-500/10 text-amber-700 dark:text-amber-400 shadow-sm"
+                  : "text-amber-600/70 dark:text-amber-500/70 hover:bg-amber-500/10 hover:text-amber-700 dark:hover:text-amber-400"
+              )}
+            >
+              <Shield className="size-4 shrink-0" />
+              {!isCollapsed && <span>管理后台</span>}
+            </Link>
+          </div>
+        )}
 
         {/* Collapse toggle — desktop only, hidden on mobile drawer */}
         {!forceExpanded && (

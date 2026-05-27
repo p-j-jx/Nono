@@ -1,5 +1,6 @@
 import { auth } from "@/lib/auth"
 import { redirect } from "next/navigation"
+import { isAdminEmail } from "@/lib/admin"
 import { DashboardHeader } from "@/components/dashboard/header"
 import { DashboardSidebar } from "@/components/dashboard/sidebar"
 import { SidebarProvider } from "@/components/dashboard/sidebar-context"
@@ -28,7 +29,7 @@ export default async function DashboardLayout({
     <SessionProvider session={serializableSession}>
       <SidebarProvider>
         <div className="min-h-screen flex">
-          <DashboardSidebar />
+          <DashboardSidebar isAdmin={isAdminEmail(session.user.email)} />
           <div className="flex-1 flex flex-col min-w-0">
             <DashboardHeader />
             <main className="flex-1">{children}</main>
