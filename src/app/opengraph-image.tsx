@@ -33,11 +33,19 @@ export default function Image() {
               height: "72px",
               borderRadius: "18px",
               backgroundColor: "#2a9d78",
-              fontSize: "44px",
               marginRight: "24px",
             }}
           >
-            ✦
+            {/* 白色圆点组成的抽象 spark 标记，不依赖字体字形 */}
+            <div
+              style={{
+                width: "30px",
+                height: "30px",
+                borderRadius: "8px",
+                backgroundColor: "#ffffff",
+                transform: "rotate(45deg)",
+              }}
+            />
           </div>
           <div style={{ fontSize: "40px", fontWeight: 700 }}>AI跨境通</div>
         </div>
