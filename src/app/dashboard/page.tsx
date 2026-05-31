@@ -4,6 +4,7 @@ import { DashboardBackground } from "@/components/dashboard/dashboard-background
 import { OnboardingBanner } from "@/components/dashboard/onboarding-banner"
 import { UsageBar } from "@/components/dashboard/usage-bar"
 import { MONTHLY_QUOTA } from "@/lib/quota"
+import { isAdminEmail } from "@/lib/admin"
 import { WelcomeHeader } from "@/components/dashboard/welcome-header"
 import { QuickActions } from "@/components/dashboard/quick-actions"
 import { StatCards } from "@/components/dashboard/stat-cards"
@@ -24,6 +25,24 @@ export default async function DashboardPage() {
   const monthStart = new Date()
   monthStart.setDate(1)
   monthStart.setHours(0, 0, 0, 0)
+
+  const isAdmin = isAdminEmail(session.user.email)
+
+  // Fetch user's bonusQuota for non-admin users
+  let userBonus = 0
+  if (!isAdmin) {
+    try {
+      const u = await prisma.user.findUnique({
+        where: { id: session.user.id },
+        select: { bonusQuota: true },
+      })
+      userBonus = u?.bonusQuota ?? 0
+    } catch {
+      // bonusQuota column may not exist yet
+    }
+  }
+
+  const effectiveQuota = isAdmin ? Infinity : MONTHLY_QUOTA + userBonus
 
   const [projects, todayRecords, monthGenerations, monthAnalyses] = await Promise.all([
     prisma.productProject.findMany({
@@ -74,12 +93,12 @@ export default async function DashboardPage() {
           </section>
         )}
 
-        {/* Usage bar — only shown to users who have started using the platform */}
-        {projects.length > 0 && (
+        {/* Usage bar — only shown to non-admin users who have started using the platform */}
+        {projects.length > 0 && !isAdmin && (
           <section className="mb-6">
             <UsageBar
               used={monthlyUsed}
-              quota={MONTHLY_QUOTA}
+              quota={effectiveQuota}
               breakdown={{ generations: monthGenerations, analyses: monthAnalyses }}
             />
           </section>
